@@ -73,7 +73,13 @@ export const HistorialView = () => {
               type="date" 
               value={fechaFiltro} 
               onChange={(e) => setFechaFiltro(e.target.value)} 
-              className="w-full md:w-auto pl-12 pr-5 py-3.5 bg-white text-primary-dark font-black tracking-widest text-lg rounded-2xl border-4 border-transparent focus:outline-none focus:border-primary/50 shadow-inner cursor-pointer transition-all hover:bg-slate-50" 
+              className="relative w-full md:w-auto pl-12 pr-4 py-3.5 bg-white text-primary-dark font-black tracking-widest text-lg border-4 border-transparent focus:outline-none focus:border-primary/50 shadow-inner cursor-pointer transition-all hover:bg-slate-50 
+              [&::-webkit-calendar-picker-indicator]:opacity-0 
+              [&::-webkit-calendar-picker-indicator]:absolute 
+              [&::-webkit-calendar-picker-indicator]:inset-0 
+              [&::-webkit-calendar-picker-indicator]:w-full 
+              [&::-webkit-calendar-picker-indicator]:h-full 
+              [&::-webkit-calendar-picker-indicator]:cursor-pointer"
             />
           </div>
         </div>
