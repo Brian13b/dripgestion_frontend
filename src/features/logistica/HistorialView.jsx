@@ -46,21 +46,17 @@ export const HistorialView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-    
-      {/* HEADER TIPO "ISLA" FLOTANTE */}
-      <div className="sticky top-0 z-20 pt-4 md:pt-6 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto bg-primary-dark text-white p-5 md:px-10 md:py-6 rounded-[2rem] shadow-2xl border-b-4 border-primary flex flex-col md:flex-row md:justify-between md:items-center gap-5 transition-all">
-          
-          {/* Título y botón */}
+      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
+        <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
           <div className="flex items-center">
             <button onClick={() => navigate(-1)} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm">
               <ArrowLeft size={28} />
             </button>
             <div>
-              <h1 className="text-2xl md:text-4xl font-black tracking-wide flex items-center">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
                 Auditoría de Caja
               </h1>
-              <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">
+              <p className="text-primary-light font-medium mt-1 tracking-wider">
                 Control Financiero
               </p>
             </div>
