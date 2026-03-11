@@ -12,7 +12,7 @@ export const ResumenReparto = () => {
   const totalRecaudado = resumen.efectivo + resumen.transferencia;
 
   return (
-    <div className="min-h-screen bg-background pb-24 font-sans selection:bg-primary-light selection:text-primary-dark">
+    <div className="min-h-screen max-w-7xl bg-background pb-24 font-sans selection:bg-primary-light selection:text-primary-dark">
       <div className="bg-success text-white py-12 px-5 flex flex-col items-center justify-center shadow-lg rounded-b-[40px]">
         <div className="bg-white/20 p-4 rounded-full mb-4"><Check size={48} strokeWidth={3} /></div>
         <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">Viaje Finalizado</h1>
