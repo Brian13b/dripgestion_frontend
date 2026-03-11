@@ -15,7 +15,7 @@ export const TenantProvider = ({ children }) => {
         let hostname = window.location.hostname;
         let subdominio = hostname.split('.')[0];
         
-        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'dripgestion.vercel.app') {
           subdominio = 'arlestin';
         }
 
@@ -29,20 +29,18 @@ export const TenantProvider = ({ children }) => {
         const data = await response.json();
         setTenant(data);
 
-        document.title = `${data.nombre || 'Cargando'} - DripGestión`;
+        document.title = `${data.nombre || 'Cargando'} - Logística`;
 
         const root = document.documentElement;
-        if (data.color_primario) {
-          root.style.setProperty('--tenant-primary', data.color_primario);
-          root.style.setProperty('--tenant-primary-light', `${data.color_primario}33`);
-        }
-        if (data.color_secundario) {
-          root.style.setProperty('--tenant-primary-dark', data.color_secundario);
-        }
-
-        if (data.nombre) {
-          document.title = `${data.nombre} - Logística`;
-        }
+        
+        if (data.font_sans) root.style.setProperty('--font-sans', data.font_sans);
+        if (data.color_primario) root.style.setProperty('--color-primary', data.color_primario);
+        if (data.color_primario_light) root.style.setProperty('--color-primary-light', data.color_primario_light);
+        if (data.color_primario_dark) root.style.setProperty('--color-primary-dark', data.color_primario_dark);
+        if (data.color_background) root.style.setProperty('--color-background', data.color_background);
+        if (data.color_success) root.style.setProperty('--color-success', data.color_success);
+        if (data.color_danger) root.style.setProperty('--color-danger', data.color_danger);
+        if (data.color_secondary) root.style.setProperty('--color-secondary', data.color_secondary);
 
       } catch (err) {
         console.error("Error cargando Tenant:", err);

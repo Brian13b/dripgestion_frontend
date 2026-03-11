@@ -1,31 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&display=swap');
 @import "tailwindcss";
 
 :root {
-  --tenant-primary: #25A7DA; 
-  --tenant-primary-light: #00ACC1;
-  --tenant-primary-dark: #0C4A6E;
-  --tenant-background: #F0FDFA;
-}
-
-@theme {
-  --font-sans: 'Bebas Neue', sans-serif;
-
-  --color-primary: var(--tenant-primary); 
-  --color-primary-light: var(--tenant-primary-light);
-  --color-primary-dark: var(--tenant-primary-dark);
+  --font-sans: 'Inter', sans-serif;
   
-  --color-background: var(--tenant-background);
+  --color-primary: #25A7DA; 
+  --color-primary-light: #00ACC1;
+  --color-primary-dark: #0C4A6E;
+  --color-background: #F0FDFA;
   
-  /* Colores de estado */
   --color-success: #10b981;
   --color-danger: #ef4444;
   --color-secondary: #64748b;
 }
 
+@theme {
+  --font-sans: var(--font-sans);
+
+  --color-primary: var(--color-primary); 
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-dark: var(--color-primary-dark);
+  
+  --color-background: var(--color-background);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
+  --color-secondary: var(--color-secondary);
+}
+
 body {
-  background-color: #e2e8f0; 
-  color: var(--color-primary-dark); 
+  background-color: var(--color-background); 
+  color: var(--color-primary-dark);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -36,6 +40,6 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: var(--color-secondary); 
   border-radius: 10px;
 }
