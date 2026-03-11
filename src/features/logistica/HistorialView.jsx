@@ -56,7 +56,7 @@ export const HistorialView = () => {
             </div>
           </div>
           <div className="relative w-full md:w-auto group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
               <CalendarIcon size={22} className="text-primary-dark group-hover:text-primary transition-colors" />
             </div>
             <input 
