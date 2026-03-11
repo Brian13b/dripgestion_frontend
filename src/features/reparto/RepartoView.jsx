@@ -56,7 +56,27 @@ export const RepartoView = () => {
   const [modalAgregarAbierto, setModalAgregarAbierto] = useState(false);
   const [clientesDisponibles, setClientesDisponibles] = useState([]);
   const [busquedaCliente, setBusquedaCliente] = useState('');
-  const [modalFormularioAbierta, setModalFormularioAbierta] = useState(false);  
+  const [modalFormularioAbierta, setModalFormularioAbierta] = useState(false);
+
+  useEffect(() => {
+    const fetchClienteFresco = async () => {
+      if (clientesRuta.length > 0 && clientesRuta[indiceActual]) {
+        try {
+          const clienteFresco = await clientesService.getById(clientesRuta[indiceActual].id);
+          
+          setClientesRuta(prevRuta => {
+            const nuevaRuta = [...prevRuta];
+            nuevaRuta[indiceActual] = clienteFresco;
+            return nuevaRuta;
+          });
+        } catch (error) {
+          console.error("Error al refrescar datos del cliente", error);
+        }
+      }
+    };
+    
+    fetchClienteFresco();
+  }, [indiceActual]);
 
   // --- MAGIA 2: Autoguardado silencioso cada vez que avanzás ---
   useEffect(() => {
@@ -119,7 +139,7 @@ export const RepartoView = () => {
   const saldoAnterior = clienteActual?.saldo_dinero || 0;
   const deudaTotal = saldoAnterior + totalEntregaHoy;
   const cobradoNum = Number(montoCobrado) || 0;
-  const nuevoSaldoProyectado = deudaTotal - cobradoNum;
+  const nuevoSaldoProyectado = Math.round(deudaTotal - cobradoNum);
 
   // --- MODAL AGREGAR ---
   const abrirModalAgregar = async () => {
