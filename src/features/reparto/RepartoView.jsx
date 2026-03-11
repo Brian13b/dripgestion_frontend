@@ -37,7 +37,7 @@ export const RepartoView = () => {
       const viaje = JSON.parse(guardado);
       if (viaje.recorridoId === id) return viaje.resumenViaje;
     }
-    return { cobrado_efectivo: 0, cobrado_transferencia: 0, fiado_cuenta: 0, bidones_entregados: 0, bidones_devueltos: 0, sifones_entregados: 0, sifones_devueltos: 0 };
+    return { efectivo: 0, transferencia: 0, fiado: 0, productos: {} };
   });
 
   const clienteActual = clientesRuta[indiceActual];
@@ -164,28 +164,24 @@ export const RepartoView = () => {
     try {
       await recorridoService.registrarMovimiento(payload);
 
-      // Calculamos sumatorias buscando "bid" o "sif" en el nombre del producto
-      let bid_ent = 0, bid_dev = 0, sif_ent = 0, sif_dev = 0;
+      const nuevosProductos = { ...resumenViaje.productos };
+
       catalogo.forEach(p => {
-         const mov = movimientos[p.id] || {entregado: 0, devuelto: 0};
-         const nombreStr = p.nombre.toLowerCase();
-         if (nombreStr.includes('bid')) {
-            bid_ent += mov.entregado; bid_dev += mov.devuelto;
-         }
-         if (nombreStr.includes('sif')) {
-            sif_ent += mov.entregado; sif_dev += mov.devuelto;
+         const mov = movimientos[p.id] || { entregado: 0, devuelto: 0 };
+         if (mov.entregado > 0 || mov.devuelto > 0) {
+           if (!nuevosProductos[p.id]) {
+             nuevosProductos[p.id] = { nombre: p.nombre, entregado: 0, devuelto: 0 };
+           }
+           nuevosProductos[p.id].entregado += mov.entregado;
+           nuevosProductos[p.id].devuelto += mov.devuelto;
          }
       });
 
-      // Actualizamos el resumen interno
       const nuevoResumen = {
-        cobrado_efectivo: resumenViaje.cobrado_efectivo + (metodoPago === 'efectivo' ? cobroFinal : 0),
-        cobrado_transferencia: resumenViaje.cobrado_transferencia + (metodoPago === 'transferencia' ? cobroFinal : 0),
-        fiado_cuenta: resumenViaje.fiado_cuenta + (metodoPago === 'cta_corriente' ? totalEntregaHoy : 0),
-        bidones_entregados: resumenViaje.bidones_entregados + bid_ent,
-        bidones_devueltos: resumenViaje.bidones_devueltos + bid_dev,
-        sifones_entregados: resumenViaje.sifones_entregados + sif_ent,
-        sifones_devueltos: resumenViaje.sifones_devueltos + sif_dev
+        efectivo: resumenViaje.efectivo + (metodoPago === 'efectivo' ? cobroFinal : 0),
+        transferencia: resumenViaje.transferencia + (metodoPago === 'transferencia' ? cobroFinal : 0),
+        fiado: resumenViaje.fiado + (metodoPago === 'cta_corriente' ? totalEntregaHoy : 0),
+        productos: nuevosProductos
       };
 
       setResumenViaje(nuevoResumen);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LogOut, Package, DollarSign, MessageCircle, MapPin, AlertCircle, FileText } from 'lucide-react';
+import { LogOut, Package, DollarSign, MessageCircle, MapPin, AlertCircle, FileText, Droplet } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
 import { portalService } from '../../api/portalService';
