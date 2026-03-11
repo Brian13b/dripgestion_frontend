@@ -2,11 +2,11 @@ import api from '../api/axios';
 
 export const productosService = {
   getAll: async () => {
-    const response = await api.get('/productos/');
+    const response = await api.get('/productos');
     return response.data;
   },
   create: async (data) => {
-    const response = await api.post('/productos/', data);
+    const response = await api.post('/productos', data);
     return response.data;
   },
   updatePrecio: async (id, precio) => {

@@ -3,7 +3,7 @@ import api from './axios';
 export const clientesService = {
   // Traer todos
   getAll: async () => {
-    const response = await api.get('/clientes/');
+    const response = await api.get('/clientes');
     return response.data;
   },
   
@@ -15,7 +15,7 @@ export const clientesService = {
   
   // Crear
   create: async (data) => {
-    const response = await api.post('/clientes/', data);
+    const response = await api.post('/clientes', data);
     return response.data;
   },
   

@@ -3,7 +3,7 @@ import api from '../api/axios';
 export const recorridoService = {
   // Traer todos los recorridos
   getAll: async () => {
-    const response = await api.get('/logistica/recorridos/');
+    const response = await api.get('/logistica/recorridos');
     return response.data;
   },
   
@@ -15,7 +15,7 @@ export const recorridoService = {
   
   // Crear un nuevo recorrido
   create: async (data) => {
-    const response = await api.post('/logistica/recorridos/', data);
+    const response = await api.post('/logistica/recorridos', data);
     return response.data;
   },
   
@@ -27,7 +27,7 @@ export const recorridoService = {
   
   // Registrar una entrega / movimiento
   registrarMovimiento: async (data) => {
-    const response = await api.post('/logistica/movimientos/', data);
+    const response = await api.post('/logistica/movimientos', data);
     return response.data;
   },
 
