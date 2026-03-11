@@ -55,9 +55,16 @@ export const HistorialView = () => {
               <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">Control financiero</p>
             </div>
           </div>
-          <div className="relative max-w-5">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><CalendarIcon size={20} className="text-primary-dark" /></div>
-            <input type="date" value={fechaFiltro} onChange={(e) => setFechaFiltro(e.target.value)} className="pl-10 pr-4 py-3 bg-white text-primary-dark font-bold tracking-widest text-lg rounded-2xl border-2 border-primary-light/50 focus:outline-none focus:border-primary shadow-sm w-full md:w-auto" />
+          <div className="relative w-full md:w-auto group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <CalendarIcon size={22} className="text-primary-dark group-hover:text-primary transition-colors" />
+            </div>
+            <input 
+              type="date" 
+              value={fechaFiltro} 
+              onChange={(e) => setFechaFiltro(e.target.value)} 
+              className="w-full md:w-auto pl-12 pr-5 py-3.5 bg-white text-primary-dark font-black tracking-widest text-lg rounded-2xl border-4 border-transparent focus:outline-none focus:border-primary/50 shadow-inner cursor-pointer transition-all hover:bg-slate-50" 
+            />
           </div>
         </div>
       </div>
