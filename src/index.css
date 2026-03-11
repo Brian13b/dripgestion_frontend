@@ -1,15 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Arimo&display=swap');
-
 @import "tailwindcss";
+
+:root {
+  --tenant-primary: #25A7DA; 
+  --tenant-primary-light: #00ACC1;
+  --tenant-primary-dark: #0C4A6E;
+  --tenant-background: #F0FDFA;
+}
 
 @theme {
   --font-sans: 'Bebas Neue', sans-serif;
 
-  --color-primary: #25A7DA;       /* Sky 400 - Color base vibrante */
-  --color-primary-light: #00ACC1; /* Cyan 600 - Para hovers, acentos o gradientes */
-  --color-primary-dark: #0C4A6E;  /* Sky 900 - Para textos, cabeceras y contrastes */
+  --color-primary: var(--tenant-primary); 
+  --color-primary-light: var(--tenant-primary-light);
+  --color-primary-dark: var(--tenant-primary-dark);
   
-  --color-background: #F0FDFA;    /* Teal 50 - Fondo súper clarito y fresco para la app */
+  --color-background: var(--tenant-background);
   
   /* Colores de estado */
   --color-success: #10b981;
@@ -19,7 +25,7 @@
 
 body {
   background-color: #e2e8f0; 
-  color: var(--color-primary-dark);
+  color: var(--color-primary-dark); 
   -webkit-font-smoothing: antialiased;
 }
 

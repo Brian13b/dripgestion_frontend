@@ -1,57 +1,44 @@
-# 💧 Arlestin Logística
+# 📱 DripGestión App - White-Label PWA
 
-![Estado](https://img.shields.io/badge/Estado-En_Producci%C3%B3n-success)
-![Versión](https://img.shields.io/badge/Versi%C3%B3n-1.0.0-blue)
+![Estado](https://img.shields.io/badge/Estado-En_Producción-success)
 ![PWA](https://img.shields.io/badge/PWA-Ready-f31260)
 ![React](https://img.shields.io/badge/React-Vite-61dafb?logo=react)
 ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?logo=tailwind-css)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite)
 
-**Arlestin** es una solución integral multiplataforma (Progressive Web App) diseñada para modernizar y optimizar la logística de empresas distribuidoras de agua (sifones y bidones). 
+Interfaz de usuario moderna y adaptativa para el ecosistema **DripGestión**. Diseñada con un enfoque Mobile-First para facilitar el trabajo de los choferes en calle y el autoservicio de los clientes.
 
-Permite a los choferes gestionar sus rutas de reparto en la calle sin depender de una conexión a internet constante, llevar un control estricto de los envases prestados y cobrar en múltiples formatos, mientras la administración audita la caja en tiempo real.
+## 🌟 Características Destacadas
+* **Branding Dinámico:** La App detecta el subdominio y aplica automáticamente la identidad visual (colores y logos) de la distribuidora correspondiente.
+* **Modo PWA:** Instalable en dispositivos iOS y Android como una aplicación nativa.
+* **Portal de Clientes:** Interfaz simplificada para que los clientes finales consulten saldo, envases y realicen pedidos vía WhatsApp.
+* **Dashboard Operativo:** Panel administrativo con métricas en tiempo real de recaudación y clientes activos.
 
----
+## 🛠️ Stack Tecnológico
+* **Vite + React**
+* **Tailwind CSS** (Diseño responsivo y custom properties)
+* **Lucide Icons** (Iconografía limpia)
+* **Axios** (Gestión de peticiones con interceptores de seguridad)
 
-## ✨ Características Principales
+## 🚀 Roadmap de UI/UX
+- [ ] **Modo Offline total:** Sincronización diferida de datos en zonas sin señal.
+- [ ] **Firma Digital:** Captura de firma del cliente al momento de la entrega.
+- [ ] **Soporte Multi-lenguaje:** Preparación para mercados internacionales.
+- [ ] **Dark Mode:** Adaptación visual para entregas nocturnas.
 
-### 🚚 Gestión de Repartos "En Vivo"
-* **Rutas Dinámicas:** Creación de hojas de ruta predefinidas con capacidad de reordenamiento (drag & drop / flechas) en tiempo real.
-* **Excepciones Diarias:** Posibilidad de omitir clientes o agregar "paradas excepcionales" sobre la marcha según la demanda del día.
-* **Offline-First (PWA):** Soporte para instalación como aplicación nativa en iOS/Android y funcionamiento sin internet en zonas de baja cobertura.
+## 🚀 Configuración
+1. `npm install`
+2. Crear archivo `.env` con la variable `VITE_API_URL`.
+3. `npm run dev` para desarrollo local.
+4. `npm run build` para generar la versión de producción.
 
-### 📦 Punto de Venta y Control de Envases
-* **Calculadora Integrada:** Cobros mixtos (Efectivo, Transferencia, Fiado/A Cuenta) y aplicación de descuentos promocionales.
-* **Trazabilidad de Envases:** Sistema inteligente que calcula el neto de envases (dejados vs. retirados) y actualiza el stock prestado de cada cliente de forma automática.
-* **Resumen de Viaje:** Liquidación de ruta automatizada al finalizar el recorrido para facilitar la rendición del chofer.
-
-### 👥 Administración y Portal de Clientes
-* **Auditoría de Caja:** Historial detallado por día y acumulados del mes, separado por método de pago.
-* **Gestión de Clientes:** Fichas completas con historial de saldos, geolocalización básica y generación automática de PIN de acceso.
-* **Portal de Auto-Gestión:** Los clientes pueden ingresar con su teléfono y PIN para auditar sus deudas, revisar sus envases prestados y realizar pedidos vía WhatsApp.
-
----
-
-## 🛠️ Tecnologías Utilizadas
-
-### Frontend
-* **Core:** React 18 + Vite
-* **Estilos:** Tailwind CSS
-* **Navegación:** React Router DOM
-* **Iconografía:** Lucide React
-* **PWA:** `vite-plugin-pwa` (Service Workers, Workbox)
-* **Peticiones:** Axios
-
-### Backend (API)
-* **Framework:** Python / FastAPI
-* **Base de Datos:** PostgreSQL
-* **ORM:** SQLAlchemy
-* **Autenticación:** JWT (JSON Web Tokens)
-
----
+## 🎨 Personalización (Theming)
+El sistema utiliza el `TenantContext` para inyectar variables CSS en el `:root` del documento, permitiendo cambios de tema sin recargar la aplicación ni duplicar código.
 
 ## 👨‍💻 Autores
 Un producto desarrollado por **GB Soluciones Digitales**.
 
-**Desarrollador Principal**: Brian Battauz (@Brian13b)
+**Desarrollador Principal**: Brian Battauz ([@Brian13b](https://github.com/Brian13b))
 
 ---
+> 🎯 *DripGestión no es solo una app, es la herramienta definitiva para digitalizar la distribución tradicional.*

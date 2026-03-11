@@ -1,0 +1,27 @@
+{
+  "short_name": "DripGestión",
+  "name": "DripGestión - Sistema de Distribución",
+  "description": "Plataforma SaaS para gestión logística de distribuidoras de agua y bebidas.",
+  "icons": [
+    {
+      "src": "logo-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0ea5e9",
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "es-AR",
+  "categories": ["business", "productivity", "utilities"]
+}

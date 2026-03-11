@@ -40,7 +40,6 @@ export const ClientesList = () => {
     fetchData();
   }, []);
 
-  // Creamos un diccionario rápido para traducir ID -> Nombre (Ej: "1" -> "Bidón 20L")
   const mapaProductos = productos.reduce((acc, prod) => {
     acc[prod.id] = prod.nombre;
     return acc;

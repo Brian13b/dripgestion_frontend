@@ -1,18 +1,20 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useTenant } from '../../context/TenantContext';
 import { Droplet, Lock, Phone, MessageCircle } from 'lucide-react';
 import { BotonInstalar } from '../../components/ui/BotonInstalar';
 
 export const Login = () => {
-  const { login, user } = useContext(AuthContext); 
+  const { login, user } = useContext(AuthContext);
+  const tenant = useTenant();
+
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const NUMERO_WHATSAPP = "5491100000000";
 
   useEffect(() => {
     if (user) {
@@ -30,8 +32,10 @@ export const Login = () => {
   };
 
   const handlePedirPorWhatsApp = () => {
+    const numeroDestino = tenant?.whatsapp || "5491100000000"; 
+    
     const mensaje = `Hola! Necesito saber mi PIN.`;
-    window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    window.open(`https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   return (
@@ -40,10 +44,22 @@ export const Login = () => {
       {/* Lado Izquierdo */}
       <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-[40px] md:rounded-none md:rounded-r-[60px] z-10">
         <div className="bg-white/20 p-5 md:p-8 rounded-full backdrop-blur-sm mb-6 border border-white/30">
-          <Droplet size={64} className="text-white fill-white/20" strokeWidth={1.5} />
+          {tenant?.logo_url ? (
+            <img 
+              src={tenant.logo_url} 
+              alt={`Logo de ${tenant.nombre}`} 
+              className="w-full h-full object-contain object-center drop-shadow-md"
+            />
+          ) : (
+            <Droplet size={64} className="text-white fill-white/20" strokeWidth={1.5} />
+          )}
         </div>
-        <h1 className="text-5xl md:text-7xl font-black mb-2 tracking-tight">Arlestin</h1>
-        <p className="text-primary-light font-medium tracking-wide md:text-xl uppercase">Logística & Distribución</p>
+        <h1 className="text-5xl md:text-7xl font-black mb-2 tracking-tight text-center">
+          {tenant?.nombre || 'Logística'}
+        </h1>
+        <p className="text-primary-light font-medium tracking-wide md:text-xl uppercase text-center">
+          Gestión & Distribución
+        </p>
       </div>
 
       {/* Lado Derecho */}

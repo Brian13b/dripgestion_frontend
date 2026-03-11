@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LogOut, Package, DollarSign, MessageCircle, MapPin, AlertCircle, FileText } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
+import { useTenant } from '../../context/TenantContext';
 import { portalService } from '../../api/portalService';
 
 export const PortalClienteView = () => {
   const { logout } = useContext(AuthContext);
+  const tenant = useTenant();
   const [cuenta, setCuenta] = useState(null);
   const [movimientos, setMovimientos] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const NUMERO_WHATSAPP = "5491100000000"; 
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -27,8 +27,9 @@ export const PortalClienteView = () => {
   }, []);
 
   const handlePedirPorWhatsApp = () => {
+    const numeroDestino = tenant?.whatsapp || "5491100000000"; 
     const mensaje = `Hola! Necesito hacer un pedido para *${cuenta?.nombre_negocio}* (${cuenta?.direccion}).`;
-    window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    window.open(`https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   if (loading) return <div className="min-h-screen bg-background flex items-center justify-center animate-pulse text-primary font-bold text-2xl tracking-widest">Cargando tu cuenta...</div>;
@@ -39,8 +40,14 @@ export const PortalClienteView = () => {
       <div className="bg-primary-dark w-full pt-12 pb-10 shadow-lg rounded-b-[40px] relative text-center">
         <div className="max-w-2xl mx-auto px-5">
           <button onClick={logout} className="absolute top-6 right-6 text-white/60 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors"><LogOut size={24} /></button>
-          <div className="w-20 h-20 bg-white/10 rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20"><MapPin size={32} className="text-primary-light" /></div>
-          <h1 className="text-sm font-bold text-primary-light uppercase tracking-widest mb-2">Mi Cuenta Arlestin</h1>
+          <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 overflow-hidden shadow-inner">
+            {tenant?.logo_url ? (
+              <img src={tenant.logo_url} alt="Empresa" className="w-full h-full object-contain p-2" />
+            ) : (
+              <Droplet size={32} className="text-primary" />
+            )}
+          </div>
+          <h1 className="text-sm font-bold text-primary-light uppercase tracking-widest mb-2">Mi Cuenta en {tenant?.nombre}</h1>
           <h2 className="text-4xl md:text-5xl font-black text-white leading-tight tracking-wide">{cuenta?.nombre_negocio}</h2>
           <p className="text-primary-light text-lg mt-2 font-medium">{cuenta?.direccion}</p>
         </div>

@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthProvider, AuthContext } from './context/AuthContext';
+import { TenantProvider } from './context/TenantContext'
 import { BottomNav } from './components/layout/BottomNav';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/auth/Login';
@@ -80,11 +81,13 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Toaster position="top-center" reverseOrder={false} />
-        <OfflineBanner />
-        <AppRoutes />
-      </AuthProvider>
+      <TenantProvider>
+        <AuthProvider>
+          <Toaster position="top-center" reverseOrder={false} />
+          <OfflineBanner />
+          <AppRoutes />
+        </AuthProvider>
+      </TenantProvider>
     </BrowserRouter>
   );
 }

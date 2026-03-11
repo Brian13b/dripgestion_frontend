@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { useTenant } from '../../context/TenantContext'
 import { Package, Users, DollarSign, TrendingUp, ChevronRight, Droplet } from 'lucide-react';
 import { dashboardService } from '../../api/dashboardService';
 
@@ -33,6 +34,7 @@ const ActionButton = ({ label, primary = false, onClick }) => (
 
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
+  const tenant = useTenant();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ clientes_activos: 0, total_envases: 0, saldos_pendientes: 0, recaudacion_hoy: 0 });
 
@@ -47,12 +49,16 @@ export const Dashboard = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center text-primary font-black text-4xl tracking-tight mb-4">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mr-3">
-              <Droplet size={36}/> 
+              {tenant?.logo_url ? (
+                <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-1" />
+              ) : (
+                <Droplet size={36}/> 
+              )} 
             </div>
-              Arlestin
+              {tenant?.nombre || 'Gestion'}
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Buenos días</h1>
-          <p className="text-white font-medium text-md mt-2">Resumen operativo de tu distribuidora</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Buenos días, {user?.full_name.split(' ')[0]}</h1>
+          <p className="text-white font-medium text-md mt-2">Resumen operativo de {tenant?.nombre}</p>
         </div>
       </div>
 

@@ -1,12 +1,11 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://a0d5-181-230-133-18.ngrok-free.app/api/v1';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true'
   },
 });
 
