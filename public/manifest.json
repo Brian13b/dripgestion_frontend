@@ -4,7 +4,7 @@
   "description": "Plataforma SaaS para gestión logística de distribuidoras de agua y bebidas.",
   "icons": [
     {
-      "src": "logo-192.png",
+      "src": "pwa-192x192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any maskable"

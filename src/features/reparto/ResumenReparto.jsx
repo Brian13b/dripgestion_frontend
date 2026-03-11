@@ -45,10 +45,10 @@ export const ResumenReparto = () => {
         <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-primary-light/30">
           <h3 className="font-bold text-primary-dark text-xl mb-5 border-b border-primary-light/20 pb-3 tracking-wide">Balance de Envases</h3>
           <div className="space-y-6">
-            {Object.values(resumen.productos).length === 0 ? (
+            {Object.values(resumen.productos || {}).length === 0 ? (
               <p className="text-secondary text-center italic py-4">No se registraron movimientos de envases.</p>
             ) : (
-              Object.values(resumen.productos).map((prod, index) => (
+              Object.values(resumen.productos || {}).map((prod, index) => (
                 <div key={index} className="bg-background p-4 rounded-2xl border border-primary-light/40">
                    <p className="font-bold text-primary-dark text-lg mb-3 tracking-wide">{prod.nombre}</p>
                    <div className="flex justify-between text-sm font-bold text-secondary mb-2"><span>Entregados</span> <span className="bg-white px-3 py-1 rounded-lg border border-primary-light/30 text-primary-dark">{prod.entregado}</span></div>
