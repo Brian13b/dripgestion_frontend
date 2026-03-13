@@ -7,7 +7,6 @@ export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave 
   const [rutaEditando, setRutaEditando] = useState({ nombre: '', dia_semana: 0, clientes_orden: [] });
   const [busquedaCliente, setBusquedaCliente] = useState('');
 
-  // Sincronizar estado cuando se abre para editar o crear
   useEffect(() => {
     if (rutaInicial) {
       setRutaEditando({ ...rutaInicial, clientes_orden: [...rutaInicial.clientes_orden] });

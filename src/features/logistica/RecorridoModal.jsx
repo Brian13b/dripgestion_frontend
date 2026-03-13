@@ -6,7 +6,6 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
   const [clientesEnVistaPrevia, setClientesEnVistaPrevia] = useState([]);
   const [busquedaExcepcion, setBusquedaExcepcion] = useState('');
 
-  // Cargar los clientes iniciales cuando se abre el modal
   useEffect(() => {
     if (recorrido) {
       const clientesCompletos = recorrido.clientes_orden.map(id => clientes.find(c => c.id === id)).filter(Boolean);

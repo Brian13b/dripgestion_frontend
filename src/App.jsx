@@ -7,6 +7,7 @@ import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/auth/Login';
 import { ClientesList } from './features/clientes/ClientesList';
 import { RecorridosList } from './features/logistica/RecorridosList';
+import { RecorridoModal } from './features/logistica/RecorridoModal';
 import { RepartoView } from './features/reparto/RepartoView'
 import { ResumenReparto } from './features/reparto/ResumenReparto';
 import { PreciosView } from './features/precios/PreciosView';
@@ -60,8 +61,8 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/clientes" element={<ClientesList />} />
         <Route path="/recorridos" element={<RecorridosList />} />
-        <Route path="/recorridos/nuevo" element={<RecorridoForm />} />
-        <Route path="/recorridos/editar/:id" element={<RecorridoForm />} />
+        <Route path="/recorridos/nuevo" element={<RecorridoModal />} />
+        <Route path="/recorridos/editar/:id" element={<RecorridoModal />} />
         <Route path="/reparto/:id" element={<RepartoView />} />
         <Route path="/reparto/resumen" element={<ResumenReparto />} />
         <Route path="/precios" element={<PreciosView />} />
