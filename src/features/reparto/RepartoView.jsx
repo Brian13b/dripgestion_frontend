@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Check, MapPin, Phone, Minus, Plus, Banknote, CreditCard, BookOpen, X, Search, UserPlus, Package } from 'lucide-react';
+import { Check, MapPin, Minus, Plus, Banknote, CreditCard, BookOpen, X, Search, UserPlus, Package, ArrowRight, SkipForward } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
 import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService';
@@ -152,7 +152,6 @@ export const RepartoView = () => {
   };
 
   const agregarClienteAlPaso = (cliente) => {
-    // Insertamos el cliente justo después del actual
     const nuevasRutas = [...clientesRuta];
     nuevasRutas.splice(indiceActual + 1, 0, cliente);
     setClientesRuta(nuevasRutas);
@@ -218,11 +217,9 @@ export const RepartoView = () => {
 
   const avanzarOSalir = (resumenActualizado = resumenViaje) => {
     if (indiceActual < clientesRuta.length - 1) {
-      // Avanzamos al siguiente cliente
       setIndiceActual(indiceActual + 1);
       window.scrollTo(0, 0);
     } else {
-      // --- MAGIA 3: Limpiamos la memoria y nos vamos al resumen final ---
       localStorage.removeItem('arlestin_viaje_activo');
       navigate('/reparto/resumen', { state: { resumen: resumenActualizado, nombreRuta: recorrido?.nombre } }); 
     }
@@ -231,65 +228,77 @@ export const RepartoView = () => {
   if (loading || !clienteActual) return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-24 font-sans">
-      <div className="bg-primary text-white p-4 sticky top-0 z-10 shadow-md flex justify-between items-center">
-        <div>
-          <p className="text-primary-light text-xs font-semibold uppercase tracking-wider">Recorrido en curso</p>
-          <h1 className="text-lg font-bold">Cliente {indiceActual + 1} de {clientesRuta.length}</h1>
+    <div className="min-h-screen bg-background pb-24 font-sans">
+      
+      {/* HEADER CON ESTÉTICA UNIFICADA */}
+      <div className="bg-primary-dark p-5 md:px-12 pt-8 md:pt-12 sticky top-0 z-20 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
+        <div className="max-w-3xl mx-auto flex justify-between items-center">
+          <div>
+            <p className="text-primary-light text-xs md:text-sm font-bold uppercase tracking-widest mb-1">Recorrido en curso</p>
+            <h1 className="text-2xl md:text-3xl font-black tracking-wide">Cliente {indiceActual + 1} de {clientesRuta.length}</h1>
+          </div>
+          <button onClick={() => avanzarOSalir()} className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-5 rounded-2xl flex items-center shadow-sm font-bold text-sm md:text-base">
+            <Check size={20} className="md:mr-2" strokeWidth={3} />
+            <span className="hidden md:inline tracking-wider">Finalizar V.</span>
+          </button>
         </div>
-        <button onClick={() => avanzarOSalir()} className="bg-white text-slate-800 text-sm font-bold py-2 px-4 rounded-full flex items-center shadow-sm">
-          <Check size={16} className="mr-1" /> Finalizar
-        </button>
       </div>
 
-      <div className="max-w-md mx-auto p-3 space-y-3 mt-2">
+      {/* CONTENEDOR PRINCIPAL - Formato "Mobile Centrado" pero elegante */}
+      <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-5 mt-4">
         
         {/* INFO CLIENTE */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <span className="float-right bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-md">Pendiente</span>
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">{clienteActual.nombre_negocio}</h2>
-          <p className="flex items-start text-slate-500 text-sm mb-4"><MapPin size={16} className="mr-2 text-primary shrink-0 mt-0.5" /> {clienteActual.direccion}</p>
+        <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-primary-light/10 rounded-bl-full -z-10"></div>
           
-          <div className="grid grid-cols-2 gap-3 mb-2">
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-               <p className="text-[10px] text-slate-500 uppercase font-bold">Saldo Histórico</p>
-               <p className={`text-lg font-bold ${saldoAnterior > 0 ? 'text-danger' : saldoAnterior < 0 ? 'text-success' : 'text-slate-800'}`}>${Math.abs(saldoAnterior)} {saldoAnterior > 0 ? '(Debe)' : ''}</p>
+          <span className="float-right bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">Pendiente</span>
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-dark mb-2 tracking-wide pr-20">{clienteActual.nombre_negocio}</h2>
+          <p className="flex items-start text-secondary text-sm md:text-base font-medium mb-6"><MapPin size={18} className="mr-2 text-primary shrink-0 mt-0.5" /> {clienteActual.direccion}</p>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
+               <p className="text-[10px] md:text-xs text-secondary uppercase font-bold tracking-wider mb-1">Saldo Histórico</p>
+               <p className={`text-xl md:text-2xl font-black ${saldoAnterior > 0 ? 'text-danger' : saldoAnterior < 0 ? 'text-success' : 'text-primary-dark'}`}>
+                 ${Math.abs(saldoAnterior)} <span className="text-sm font-bold opacity-70">{saldoAnterior > 0 ? '(Debe)' : ''}</span>
+               </p>
             </div>
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
-              <p className="text-[10px] text-slate-500 uppercase font-bold">Envases Prestados</p>
-              <p className="text-lg font-bold text-slate-800">{Object.values(clienteActual.stock_envases || {}).reduce((a, b) => a + b, 0)}</p>
+            <div className="bg-slate-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
+              <p className="text-[10px] md:text-xs text-secondary uppercase font-bold tracking-wider mb-1">Envases Prestados</p>
+              <p className="text-xl md:text-2xl font-black text-primary-dark">{Object.values(clienteActual.stock_envases || {}).reduce((a, b) => a + b, 0)}</p>
             </div>
           </div>
         </div>
 
         {/* --- CATÁLOGO DINÁMICO --- */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-800 mb-4 flex items-center"><Package size={18} className="mr-2 text-primary"/> Registro de Envases</h3>
+        <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6">
+          <h3 className="font-bold text-primary-dark text-xl md:text-2xl mb-5 flex items-center border-b border-primary-light/20 pb-4 tracking-wide">
+            <Package size={24} className="mr-3 text-primary"/> Registro de Envases
+          </h3>
           
-          <div className="space-y-4">
+          <div className="space-y-5">
             {catalogo.filter(p => p.activo).map(prod => (
-              <div key={prod.id} className="border-b border-slate-100 pb-4 last:border-0 last:pb-0">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="font-bold text-slate-700">{prod.nombre}</span>
-                  <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded-md">${prod.precio_actual}</span>
+              <div key={prod.id} className="border-b border-primary-light/10 pb-5 last:border-0 last:pb-0">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="font-bold text-primary-dark text-lg">{prod.nombre}</span>
+                  <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-lg">${prod.precio_actual}</span>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-50 p-2 rounded-xl border border-slate-100 flex flex-col items-center">
-                    <span className="text-[10px] uppercase font-bold text-slate-500 mb-2">Dejás</span>
-                    <div className="flex items-center space-x-3">
-                      <button onClick={() => updateCantidad(prod.id, 'entregado', -1)} className="w-8 h-8 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-600 active:scale-95"><Minus size={16}/></button>
-                      <span className="w-4 text-center font-bold text-lg">{movimientos[prod.id]?.entregado || 0}</span>
-                      <button onClick={() => updateCantidad(prod.id, 'entregado', 1)} className="w-8 h-8 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-600 active:scale-95"><Plus size={16}/></button>
+                <div className="grid grid-cols-2 gap-4 md:gap-6">
+                  <div className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
+                    <span className="text-[10px] md:text-xs uppercase font-bold text-secondary tracking-widest mb-2">Dejás</span>
+                    <div className="flex items-center space-x-4">
+                      <button onClick={() => updateCantidad(prod.id, 'entregado', -1)} className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"><Minus size={18}/></button>
+                      <span className="w-6 text-center font-black text-xl text-primary-dark">{movimientos[prod.id]?.entregado || 0}</span>
+                      <button onClick={() => updateCantidad(prod.id, 'entregado', 1)} className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"><Plus size={18}/></button>
                     </div>
                   </div>
                   
-                  <div className="bg-slate-50 p-2 rounded-xl border border-slate-100 flex flex-col items-center">
-                    <span className="text-[10px] uppercase font-bold text-slate-500 mb-2">Te Llevás</span>
-                    <div className="flex items-center space-x-3">
-                      <button onClick={() => updateCantidad(prod.id, 'devuelto', -1)} className="w-8 h-8 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-600 active:scale-95"><Minus size={16}/></button>
-                      <span className="w-4 text-center font-bold text-lg">{movimientos[prod.id]?.devuelto || 0}</span>
-                      <button onClick={() => updateCantidad(prod.id, 'devuelto', 1)} className="w-8 h-8 rounded-full border border-slate-200 bg-white shadow-sm flex items-center justify-center text-slate-600 active:scale-95"><Plus size={16}/></button>
+                  <div className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
+                    <span className="text-[10px] md:text-xs uppercase font-bold text-secondary tracking-widest mb-2">Te Llevás</span>
+                    <div className="flex items-center space-x-4">
+                      <button onClick={() => updateCantidad(prod.id, 'devuelto', -1)} className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"><Minus size={18}/></button>
+                      <span className="w-6 text-center font-black text-xl text-primary-dark">{movimientos[prod.id]?.devuelto || 0}</span>
+                      <button onClick={() => updateCantidad(prod.id, 'devuelto', 1)} className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"><Plus size={18}/></button>
                     </div>
                   </div>
                 </div>
@@ -299,75 +308,103 @@ export const RepartoView = () => {
         </div>
 
         {/* DESCUENTO */}
-        <div className="bg-orange-50 rounded-2xl p-4 flex justify-between items-center border border-orange-100">
-           <span className="font-bold text-orange-800 text-sm">Descuento Promocional</span>
-           <div className="relative w-28">
-             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-orange-700 font-bold">$</span>
-             <input type="number" value={descuento} onChange={e => setDescuento(e.target.value)} className="w-full bg-white rounded-xl py-2 pl-7 pr-3 font-bold text-right outline-none" placeholder="0" />
+        <div className="bg-orange-50/80 rounded-3xl p-5 flex justify-between items-center border border-orange-200 shadow-sm">
+           <span className="font-bold text-orange-800 text-base">Descuento Promocional</span>
+           <div className="relative w-32">
+             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-orange-700 font-bold">$</span>
+             <input type="number" value={descuento} onChange={e => setDescuento(e.target.value)} className="w-full bg-white rounded-xl py-3 pl-8 pr-4 font-black text-primary-dark text-right outline-none shadow-inner focus:border-orange-300 border border-transparent" placeholder="0" />
            </div>
         </div>
 
         {/* PAGO Y CALCULADORA */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-          <h3 className="font-bold text-slate-800 mb-3">Método de Pago</h3>
-          <div className="flex space-x-2 mb-5">
-            <button onClick={() => setMetodoPago('efectivo')} className={`flex-1 py-3 flex flex-col items-center rounded-xl border transition-colors ${metodoPago === 'efectivo' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 hover:bg-slate-50'}`}><Banknote size={20}/><span className="text-xs font-semibold mt-1">Efectivo</span></button>
-            <button onClick={() => setMetodoPago('transferencia')} className={`flex-1 py-3 flex flex-col items-center rounded-xl border transition-colors ${metodoPago === 'transferencia' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 hover:bg-slate-50'}`}><CreditCard size={20}/><span className="text-xs font-semibold mt-1">Transf.</span></button>
-            <button onClick={() => {setMetodoPago('cta_corriente'); setMontoCobrado('');}} className={`flex-1 py-3 flex flex-col items-center rounded-xl border transition-colors ${metodoPago === 'cta_corriente' ? 'border-primary bg-primary/5 text-primary' : 'text-slate-500 hover:bg-slate-50'}`}><BookOpen size={20}/><span className="text-xs font-semibold mt-1">Fiado</span></button>
+        <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6">
+          <h3 className="font-bold text-primary-dark text-lg mb-4 tracking-wide">Método de Pago</h3>
+          <div className="flex space-x-3 mb-6">
+            <button onClick={() => setMetodoPago('efectivo')} className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${metodoPago === 'efectivo' ? 'border-primary bg-primary/5 text-primary' : 'border-primary-light/20 text-secondary hover:bg-slate-50'}`}><Banknote size={24}/><span className="text-xs md:text-sm font-bold mt-2">Efectivo</span></button>
+            <button onClick={() => setMetodoPago('transferencia')} className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${metodoPago === 'transferencia' ? 'border-primary bg-primary/5 text-primary' : 'border-primary-light/20 text-secondary hover:bg-slate-50'}`}><CreditCard size={24}/><span className="text-xs md:text-sm font-bold mt-2">Transf.</span></button>
+            <button onClick={() => {setMetodoPago('cta_corriente'); setMontoCobrado('');}} className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${metodoPago === 'cta_corriente' ? 'border-primary bg-primary/5 text-primary' : 'border-primary-light/20 text-secondary hover:bg-slate-50'}`}><BookOpen size={24}/><span className="text-xs md:text-sm font-bold mt-2">Fiado</span></button>
           </div>
 
-          <div className="space-y-2 text-sm text-slate-600 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <div className="flex justify-between"><p>Venta de hoy:</p> <p className="font-bold text-primary">${totalEntregaHoy}</p></div>
-            <div className="flex justify-between"><p>Deuda Anterior:</p> <p>${saldoAnterior}</p></div>
-            <div className="flex justify-between border-t border-slate-200 pt-2 font-bold text-slate-800 text-base"><p>Total a Pagar:</p> <p>${deudaTotal}</p></div>
+          <div className="space-y-3 text-base text-secondary mb-6 bg-slate-50 p-4 md:p-5 rounded-2xl border border-primary-light/20 font-medium">
+            <div className="flex justify-between items-center"><p>Venta de hoy:</p> <p className="font-bold text-primary text-lg">${totalEntregaHoy}</p></div>
+            <div className="flex justify-between items-center"><p>Deuda Anterior:</p> <p className="text-lg">${saldoAnterior}</p></div>
+            <div className="flex justify-between items-center border-t border-primary-light/30 pt-3 mt-1 font-black text-primary-dark text-xl"><p>Total a Pagar:</p> <p>${deudaTotal}</p></div>
           </div>
 
           {metodoPago !== 'cta_corriente' && (
-            <div className="mb-4">
-              <label className="block text-xs font-bold text-slate-500 uppercase mb-2 ml-1">¿Cuánto abona ahora?</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
-                <input type="number" value={montoCobrado} onChange={(e) => setMontoCobrado(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 pl-8 pr-4 text-lg font-bold focus:border-primary outline-none" placeholder="Ej: 5000" />
+            <div className="mb-6 bg-primary/5 p-4 rounded-2xl border border-primary/10">
+              <label className="block text-xs font-bold text-primary-dark uppercase tracking-widest mb-3 ml-1">¿Cuánto abona ahora?</label>
+              <div className="relative mb-3">
+                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-primary font-bold text-xl">$</span>
+                <input type="number" value={montoCobrado} onChange={(e) => setMontoCobrado(e.target.value)} className="w-full bg-white border-2 border-primary-light/30 rounded-2xl py-4 pl-10 pr-4 text-2xl font-black text-primary-dark focus:border-primary outline-none shadow-inner" placeholder="Ej: 5000" />
               </div>
-              <div className="flex gap-2 mt-3">
-                <button onClick={() => setMontoCobrado(totalEntregaHoy.toString())} className="flex-1 text-xs bg-primary/10 text-primary py-2 rounded-lg font-bold">Pagar solo hoy</button>
-                <button onClick={() => setMontoCobrado(deudaTotal > 0 ? deudaTotal.toString() : '0')} className="flex-1 text-xs bg-slate-800 text-white py-2 rounded-lg font-bold">Saldar todo</button>
+              <div className="flex gap-3">
+                <button onClick={() => setMontoCobrado(totalEntregaHoy.toString())} className="flex-1 text-sm bg-white border border-primary-light/30 text-primary-dark py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors shadow-sm">Solo hoy</button>
+                <button onClick={() => setMontoCobrado(deudaTotal > 0 ? deudaTotal.toString() : '0')} className="flex-1 text-sm bg-primary-dark text-white py-3 rounded-xl font-bold hover:bg-primary transition-colors shadow-sm">Saldar todo</button>
               </div>
             </div>
           )}
 
-          <div className={`rounded-xl p-4 flex justify-between items-center border ${nuevoSaldoProyectado > 0 ? 'bg-danger/10 border-danger/20 text-danger' : 'bg-success/10 border-success/20 text-success'}`}>
-            <span className="font-bold text-sm">{nuevoSaldoProyectado > 0 ? 'Queda debiendo:' : 'Saldo a favor:'}</span>
-            <span className="text-xl font-black">${Math.abs(nuevoSaldoProyectado)}</span>
+          <div className={`rounded-2xl p-5 flex justify-between items-center border-2 ${nuevoSaldoProyectado > 0 ? 'bg-danger/10 border-danger/20 text-danger' : 'bg-success/10 border-success/20 text-success'}`}>
+            <span className="font-bold tracking-wide">{nuevoSaldoProyectado > 0 ? 'Queda debiendo:' : 'Saldo a favor:'}</span>
+            <span className="text-2xl font-black">${Math.abs(nuevoSaldoProyectado)}</span>
           </div>
         </div>
 
         {/* BOTONES INFERIORES */}
-        <div className="flex space-x-3 pt-2">
-          <button onClick={() => avanzarOSalir()} className="flex-1 py-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold shadow-sm active:scale-95 transition-transform">Omitir</button>
-          <button onClick={handleConfirmar} disabled={isSubmitting} className="flex-[2] py-4 bg-primary text-white rounded-xl font-bold flex justify-center items-center shadow-md active:scale-95 disabled:opacity-70 transition-transform">
-            {isSubmitting ? 'Guardando...' : <><Check size={18} className="mr-2" strokeWidth={3}/> Confirmar</>}
+        <div className="flex space-x-4 pt-4">
+          <button onClick={() => avanzarOSalir()} className="flex-1 py-5 bg-white border border-primary-light/40 text-secondary rounded-2xl font-bold shadow-sm hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center text-lg">
+            <SkipForward size={20} className="mr-2" /> Omitir
+          </button>
+          <button onClick={handleConfirmar} disabled={isSubmitting} className="flex-[2] py-5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-bold flex justify-center items-center shadow-lg active:scale-95 disabled:opacity-70 transition-all text-xl tracking-wide">
+            {isSubmitting ? 'Guardando...' : <><Check size={24} className="mr-2" strokeWidth={3}/> Confirmar</>}
           </button>
         </div>
 
         {/* PAGINADOR Y AGREGAR AL PASO */}
-        <div className="flex justify-between items-center px-2 py-4 text-sm font-semibold text-slate-400">
-          <button disabled={indiceActual === 0} onClick={() => setIndiceActual(indiceActual - 1)} className="disabled:opacity-30">&lt; Ant</button>
-          <button onClick={abrirModalAgregar} className="flex items-center text-primary bg-primary/10 px-4 py-2 rounded-full font-bold active:scale-95 transition-transform"><UserPlus size={16} className="mr-2"/> Agregar al paso</button>
-          <button disabled={indiceActual === clientesRuta.length - 1} onClick={() => setIndiceActual(indiceActual + 1)} className="disabled:opacity-30">Sig &gt;</button>
+        <div className="flex justify-between items-center px-2 py-6 text-sm font-bold text-secondary">
+          <button disabled={indiceActual === 0} onClick={() => setIndiceActual(indiceActual - 1)} className="disabled:opacity-30 hover:text-primary-dark transition-colors">&lt; Anterior</button>
+          <button onClick={abrirModalAgregar} className="flex items-center text-primary bg-primary/10 px-5 py-2.5 rounded-full font-black active:scale-95 transition-transform border border-primary/20"><UserPlus size={18} className="mr-2"/> Agregar al paso</button>
+          <button disabled={indiceActual === clientesRuta.length - 1} onClick={() => setIndiceActual(indiceActual + 1)} className="disabled:opacity-30 hover:text-primary-dark transition-colors">Siguiente &gt;</button>
         </div>
       </div>
 
-      {/* --- MODALES --- */}
+      {/* --- MODALES CON ESTÉTICA ACTUALIZADA --- */}
       {modalAgregarAbierto && (
-        <div className="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden flex flex-col h-[70vh] shadow-2xl">
-            <div className="p-5 border-b flex justify-between items-center bg-slate-50"><h2 className="font-bold text-slate-800">Visita Excepcional</h2><button onClick={() => setModalAgregarAbierto(false)} className="text-slate-400 bg-white p-1.5 rounded-full shadow-sm"><X size={20}/></button></div>
-            <div className="p-4 space-y-3"><div className="relative"><Search className="absolute left-3 top-3 text-slate-400" size={18}/><input type="text" placeholder="Buscar cliente..." value={busquedaCliente} onChange={e=>setBusquedaCliente(e.target.value)} className="w-full bg-slate-50 border border-slate-200 focus:border-primary outline-none rounded-xl py-2 pl-10 text-slate-700 font-medium"/></div><button onClick={() => setModalFormularioAbierta(true)} className="w-full bg-primary/10 text-primary font-bold py-3 rounded-xl flex justify-center active:scale-95 transition-transform"><UserPlus size={18} className="mr-2"/> Crear Cliente Nuevo</button></div>
-            <div className="overflow-y-auto p-2 flex-1 space-y-1">{clientesFiltrados.map(c => (<button key={c.id} onClick={() => agregarClienteAlPaso(c)} className="w-full text-left p-4 hover:bg-slate-50 border border-transparent hover:border-slate-100 rounded-xl flex justify-between items-center group transition-colors"><div><p className="font-bold text-slate-800">{c.nombre_negocio}</p><p className="text-xs text-slate-500 font-medium">{c.direccion}</p></div><Plus className="text-primary opacity-50 group-hover:opacity-100"/></button>))}</div>
+        <div className="fixed inset-0 bg-primary-dark/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col h-[75vh] shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
+              <h2 className="text-xl font-bold text-primary-dark tracking-wide">Visita Excepcional</h2>
+              <button onClick={() => setModalAgregarAbierto(false)} className="text-secondary hover:text-primary-dark bg-white p-2 rounded-full shadow-sm border border-primary-light/30"><X size={20}/></button>
+            </div>
+            
+            <div className="p-5 space-y-4 bg-slate-50 border-b border-primary-light/20 shrink-0">
+              <div className="relative">
+                <Search className="absolute left-4 top-3.5 text-primary" size={20}/>
+                <input type="text" placeholder="Buscar cliente..." value={busquedaCliente} onChange={e=>setBusquedaCliente(e.target.value)} className="w-full bg-white border-2 border-primary-light/20 focus:border-primary outline-none rounded-2xl py-3 pl-12 pr-4 text-primary-dark font-medium"/>
+              </div>
+              <button onClick={() => setModalFormularioAbierta(true)} className="w-full bg-primary/10 hover:bg-primary/20 text-primary font-bold py-3.5 rounded-2xl flex justify-center active:scale-95 transition-all border border-primary/20">
+                <UserPlus size={20} className="mr-2"/> Crear Cliente Nuevo
+              </button>
+            </div>
+            
+            <div className="overflow-y-auto p-3 flex-1 space-y-2 bg-white scrollbar-thin">
+              {clientesFiltrados.map(c => (
+                <button key={c.id} onClick={() => agregarClienteAlPaso(c)} className="w-full text-left p-4 hover:bg-slate-50 border border-primary-light/10 hover:border-primary/30 rounded-2xl flex justify-between items-center group transition-all">
+                  <div>
+                    <p className="font-bold text-primary-dark text-lg">{c.nombre_negocio}</p>
+                    <p className="text-sm text-secondary font-medium truncate w-56">{c.direccion}</p>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary transition-colors">
+                    <Plus className="text-primary group-hover:text-white" size={18}/>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       )}
+      
       <ClienteModal isOpen={modalFormularioAbierta} onClose={() => setModalFormularioAbierta(false)} onSuccess={(c) => agregarClienteAlPaso(c)} />
     </div>
   );
