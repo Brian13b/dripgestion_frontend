@@ -107,7 +107,6 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <div>
                 <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">PIN Acceso</label>
                 <div className="relative">
-                  {/* Si está editando, mostramos un candado */}
                   {isEditing ? <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" /> : <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />}
                   
                   <input type="text" name="pin_acceso" required={!isEditing} maxLength="4" readOnly={isEditing} value={formData.pin_acceso} onChange={handleChange} 
@@ -129,7 +128,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
 
         {/* Footer */}
         <div className="p-5 border-t border-primary-light/20 bg-background rounded-b-[2rem]">
-          <button type="submit" form="cliente-form" disabled={isLoading} className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-2xl shadow-lg active:scale-95 disabled:opacity-70 transition-colors text-lg tracking-wide">
+          <button type="submit" form="cliente-form" disabled={isLoading} className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 disabled:opacity-70 transition-colors text-lg tracking-wide">
             {isLoading ? 'Guardando...' : 'Guardar Cliente'}
           </button>
         </div>

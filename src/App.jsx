@@ -7,7 +7,6 @@ import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/auth/Login';
 import { ClientesList } from './features/clientes/ClientesList';
 import { RecorridosList } from './features/logistica/RecorridosList';
-import { RecorridoForm } from './features/logistica/RecorridoModal';
 import { RepartoView } from './features/reparto/RepartoView'
 import { ResumenReparto } from './features/reparto/ResumenReparto';
 import { PreciosView } from './features/precios/PreciosView';

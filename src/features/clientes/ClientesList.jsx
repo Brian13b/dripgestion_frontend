@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, MapPin, Phone, Package, DollarSign, Pencil, Trash2, KeyRound } from 'lucide-react';
+import { Search, Plus, MapPin, Phone, Package, DollarSign, Pencil, Trash2, User } from 'lucide-react';
 import api from '../../api/axios';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -96,12 +96,13 @@ export const ClientesList = () => {
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
         <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Clientes</h1>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+              <User size={32} className="mr-3 text-white" />Clientes
+            </h1>
             <p className="text-primary-light font-medium mt-1 tracking-wider">{clientes.length} registrados</p>
           </div>
-          <button onClick={() => abrirModalNuevo()} className="bg-white text-primary hover:bg-primary-light transition-colors py-3 px-5 rounded-2xl flex items-center shadow-sm font-bold text-lg">
-            <Plus size={22} className="md:mr-2" />
-            <span className="hidden md:inline tracking-wider">Nuevo Cliente</span>
+          <button onClick={() => abrirModalNuevo()} className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg">
+            <Plus size={22} className="md:mr-2" /><span className="hidden md:inline tracking-wider">Nuevo Cliente</span>
           </button>
         </div>
 
