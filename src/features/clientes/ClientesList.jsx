@@ -96,7 +96,7 @@ export const ClientesList = () => {
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
         <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-wide flex items-center">
               <User size={32} className="mr-3 text-white" />Clientes
             </h1>
             <p className="text-primary-light font-medium mt-1 tracking-wider">{clientes.length} registrados</p>
