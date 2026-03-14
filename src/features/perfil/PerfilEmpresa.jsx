@@ -38,8 +38,8 @@ export const PerfilEmpresa = () => {
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">{user?.full_name || 'Mi Distribuidora'}</h1>
         <p className="text-primary-light font-medium text-lg mt-2 tracking-wide">{tenant?.nombre || 'Gestión Logística'}</p>
-        <button className="absolute top-8 right-6 md:right-12 text-white/80 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors">
-          <Settings size={28} /> {/* Funcion a futuro: Version 2.0*/}
+        <button onClick={() => navigate('/configuracion')} className="absolute top-8 right-6 md:right-12 text-white/80 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors">
+          <Settings size={28} />
         </button>
       </div>
 

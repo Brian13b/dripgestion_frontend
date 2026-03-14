@@ -14,6 +14,7 @@ import { PreciosView } from './features/precios/PreciosView';
 import { HistorialView } from './features/logistica/HistorialView';
 import { PerfilEmpresa } from './features/perfil/PerfilEmpresa';
 import { PortalClienteView } from './features/portal/PortalClienteView';
+import { ConfiguracionView } from './features/perfil/ConfiguracionView';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
@@ -68,6 +69,7 @@ function AppRoutes() {
         <Route path="/precios" element={<PreciosView />} />
         <Route path="/historial" element={<HistorialView />} />
         <Route path="/perfil" element={<PerfilEmpresa />} />
+        <Route path="/configuracion" element={<ConfiguracionView />} />
       </Route>
 
       {/* Rutas Privadas: CLIENTE */}
