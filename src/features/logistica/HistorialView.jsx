@@ -60,7 +60,7 @@ export const HistorialView = () => {
               <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
                 Auditoría de Caja
               </h1>
-              <p className="text-primary-light font-medium mt-1 tracking-wider">
+              <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">
                 Control Financiero
               </p>
             </div>
