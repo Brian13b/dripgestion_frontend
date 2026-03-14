@@ -26,14 +26,17 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (username, password) => {
+  const login = async (username, password, tenantId) => {
     try {
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
 
       const response = await api.post('/auth/login/access-token', formData, {
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Tenant-ID': tenantId 
+        }
       });
 
       const { access_token } = response.data;
