@@ -1,22 +1,45 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../../context/TenantContext';
-import { ArrowLeft, Store, Palette, Shield, Save, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Store, Palette, Shield, Save, Image as ImageIcon, Type } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { tenantService } from '../../api/tenantService';
 
 export const ConfiguracionView = () => {
   const navigate = useNavigate();
   const tenant = useTenant();
   const [activeTab, setActiveTab] = useState('general');
+  const [isSaving, setIsSaving] = useState(false);
 
   const [formData, setFormData] = useState({
     nombre: tenant?.nombre || '',
     whatsapp: tenant?.whatsapp || '',
-    colorPrimario: tenant?.color_primario || '#2563eb',
+    font_sans: tenant?.font_sans || "'Inter', sans-serif",
+    color_primario: tenant?.color_primario || '#25A7DA',
+    color_primario_light: tenant?.color_primario_light || '#00ACC1',
+    color_primario_dark: tenant?.color_primario_dark || '#0C4A6E',
+    color_background: tenant?.color_background || '#F0FDFA',
+    color_success: tenant?.color_success || '#10b981',
+    color_danger: tenant?.color_danger || '#ef4444',
+    color_secondary: tenant?.color_secondary || '#64748b',
   });
 
-  const handleGuardar = () => {
-    toast.success('Configuración guardada exitosamente');
+  const handleGuardar = async () => {
+    setIsSaving(true);
+    try {
+      await tenantService.updateConfig(formData);
+      toast.success('Configuración guardada exitosamente');
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al guardar la configuración');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const tabs = [
@@ -25,18 +48,28 @@ export const ConfiguracionView = () => {
     { id: 'seguridad', name: 'Seguridad', icon: Shield },
   ];
 
+  const coloresConfig = [
+    { key: 'color_primario', label: 'Primario (Botones y Navbar)' },
+    { key: 'color_primario_light', label: 'Primario Claro (Detalles)' },
+    { key: 'color_primario_dark', label: 'Primario Oscuro (Textos Titulares)' },
+    { key: 'color_background', label: 'Fondo General (Background)' },
+    { key: 'color_success', label: 'Éxito (Verde)' },
+    { key: 'color_danger', label: 'Peligro (Rojo)' },
+    { key: 'color_secondary', label: 'Secundario (Gris)' },
+  ];
+
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       
       {/* HEADER */}
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="sticky top-0 z-20 pt-4 md:pt-6 px-4 md:px-8">
+        <div className="max-w-7xl mx-auto bg-primary-dark text-white p-5 md:px-10 md:py-6 rounded-[2rem] shadow-2xl border-b-4 border-primary flex justify-between items-center transition-all">
           <div className="flex items-center">
             <button onClick={() => navigate(-1)} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
               <ArrowLeft size={28} />
             </button>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Configuración</h1>
+              <h1 className="text-2xl md:text-4xl font-black tracking-wide">Configuración</h1>
               <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Ajustes del Sistema</p>
             </div>
           </div>
@@ -69,6 +102,7 @@ export const ConfiguracionView = () => {
         </div>
 
         <div className="flex-1 bg-white p-6 md:p-10 rounded-3xl shadow-sm border border-primary-light/20">          
+          
           {/* GENERAL */}
           {activeTab === 'general' && (
             <div className="space-y-6 animate-in fade-in duration-300">
@@ -89,7 +123,7 @@ export const ConfiguracionView = () => {
 
           {/* APARIENCIA */}
           {activeTab === 'apariencia' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="space-y-8 animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Palette className="mr-3 text-primary"/> Branding Visual</h2>
               
               <div className="p-5 bg-slate-50 border border-primary-light/30 rounded-3xl flex flex-col md:flex-row items-center gap-6 max-w-xl">
@@ -99,15 +133,46 @@ export const ConfiguracionView = () => {
                 <div className="flex-1 text-center md:text-left">
                   <p className="font-bold text-primary-dark mb-1 tracking-wide">Logo de la App</p>
                   <p className="text-sm text-secondary mb-3">Se mostrará en el login y en el portal del cliente.</p>
-                  <button className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm text-sm">Subir Nueva Imagen</button>
+                  <button className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm text-sm">Próximamente</button>
                 </div>
               </div>
 
-              <div className="max-w-lg mt-6">
-                <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-3">Color Primario</label>
-                <div className="flex items-center gap-4">
-                  <input type="color" value={formData.colorPrimario} onChange={(e) => setFormData({...formData, colorPrimario: e.target.value})} className="w-16 h-16 rounded-xl cursor-pointer border-0 p-0" />
-                  <input type="text" value={formData.colorPrimario} onChange={(e) => setFormData({...formData, colorPrimario: e.target.value})} className="flex-1 p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-bold text-lg outline-none uppercase" />
+              <div className="max-w-xl">
+                <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-3 flex items-center"><Type size={18} className="mr-2"/> Tipografía Principal</label>
+                <select 
+                  value={formData.font_sans} 
+                  onChange={(e) => setFormData({...formData, font_sans: e.target.value})} 
+                  className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-bold text-lg outline-none cursor-pointer"
+                >
+                  <option value="'Inter', sans-serif">Inter (Moderna y Limpia)</option>
+                  <option value="'Poppins', sans-serif">Poppins (Redondeada y Amigable)</option>
+                  <option value="'Roboto', sans-serif">Roboto (Corporativa y Clásica)</option>
+                  <option value="'Nunito', sans-serif">Nunito (Suave y Atractiva)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-4 border-b border-primary-light/20 pb-2">Paleta de Colores</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
+                  {coloresConfig.map((color) => (
+                    <div key={color.key} className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20">
+                      <label className="block text-xs font-bold text-secondary mb-2">{color.label}</label>
+                      <div className="flex items-center gap-3">
+                        <input 
+                          type="color" 
+                          value={formData[color.key]} 
+                          onChange={(e) => setFormData({...formData, [color.key]: e.target.value})} 
+                          className="w-12 h-12 rounded-xl cursor-pointer border-0 p-0 shadow-sm shrink-0" 
+                        />
+                        <input 
+                          type="text" 
+                          value={formData[color.key]} 
+                          onChange={(e) => setFormData({...formData, [color.key]: e.target.value})} 
+                          className="flex-1 p-2.5 rounded-xl border border-primary-light/30 focus:border-primary text-primary-dark font-bold outline-none uppercase text-sm" 
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -118,13 +183,12 @@ export const ConfiguracionView = () => {
             <div className="space-y-6 animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Shield className="mr-3 text-primary"/> Seguridad de Cuenta</h2>
               <div className="space-y-5 max-w-lg">
+                <p className="text-sm text-secondary bg-primary/10 p-4 rounded-xl font-medium">
+                  El cambio de contraseña estará disponible en la próxima actualización.
+                </p>
                 <div>
-                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Nueva Contraseña</label>
-                  <input type="password" placeholder="••••••••" className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Repetir Contraseña</label>
-                  <input type="password" placeholder="••••••••" className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" />
+                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2 opacity-50">Nueva Contraseña</label>
+                  <input disabled type="password" placeholder="••••••••" className="w-full p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 text-secondary font-black tracking-widest text-lg outline-none opacity-50 cursor-not-allowed" />
                 </div>
               </div>
             </div>
@@ -132,8 +196,12 @@ export const ConfiguracionView = () => {
 
           {/* BOTÓN GUARDAR */}
           <div className="mt-10 pt-6 border-t border-primary-light/20 flex justify-end">
-            <button onClick={handleGuardar} className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all active:scale-95 text-lg flex items-center justify-center tracking-wide">
-              <Save size={24} className="mr-2" /> Guardar Cambios
+            <button 
+              onClick={handleGuardar} 
+              disabled={isSaving}
+              className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all active:scale-95 text-lg flex items-center justify-center tracking-wide disabled:opacity-70"
+            >
+              {isSaving ? 'Guardando...' : <><Save size={24} className="mr-2" /> Guardar Cambios</>}
             </button>
           </div>
 
