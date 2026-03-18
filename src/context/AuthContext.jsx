@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import { authService } from '../api/authService';
 
 export const AuthContext = createContext();
 
@@ -14,8 +14,8 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await api.get('/auth/me');
-          setUser(response.data);
+          const userData = await authService.getMe();
+          setUser(userData);
         } catch (error) {
           console.error("Token inválido o expirado");
           localStorage.removeItem('token');
@@ -28,34 +28,21 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password, tenantId) => {
     try {
-      const formData = new URLSearchParams();
-      formData.append('username', username);
-      formData.append('password', password);
-
-      const response = await api.post('/auth/login/access-token', formData, {
-        headers: { 
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-Tenant-ID': tenantId 
-        }
-      });
-
-      const { access_token } = response.data;
+      const { access_token } = await authService.login(username, password, tenantId);
       localStorage.setItem('token', access_token);
+
+      const userData = await authService.getMe();
+      setUser(userData);
       
-      const userResponse = await api.get('/auth/me', {
-        headers: { Authorization: `Bearer ${access_token}` }
-      });
-      
-      setUser(userResponse.data);
-      
-      if (userResponse.data.role === 'cliente') {
+      if (userData.role?.toUpperCase() === 'CLIENTE') {
         navigate('/mi-portal');
       } else {
         navigate('/dashboard');
       }
       return { success: true };
+
     } catch (error) {
-      return { success: false, error: "Credenciales incorrectas" };
+      return { success: false, error: "Credenciales incorrectas para esta empresa" };
     }
   };
 

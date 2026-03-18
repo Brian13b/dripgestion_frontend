@@ -4,12 +4,15 @@ import { useTenant } from '../../context/TenantContext';
 import { ArrowLeft, Store, Palette, Shield, Save, Image as ImageIcon, Type } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { tenantService } from '../../api/tenantService';
+import { authService } from '../../api/authService'
 
 export const ConfiguracionView = () => {
   const navigate = useNavigate();
   const tenant = useTenant();
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   const [formData, setFormData] = useState({
     nombre: tenant?.nombre || '',
@@ -62,14 +65,14 @@ export const ConfiguracionView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       
       {/* HEADER */}
-      <div className="sticky top-0 z-20 pt-4 md:pt-6 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto bg-primary-dark text-white p-5 md:px-10 md:py-6 rounded-[2rem] shadow-2xl border-b-4 border-primary flex justify-between items-center transition-all">
+      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
           <div className="flex items-center">
             <button onClick={() => navigate(-1)} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
               <ArrowLeft size={28} />
             </button>
             <div>
-              <h1 className="text-2xl md:text-4xl font-black tracking-wide">Configuración</h1>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Configuración</h1>
               <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Ajustes del Sistema</p>
             </div>
           </div>
@@ -182,14 +185,45 @@ export const ConfiguracionView = () => {
           {activeTab === 'seguridad' && (
             <div className="space-y-6 animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Shield className="mr-3 text-primary"/> Seguridad de Cuenta</h2>
+              
               <div className="space-y-5 max-w-lg">
-                <p className="text-sm text-secondary bg-primary/10 p-4 rounded-xl font-medium">
-                  El cambio de contraseña estará disponible en la próxima actualización.
-                </p>
                 <div>
-                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2 opacity-50">Nueva Contraseña</label>
-                  <input disabled type="password" placeholder="••••••••" className="w-full p-4 rounded-2xl border-2 border-slate-200 bg-slate-50 text-secondary font-black tracking-widest text-lg outline-none opacity-50 cursor-not-allowed" />
+                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Contraseña Actual</label>
+                  <input 
+                    type="password" 
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Tu contraseña actual" 
+                    className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" 
+                  />
                 </div>
+                <div>
+                  <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Nueva Contraseña</label>
+                  <input 
+                    type="password" 
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Mínimo 6 caracteres" 
+                    className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" 
+                  />
+                </div>
+                
+                <button 
+                  onClick={async () => {
+                    if(!currentPassword || !newPassword) return toast.error("Completá ambos campos");
+                    try {
+                      await authService.changePassword(currentPassword, newPassword);
+                      toast.success("Contraseña actualizada con éxito");
+                      setCurrentPassword('');
+                      setNewPassword('');
+                    } catch (error) {
+                      toast.error("Contraseña actual incorrecta");
+                    }
+                  }}
+                  className="mt-2 bg-primary-dark hover:bg-primary text-white font-bold py-3 px-6 rounded-xl transition-all shadow-sm active:scale-95"
+                >
+                  Actualizar Contraseña
+                </button>
               </div>
             </div>
           )}
