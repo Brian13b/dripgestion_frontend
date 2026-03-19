@@ -40,11 +40,11 @@ export const PortalClienteView = () => {
       <div className="bg-primary-dark w-full pt-12 pb-10 shadow-lg rounded-b-[40px] relative text-center">
         <div className="max-w-2xl mx-auto px-5">
           <button onClick={logout} className="absolute top-6 right-6 text-white/60 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors"><LogOut size={24} /></button>
-          <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border border-white/20 overflow-hidden shadow-inner">
+          <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border-2 border-white/20 overflow-hidden shadow-inner shrink-0">
             {tenant?.logo_url ? (
               <img src={tenant.logo_url} alt="Empresa" className="w-full h-full object-contain p-2" />
             ) : (
-              <Droplet size={32} className="text-primary" />
+              <Droplet size={32} className="text-primary opacity-50" />
             )}
           </div>
           <h1 className="text-sm font-bold text-primary-light uppercase tracking-widest mb-2">Mi Cuenta en {tenant?.nombre}</h1>

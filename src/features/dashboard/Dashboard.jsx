@@ -47,15 +47,15 @@ export const Dashboard = () => {
       {/* Header */}
       <div className="bg-primary-dark px-5 md:px-12 lg:px-20 pt-12 pb-8 md:pb-12 mb-8 shadow-md border-b-4 border-primary rounded-b-4xl">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center text-primary font-black text-4xl tracking-tight mb-4">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center mr-3">
+          <div className="flex items-center text-primary font-black text-3xl md:text-4xl tracking-tight mb-4">
+            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mr-3 shrink-0 overflow-hidden shadow-sm border border-primary/10">
               {tenant?.logo_url ? (
-                <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-1" />
+                <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-1.5" />
               ) : (
-                <Droplet size={36}/> 
+                <Droplet size={24} className="text-primary"/> 
               )} 
             </div>
-              {tenant?.nombre || 'Gestion'}
+            <span className="truncate">{tenant?.nombre || 'Gestión'}</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Buenos días, {user?.full_name.split(' ')[0]}</h1>
           <p className="text-white font-medium text-md mt-2">Resumen operativo de {tenant?.nombre}</p>

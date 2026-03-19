@@ -29,11 +29,11 @@ export const PerfilEmpresa = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       <div className="bg-primary-dark px-5 pt-16 pb-12 text-center relative mx-auto shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="w-28 h-28 bg-white rounded-full mx-auto mb-5 flex items-center justify-center shadow-xl border-4 border-white/20">
+        <div className="w-28 h-28 bg-white rounded-full mx-auto mb-5 flex items-center justify-center shadow-xl border-4 border-white/20 overflow-hidden shrink-0">
           {tenant?.logo_url ? (
             <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-2" />
           ) : (
-            <Store size={48} className="text-primary" />
+            <Store size={40} className="text-primary" />
           )}
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">{user?.full_name || 'Mi Distribuidora'}</h1>
