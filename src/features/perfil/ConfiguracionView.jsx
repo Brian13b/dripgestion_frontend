@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../../context/TenantContext';
 import { ArrowLeft, Store, Palette, Shield, Save, Image as ImageIcon, Type } from 'lucide-react';
