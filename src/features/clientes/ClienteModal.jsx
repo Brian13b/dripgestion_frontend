@@ -110,30 +110,24 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
             </div>
 
             {/* Seccion Fiscal */}
-            <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10 space-y-4">
-              <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">Información Fiscal</p>
-              
-              <div className="grid grid-cols-1 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">CUIT (Sin guiones)</label>
-                  <div className="relative">
-                    <FileText size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                    <input type="text" name="cuit" maxLength="11" placeholder="20334445556" value={formData.cuit} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark" />
-                  </div>
-                </div>
+            <div>
+              <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">CUIT (Sin guiones)</label>
+              <div className="relative">
+                <FileText size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+                <input type="text" name="cuit" maxLength="11" placeholder="20334445556" value={formData.cuit} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark" />
+              </div>
+            </div>
 
-                <div>
-                  <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Condición IVA</label>
-                  <div className="relative">
-                    <CheckCircle size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                    <select name="condicion_iva" value={formData.condicion_iva} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark appearance-none">
-                      <option value="Consumidor Final">Consumidor Final</option>
-                      <option value="Monotributista">Monotributista</option>
-                      <option value="Responsable Inscripto">Responsable Inscripto</option>
-                      <option value="Exento">Exento</option>
-                    </select>
-                  </div>
-                </div>
+            <div>
+              <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Condición IVA</label>
+              <div className="relative">
+                <CheckCircle size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+                <select name="condicion_iva" value={formData.condicion_iva} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark appearance-none">
+                  <option value="Consumidor Final">Consumidor Final</option>
+                  <option value="Monotributista">Monotributista</option>
+                  <option value="Responsable Inscripto">Responsable Inscripto</option>
+                  <option value="Exento">Exento</option>
+                </select>
               </div>
             </div>
 
