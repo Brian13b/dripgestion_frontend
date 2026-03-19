@@ -13,6 +13,8 @@ export const ConfiguracionView = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     nombre: tenant?.nombre || '',
@@ -26,6 +28,33 @@ export const ConfiguracionView = () => {
     color_danger: tenant?.color_danger || '#ef4444',
     color_secondary: tenant?.color_secondary || '#64748b',
   });
+
+  const handleLogoUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Por favor, seleccioná un archivo de imagen válido');
+      return;
+    }
+
+    setIsUploadingLogo(true);
+    try {
+      await tenantService.uploadLogo(file);
+      toast.success('Logo actualizado con éxito');
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al subir el logo a la nube');
+    } finally {
+      setIsUploadingLogo(false);
+      if (fileInputRef.current) fileInputRef.current.value = ''; 
+    }
+  };
 
   const handleGuardar = async () => {
     setIsSaving(true);
@@ -136,7 +165,20 @@ export const ConfiguracionView = () => {
                 <div className="flex-1 text-center md:text-left">
                   <p className="font-bold text-primary-dark mb-1 tracking-wide">Logo de la App</p>
                   <p className="text-sm text-secondary mb-3">Se mostrará en el login y en el portal del cliente.</p>
-                  <button className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm text-sm">Próximamente</button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleLogoUpload} 
+                    accept="image/*" 
+                    className="hidden" 
+                  />
+                  <button 
+                    onClick={() => fileInputRef.current?.click()} 
+                    disabled={isUploadingLogo}
+                    className="bg-primary hover:bg-primary-dark text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm text-sm disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isUploadingLogo ? 'Subiendo...' : 'Subir Nueva Imagen'}
+                  </button>
                 </div>
               </div>
 
