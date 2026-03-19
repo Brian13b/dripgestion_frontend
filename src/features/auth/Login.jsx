@@ -52,15 +52,15 @@ export const Login = () => {
       
       {/* Lado Izquierdo */}
       <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-[40px] md:rounded-none md:rounded-r-[60px] z-10">
-        <div className="w-32 h-32 md:w-40 md:h-40 bg-white/20 rounded-full backdrop-blur-sm mb-6 border border-white/30 flex items-center justify-center overflow-hidden shrink-0 mx-auto shadow-lg">
+        <div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full mb-6 border-4 border-white/30 flex items-center justify-center overflow-hidden shrink-0 mx-auto shadow-xl">
           {tenant?.logo_url ? (
             <img 
               src={tenant.logo_url} 
               alt={`Logo de ${tenant.nombre}`} 
-              className="w-full h-full object-contain object-center drop-shadow-md p-4"
+              className="w-full h-full object-contain p-2" 
             />
           ) : (
-            <Droplet size={56} className="text-white fill-white/20" strokeWidth={1.5} />
+            <Droplet size={56} className="text-primary" strokeWidth={1.5} />
           )}
         </div>
         <h1 className="text-5xl md:text-7xl font-black mb-2 tracking-tight text-center">
