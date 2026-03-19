@@ -18,13 +18,17 @@ import { ConfiguracionView } from './features/perfil/ConfiguracionView';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
-const RequireEmpresa = () => {
+const RequireEmpresa = ({ adminOnly = false }) => {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role?.toLowerCase() === 'cliente') return <Navigate to="/mi-portal" replace />;
+  
+  const role = user.role?.toLowerCase();
+  if (role === 'cliente') return <Navigate to="/mi-portal" replace />;
+  
+  if (adminOnly && role === 'repartidor') return <Navigate to="/dashboard" replace />;
   
   return (
-    <div className="min-h-screen bg-background text-primary-dark pb-20 md:pb-24 selection:bg-primary-light selection:text-primary-dark overflow-x-hidden">
+    <div className="min-h-screen bg-background text-primary-dark pb-20 md:pb-24 overflow-x-hidden">
       <Outlet />
       <BottomNav />
     </div>
@@ -72,6 +76,13 @@ function AppRoutes() {
         <Route path="/configuracion" element={<ConfiguracionView />} />
       </Route>
 
+      <Route element={<RequireEmpresa adminOnly={true} />}>
+        <Route path="/precios" element={<PreciosView />} />
+        <Route path="/configuracion" element={<ConfiguracionView />} />
+        <Route path="/recorridos/nuevo" element={<RecorridoModal />} />
+        <Route path="/recorridos/editar/:id" element={<RecorridoModal />} />
+      </Route>
+      
       {/* Rutas Privadas: CLIENTE */}
       <Route element={<RequireCliente />}>
         <Route path="/mi-portal" element={<PortalClienteView />} />

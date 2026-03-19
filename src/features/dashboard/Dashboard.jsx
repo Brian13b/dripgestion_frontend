@@ -34,6 +34,7 @@ const ActionButton = ({ label, primary = false, onClick }) => (
 
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
+  const isAltRole = user?.role?.toLowerCase() === 'repartidor';
   const tenant = useTenant();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ clientes_activos: 0, total_envases: 0, saldos_pendientes: 0, recaudacion_hoy: 0 });
@@ -66,8 +67,12 @@ export const Dashboard = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           <StatCard title="Clientes Activos" value={stats.clientes_activos} icon={Users} />
           <StatCard title="Recaudación" value={`$${stats.recaudacion_hoy}`} icon={DollarSign} isPrimary />
-          <StatCard title="Envases Calle" value={stats.total_envases} subtext="Total prestados" icon={Package} />
-          <StatCard title="Saldos Pend." value={`$${stats.saldos_pendientes}`} icon={TrendingUp} />
+          {!isAltRole && (
+            <>
+              <StatCard title="Recaudación" value={`$${stats.recaudacion_hoy}`} icon={DollarSign} isPrimary />
+              <StatCard title="Saldos Pend." value={`$${stats.saldos_pendientes}`} icon={TrendingUp} />
+            </>
+          )}
         </div>
 
         <div className="mt-8 pt-4 border-t border-primary-light/20">
