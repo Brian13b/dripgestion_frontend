@@ -9,54 +9,36 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      if (token) {
-        try {
-          const userData = await authService.getMe();
-          setUser(userData);
-        } catch (error) {
-          console.error("Token inválido o expirado");
-          localStorage.removeItem('token');
-        }
+  const checkAuth = async () => {
+    const token = authService.getToken();
+    if (token) {
+      try {
+        const userData = await authService.getMe();
+        setUser(userData);
+      } catch (error) {
+        authService.logout();
       }
-      setLoading(false);
-    };
-    checkAuth();
-  }, []);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => { checkAuth(); }, []);
 
   const login = async (username, password, tenantId) => {
-    try {
-      const { access_token } = await authService.login(username, password, tenantId);
-      localStorage.setItem('token', access_token);
-
-      const userData = await authService.getMe();
-      setUser(userData);
-      
-      if (userData.role?.toUpperCase() === 'CLIENTE') {
-        navigate('/mi-portal');
-      } else {
-        navigate('/dashboard');
-      }
-      return { success: true };
-
-    } catch (error) {
-      return { success: false, error: "Credenciales incorrectas para esta empresa" };
-    }
+    const data = await authService.login(username, password, tenantId);
+    const userData = await authService.getMe();
+    setUser(userData);
+    return userData;
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    authService.logout();
     setUser(null);
-    navigate('/login');
   };
 
-  if (loading) return <div className="flex h-screen items-center justify-center">Cargando Arlestin...</div>;
-
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ user, loading, login, logout, checkAuth }}>
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

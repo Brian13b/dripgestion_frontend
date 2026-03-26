@@ -25,19 +25,21 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); setIsLoading(true);
     setIsLoading(true);
 
-    if (!tenant || !tenant.id) {
-      setError("Error de conexión con la empresa.");
+    try {
+      const userData = await login(username, password, tenant.id);
+      
+      if (userData.role?.toLowerCase() === 'cliente') {
+        navigate('/mi-portal');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      setError("Credenciales incorrectas");
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const result = await login(username, password, tenant.id);
-    
-    if (!result.success) setError(result.error);
-    setIsLoading(false);
   };
 
   const handlePedirPorWhatsApp = () => {
