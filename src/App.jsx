@@ -15,6 +15,7 @@ import { HistorialView } from './features/logistica/HistorialView';
 import { PerfilEmpresa } from './features/perfil/PerfilEmpresa';
 import { PortalClienteView } from './features/portal/PortalClienteView';
 import { ConfiguracionView } from './features/perfil/ConfiguracionView';
+import { EquipoView } from './features/perfil/EquipoView';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
