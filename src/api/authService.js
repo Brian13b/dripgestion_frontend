@@ -10,7 +10,6 @@ export const authService = {
       headers: { 'X-Tenant-ID': tenantId }
     });
     
-    // El service se encarga de guardar el token
     if (response.data.access_token) {
       localStorage.setItem('token', response.data.access_token);
     }

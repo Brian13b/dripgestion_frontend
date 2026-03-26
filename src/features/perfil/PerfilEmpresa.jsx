@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
-import { Store, Clock, Tag, LogOut, ChevronRight, Settings } from 'lucide-react';
+import { Store, Clock, Tag, LogOut, ChevronRight, Settings, Users } from 'lucide-react';
 
 export const PerfilEmpresa = () => {
   const { user, logout } = useContext(AuthContext);
@@ -49,6 +49,7 @@ export const PerfilEmpresa = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <MenuItem icon={Clock} title="Cierre Diario" subtitle="Historial de ventas y cobros" onClick={() => navigate('/historial')} />
             <MenuItem icon={Tag} title="Lista de Precios" subtitle="Configurar catálogo y valores" onClick={() => navigate('/precios')} />
+            <MenuItem icon={Users} title="Mi Equipo" subtitle="Gestionar repartidores y permisos" onClick={() => navigate('/equipo')} />
           </div>
         </div>
 

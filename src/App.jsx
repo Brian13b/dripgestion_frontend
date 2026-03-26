@@ -81,6 +81,7 @@ function AppRoutes() {
         <Route path="/configuracion" element={<ConfiguracionView />} />
         <Route path="/recorridos/nuevo" element={<RecorridoModal />} />
         <Route path="/recorridos/editar/:id" element={<RecorridoModal />} />
+        <Route path="/equipo" element={<EquipoView />} />
       </Route>
       
       {/* Rutas Privadas: CLIENTE */}
