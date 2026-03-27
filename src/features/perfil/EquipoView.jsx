@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, UserPlus, Trash2, Shield, Truck, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Shield, Truck, Pencil } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../api/userService';
 import { UsuarioModal } from './UsuarioModal';
