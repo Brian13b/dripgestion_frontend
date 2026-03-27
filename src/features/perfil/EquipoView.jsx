@@ -54,7 +54,9 @@ export const EquipoView = () => {
             <button onClick={() => navigate('/perfil')} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
               <ArrowLeft size={28} />
             </button>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Mi Equipo</h1>
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Mi Equipo</h1>
+            </div>
           </div>
           <button onClick={handleNuevo} className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg">
             <Plus size={22} className="md:mr-2" /><span className="hidden md:inline tracking-wider">Nuevo Usuario</span>
