@@ -50,7 +50,7 @@ export const EquipoView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
         <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
-          <div >
+          <div className="flex items-center" >
             <button onClick={() => navigate('/perfil')} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
               <ArrowLeft size={28} />
             </button>
