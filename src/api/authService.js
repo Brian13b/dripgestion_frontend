@@ -2,12 +2,16 @@ import api from './axios';
 
 export const authService = {
   login: async (username, password, tenantId) => {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
 
-    const response = await api.post('/auth/login/access-token', formData, {
-      headers: { 'X-Tenant-ID': tenantId }
+    const params = new URLSearchParams();
+    params.append('username', username);
+    params.append('password', password);
+
+    const response = await api.post('/auth/login/access-token', params, {
+      headers: { 
+        'X-Tenant-ID': tenantId, 
+        'Content-Type': 'application/x-www-form-urlencoded' 
+      }
     });
     
     if (response.data.access_token) {

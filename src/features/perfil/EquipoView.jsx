@@ -47,20 +47,21 @@ export const EquipoView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="bg-white p-6 shadow-sm flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-4">
-          <button onClick={() => navigate('/perfil')} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
-            <ArrowLeft />
+    <div className="min-h-screen bg-background pb-24 font-sans">
+      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
+          <div className="flex items-center">
+            <button onClick={() => navigate('/perfil')} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
+              <ArrowLeft size={28} />
+            </button>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Mi Equipo</h1>
+          </div>
+          <button onClick={handleNuevo} className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg">
+            <Plus size={22} className="md:mr-2" /><span className="hidden md:inline tracking-wider">Nuevo Usuario</span>
           </button>
-          <h1 className="text-2xl font-black text-primary-dark">Mi Equipo</h1>
         </div>
-        <button 
-          onClick={handleNuevo}
-          className="bg-primary text-white p-3 rounded-2xl shadow-lg active:scale-95 transition-transform"
-        >
-          <UserPlus size={24} />
-        </button>
+
+        
       </div>
 
       <div className="max-w-4xl mx-auto p-5 space-y-4">
@@ -77,7 +78,7 @@ export const EquipoView = () => {
               </div>
               <div>
                 <p className="font-bold text-primary-dark text-lg leading-tight">{miembro.full_name}</p>
-                <p className="text-sm text-secondary font-medium">@{miembro.username} • <span className="capitalize">{miembro.role}</span></p>
+                <p className="text-sm text-secondary font-medium">{miembro.username} • <span className="capitalize">{miembro.role}</span></p>
               </div>
             </div>
             
