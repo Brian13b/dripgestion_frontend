@@ -49,8 +49,8 @@ export const EquipoView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
-          <div className="flex items-center">
+        <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
+          <div >
             <button onClick={() => navigate('/perfil')} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
               <ArrowLeft size={28} />
             </button>
@@ -60,8 +60,6 @@ export const EquipoView = () => {
             <Plus size={22} className="md:mr-2" /><span className="hidden md:inline tracking-wider">Nuevo Usuario</span>
           </button>
         </div>
-
-        
       </div>
 
       <div className="max-w-4xl mx-auto p-5 space-y-4">
