@@ -24,5 +24,10 @@ export const userService = {
   eliminarUsuario: async (userId) => {
     const response = await api.delete(`/users/${userId}`);
     return response.data;
+  },
+
+  logoutAllDevices: async (userId) => {
+    const response = await api.post(`/users/${userId}/logout-all`);
+    return response.data;
   }
 };

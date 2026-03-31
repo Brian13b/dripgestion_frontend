@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Plus, Trash2, Shield, Truck, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Shield, Truck, Pencil, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '../../api/userService';
 import { UsuarioModal } from './UsuarioModal';
@@ -46,6 +46,16 @@ export const EquipoView = () => {
     }
   };
 
+  const handleLogoutRemoto = async (id, nombre) => {
+    if (!window.confirm(`¿Estás seguro que querés cerrar todas las sesiones activas de ${nombre}?`)) return;
+    try {
+      await userService.logoutAllDevices(id);
+      toast.success(`Sesiones de ${nombre} cerradas correctamente`);
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "No se pudo cerrar la sesión");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
@@ -83,6 +93,13 @@ export const EquipoView = () => {
             </div>
             
             <div className="flex gap-2">
+              <button 
+                onClick={() => handleLogoutRemoto(miembro.id, miembro.full_name || miembro.username)} 
+                title="Cerrar todas sus sesiones"
+                className="p-3 text-secondary hover:bg-secondary/10 rounded-2xl transition-colors"
+              >
+                <LogOut size={20} />
+              </button>
               <button 
                 onClick={() => handleEditar(miembro.id)} 
                 className="p-3 text-primary hover:bg-primary-light/10 rounded-2xl transition-colors"
