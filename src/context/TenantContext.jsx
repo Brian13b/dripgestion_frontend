@@ -16,7 +16,7 @@ export const TenantProvider = ({ children }) => {
         let subdominio = hostname.split('.')[0];
         
         if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'dripgestion.vercel.app') {
-          subdominio = 'arlestin';
+          subdominio = import.meta.env.VITE_DEFAULT_TENANT || 'demo';
         }
 
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';

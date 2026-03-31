@@ -5,39 +5,45 @@ import { recorridoService } from '../../api/recorridoService';
 import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService';
 import { ClienteModal } from '../clientes/ClienteModal';
+import { useTenant } from '../../context/TenantContext';
 import toast from 'react-hot-toast';
 
 export const RepartoView = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const tenant = useTenant();
   
-  // --- MAGIA 1: Recuperar el estado guardado si existe (para no perder el viaje) ---
-  const [clientesRuta, setClientesRuta] = useState(() => {
-    const guardado = localStorage.getItem('arlestin_viaje_activo');
-    if (guardado) {
-      const viaje = JSON.parse(guardado);
-      if (viaje.recorridoId === id) return viaje.clientesRuta;
+  const STORAGE_KEY = `t_${tenant?.id || 'default'}_viaje_activo`;
+
+  const TIEMPO_EXPIRACION = 20 * 60 * 60 * 1000;
+
+  const cargarViajeLocal = () => {
+    const guardado = localStorage.getItem(STORAGE_KEY);
+    if (!guardado) return null;
+    
+    const viaje = JSON.parse(guardado);
+    const tiempoGuardado = viaje.timestamp || 0;
+    const ahora = new Date().getTime();
+    
+    if (ahora - tiempoGuardado > TIEMPO_EXPIRACION) {
+       localStorage.removeItem(STORAGE_KEY);
+       return null;
     }
-    return location.state?.clientesActivos || [];
-  });
+    
+    if (viaje.recorridoId === id) return viaje;
+    
+    return null; 
+  };
 
   const [indiceActual, setIndiceActual] = useState(() => {
-    const guardado = localStorage.getItem('arlestin_viaje_activo');
-    if (guardado) {
-      const viaje = JSON.parse(guardado);
-      if (viaje.recorridoId === id) return viaje.indiceActual;
-    }
-    return 0;
+    const viajeValido = cargarViajeLocal();
+    return viajeValido ? viajeValido.indiceActual : 0;
   });
 
   const [resumenViaje, setResumenViaje] = useState(() => {
-    const guardado = localStorage.getItem('arlestin_viaje_activo');
-    if (guardado) {
-      const viaje = JSON.parse(guardado);
-      if (viaje.recorridoId === id) return viaje.resumenViaje;
-    }
-    return { efectivo: 0, transferencia: 0, fiado: 0, productos: {} };
+    const viajeValido = cargarViajeLocal();
+    return viajeValido ? viajeValido.resumenViaje : { efectivo: 0, transferencia: 0, fiado: 0, productos: {} };
   });
 
   const clienteActual = clientesRuta[indiceActual];
@@ -78,17 +84,17 @@ export const RepartoView = () => {
     fetchClienteFresco();
   }, [indiceActual]);
 
-  // --- MAGIA 2: Autoguardado silencioso cada vez que avanzás ---
   useEffect(() => {
-    if (clientesRuta.length > 0) {
-      localStorage.setItem('arlestin_viaje_activo', JSON.stringify({
+    if (clientesRuta && clientesRuta.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
         recorridoId: id,
         clientesRuta,
         indiceActual,
-        resumenViaje
+        resumenViaje,
+        timestamp: new Date().getTime()
       }));
     }
-  }, [id, clientesRuta, indiceActual, resumenViaje]);
+  }, [id, clientesRuta, indiceActual, resumenViaje, STORAGE_KEY]);
 
   useEffect(() => {
     const fetchDatos = async () => {
@@ -141,7 +147,7 @@ export const RepartoView = () => {
   const cobradoNum = Number(montoCobrado) || 0;
   const nuevoSaldoProyectado = Math.round(deudaTotal - cobradoNum);
 
-  // --- MODAL AGREGAR ---
+  // MODAL AGREGAR
   const abrirModalAgregar = async () => {
     try {
       const todos = await clientesService.getAll();
@@ -164,7 +170,7 @@ export const RepartoView = () => {
     c.direccion.toLowerCase().includes(busquedaCliente.toLowerCase())
   );
 
-  // --- GUARDAR ENTREGA Y ACUMULAR PARA EL RESUMEN ---
+  // GUARDAR ENTREGA Y ACUMULAR PARA EL RESUMEN
   const handleConfirmar = async () => {
     setIsSubmitting(true);
     
@@ -220,7 +226,7 @@ export const RepartoView = () => {
       setIndiceActual(indiceActual + 1);
       window.scrollTo(0, 0);
     } else {
-      localStorage.removeItem('arlestin_viaje_activo');
+      localStorage.removeItem('STORAGE_KEY');
       navigate('/reparto/resumen', { state: { resumen: resumenActualizado, nombreRuta: recorrido?.nombre } }); 
     }
   };
@@ -244,7 +250,7 @@ export const RepartoView = () => {
         </div>
       </div>
 
-      {/* CONTENEDOR PRINCIPAL - Formato "Mobile Centrado" pero elegante */}
+      {/* CONTENEDOR PRINCIPAL */}
       <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-5 mt-4">
         
         {/* INFO CLIENTE */}
@@ -269,7 +275,7 @@ export const RepartoView = () => {
           </div>
         </div>
 
-        {/* --- CATÁLOGO DINÁMICO --- */}
+        {/* CATÁLOGO DINÁMICO */}
         <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6">
           <h3 className="font-bold text-primary-dark text-xl md:text-2xl mb-5 flex items-center border-b border-primary-light/20 pb-4 tracking-wide">
             <Package size={24} className="mr-3 text-primary"/> Registro de Envases
@@ -369,7 +375,7 @@ export const RepartoView = () => {
         </div>
       </div>
 
-      {/* --- MODALES CON ESTÉTICA ACTUALIZADA --- */}
+      {/* MODALES */}
       {modalAgregarAbierto && (
         <div className="fixed inset-0 bg-primary-dark/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
           <div className="bg-white w-full max-w-md rounded-[2rem] overflow-hidden flex flex-col h-[75vh] shadow-2xl animate-in zoom-in-95 duration-200">

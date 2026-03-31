@@ -67,16 +67,13 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/clientes" element={<ClientesList />} />
         <Route path="/recorridos" element={<RecorridosList />} />
-        <Route path="/recorridos/nuevo" element={<RecorridoModal />} />
-        <Route path="/recorridos/editar/:id" element={<RecorridoModal />} />
         <Route path="/reparto/:id" element={<RepartoView />} />
         <Route path="/reparto/resumen" element={<ResumenReparto />} />
-        <Route path="/precios" element={<PreciosView />} />
         <Route path="/historial" element={<HistorialView />} />
         <Route path="/perfil" element={<PerfilEmpresa />} />
-        <Route path="/configuracion" element={<ConfiguracionView />} />
       </Route>
 
+      {/* Rutas Privadas: EMPRESA (Solo Administradores) */}
       <Route element={<RequireEmpresa adminOnly={true} />}>
         <Route path="/precios" element={<PreciosView />} />
         <Route path="/configuracion" element={<ConfiguracionView />} />
