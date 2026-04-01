@@ -35,7 +35,7 @@ const ActionButton = ({ label, primary = false, onClick }) => (
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
   const isAltRole = user?.role?.toLowerCase() === 'repartidor';
-  const tenant = useTenant();
+  const { tenant } = useTenant();
   const navigate = useNavigate();
   const [stats, setStats] = useState({ clientes_activos: 0, total_envases: 0, saldos_pendientes: 0, recaudacion_hoy: 0 });
 
