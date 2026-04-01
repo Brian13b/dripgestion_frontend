@@ -26,6 +26,15 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
+
+    console.log("Datos del tenant actual:", tenant);
+
+    if (!tenant || !tenant.id) {
+      setError("Esperando datos de conexión de la empresa...");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const userData = await login(username, password, tenant.id);
@@ -36,6 +45,7 @@ export const Login = () => {
         navigate('/dashboard');
       }
     } catch (error) {
+      console.error("Error en login:", error);
       setError("Credenciales incorrectas");
     } finally {
       setIsLoading(false);
