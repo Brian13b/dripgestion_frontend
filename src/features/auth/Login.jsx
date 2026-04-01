@@ -28,8 +28,6 @@ export const Login = () => {
     setIsLoading(true);
     setError('');
 
-    console.log("Datos del tenant actual:", tenant);
-
     if (!tenant || !tenant.id) {
       setError("Esperando datos de conexión de la empresa...");
       setIsLoading(false);
