@@ -62,7 +62,7 @@ export const PerfilEmpresa = () => {
 
         <div className="text-center pt-10 opacity-60">
           <p className="text-sm font-bold text-primary-dark tracking-widest uppercase">
-            {tenant?.nombre || 'Gestion'} v1.2.0
+            {tenant?.nombre || 'Gestion'} v1.4.2
           </p>
           <p className="text-xs text-secondary mt-1 font-medium">Sistema de Gestión de Distribución.</p>
         </div>

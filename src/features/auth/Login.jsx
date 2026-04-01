@@ -37,6 +37,12 @@ export const Login = () => {
     try {
       const userData = await login(username, password, tenant.id);
       
+      if (!userData) {
+        setError("Credenciales incorrectas");
+        setIsLoading(false);
+        return;
+      }
+      
       if (userData.role?.toLowerCase() === 'cliente') {
         navigate('/mi-portal');
       } else {
@@ -44,7 +50,7 @@ export const Login = () => {
       }
     } catch (error) {
       console.error("Error en login:", error);
-      setError("Credenciales incorrectas");
+      setError("Credenciales incorrectas o problemas de conexión");
     } finally {
       setIsLoading(false);
     }
