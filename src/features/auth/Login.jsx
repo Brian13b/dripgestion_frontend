@@ -7,7 +7,7 @@ import { BotonInstalar } from '../../components/ui/BotonInstalar';
 
 export const Login = () => {
   const { login, user } = useContext(AuthContext);
-  const tenant = useTenant();
+  const { tenant } = useTenant();
 
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
