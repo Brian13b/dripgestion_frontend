@@ -69,8 +69,15 @@ export const TenantProvider = ({ children }) => {
     </div>
   );
 
+  const actualizarLogoEnContexto = (nuevaUrl) => {
+    setTenant(prev => ({
+      ...prev,
+      logo_url: nuevaUrl
+    }));
+  };
+
   return (
-    <TenantContext.Provider value={tenant}>
+    <TenantContext.Provider value={{ tenant, actualizarLogoEnContexto,}}>
       {children}
     </TenantContext.Provider>
   );

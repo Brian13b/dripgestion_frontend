@@ -8,7 +8,7 @@ import { authService } from '../../api/authService'
 
 export const ConfiguracionView = () => {
   const navigate = useNavigate();
-  const tenant = useTenant();
+  const { tenant, actualizarLogoEnContexto } = useTenant();
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -40,12 +40,12 @@ export const ConfiguracionView = () => {
 
     setIsUploadingLogo(true);
     try {
-      await tenantService.uploadLogo(file);
+      const response = await tenantService.uploadLogo(file);
       toast.success('Logo actualizado con éxito');
       
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      if (response && response.logo_url) {
+        actualizarLogoEnContexto(response.logo_url);
+      }
       
     } catch (error) {
       console.error(error);
@@ -61,10 +61,6 @@ export const ConfiguracionView = () => {
     try {
       await tenantService.updateConfig(formData);
       toast.success('Configuración guardada exitosamente');
-      
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
       
     } catch (error) {
       console.error(error);

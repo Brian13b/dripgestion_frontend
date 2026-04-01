@@ -53,7 +53,7 @@ export const ClientesList = () => {
   const handleDelete = async (id, nombre) => {
     if (window.confirm(`¿Estás seguro que querés eliminar a "${nombre}"?`)) {
       try {
-        await api.delete(`/clientes/${id}`);
+        await clientesService.delete(id);
         setClientes(clientes.filter(cliente => cliente.id !== id));
         toast.success("Cliente eliminado exitosamente");
       } catch (error) {
