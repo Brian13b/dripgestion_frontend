@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext'
-import { Package, Users, DollarSign, TrendingUp, ChevronRight, Droplet } from 'lucide-react';
+import { Package, Users, DollarSign, TrendingUp, ChevronRight, Droplet, MapPin } from 'lucide-react';
 import { dashboardService } from '../../api/dashboardService';
 
 const StatCard = ({ title, value, subtext, icon: Icon, isPrimary = false }) => (
@@ -34,14 +34,21 @@ const ActionButton = ({ label, primary = false, onClick }) => (
 
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
-  const isAltRole = user?.role?.toLowerCase() === 'repartidor';
+  const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
   const { tenant } = useTenant();
   const navigate = useNavigate();
+  
   const [stats, setStats] = useState({ clientes_activos: 0, total_envases: 0, saldos_pendientes: 0, recaudacion_hoy: 0 });
 
   useEffect(() => {
-    dashboardService.getResumen().then(setStats).catch(console.error);
-  }, []);
+    if (isAdmin) {
+      dashboardService.getResumen()
+        .then(data => {
+            setStats(data.kpis || data); 
+        })
+        .catch(console.error);
+    }
+  }, [isAdmin]);
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
@@ -58,21 +65,32 @@ export const Dashboard = () => {
             </div>
             <span className="truncate">{tenant?.nombre || 'Gestión'}</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Buenos días, {user?.full_name.split(' ')[0]}</h1>
-          <p className="text-white font-medium text-md mt-2">Resumen operativo de {tenant?.nombre}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}</h1>
+          <p className="text-white font-medium text-md mt-2">
+            {isAdmin ? `Resumen operativo de ${tenant?.nombre}` : 'Listo para iniciar tu recorrido de hoy.'}
+          </p>
         </div>
       </div>
 
       <div className="px-5 md:px-12 lg:px-20 max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <StatCard title="Clientes Activos" value={stats.clientes_activos} icon={Users} />
-          <StatCard title="Recaudación" value={`$${stats.recaudacion_hoy}`} icon={DollarSign} isPrimary />
-          {!isAltRole && (
+          
+          {/* VISTA DE ADMIN */}
+          {isAdmin ? (
             <>
-              <StatCard title="Recaudación" value={`$${stats.recaudacion_hoy}`} icon={DollarSign} isPrimary />
-              <StatCard title="Saldos Pend." value={`$${stats.saldos_pendientes}`} icon={TrendingUp} />
+              <StatCard title="Clientes Activos" value={stats.clientes_activos} icon={Users} />
+              <StatCard title="Total Envases" value={stats.total_envases} icon={Package} />
+              <StatCard title="Recaudación Hoy" value={`$${stats.recaudacion_hoy}`} icon={DollarSign} isPrimary />
+              <StatCard title="Deuda en Calle" value={`$${stats.saldos_pendientes || stats.deuda_en_calle || 0}`} icon={TrendingUp} />
+            </>
+          ) : (
+            /* VISTA DE REPARTIDOR */
+            <>
+               <StatCard title="Recorridos" value="Mi Ruta" icon={MapPin} isPrimary />
+               <StatCard title="Clientes" value="Ver Lista" icon={Users} />
             </>
           )}
+
         </div>
 
         <div className="mt-8 pt-4 border-t border-primary-light/20">

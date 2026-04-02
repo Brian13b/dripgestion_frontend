@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
-import { Store, Clock, Tag, LogOut, ChevronRight, Settings, Users } from 'lucide-react';
+import { Store, Clock, Tag, LogOut, ChevronRight, Settings, Users, Activity } from 'lucide-react';
 
 export const PerfilEmpresa = () => {
   const { user, logout } = useContext(AuthContext);
@@ -38,9 +38,11 @@ export const PerfilEmpresa = () => {
         </div>
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">{user?.full_name || 'Mi Distribuidora'}</h1>
         <p className="text-primary-light font-medium text-lg mt-2 tracking-wide">{tenant?.nombre || 'Gestión Logística'}</p>
-        <button onClick={() => navigate('/configuracion')} className="absolute top-8 right-6 md:right-12 text-white/80 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors">
-          <Settings size={28} />
-        </button>
+        {user?.role?.toUpperCase() === 'ADMIN' && (
+           <button onClick={() => navigate('/configuracion')} className="absolute top-8 right-6 md:right-12 text-white/80 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors">
+            <Settings size={28} />
+          </button>
+        )}
       </div>
 
       <div className="max-w-4xl mx-auto p-5 md:p-8 space-y-8 mt-2">
@@ -49,14 +51,19 @@ export const PerfilEmpresa = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <MenuItem icon={Clock} title="Cierre Diario" subtitle="Historial de ventas y cobros" onClick={() => navigate('/historial')} />
             <MenuItem icon={Tag} title="Lista de Precios" subtitle="Configurar catálogo y valores" onClick={() => navigate('/precios')} />
-            <MenuItem icon={Users} title="Mi Equipo" subtitle="Gestionar repartidores y permisos" onClick={() => navigate('/equipo')} />
+            {user?.role?.toUpperCase() === 'ADMIN' && (
+              <>
+                <MenuItem icon={Activity} title="Métricas y Reportes" subtitle="Gráficos y estadísticas" onClick={() => navigate('/metricas')} />
+                <MenuItem icon={Users} title="Mi Equipo" subtitle="Gestionar repartidores" onClick={() => navigate('/equipo')} />
+              </>
+            )}
           </div>
         </div>
 
         <div className="space-y-4 pt-4 border-t border-primary-light/20">
           <h3 className="text-sm md:text-base font-bold text-secondary uppercase tracking-widest ml-4">Sistema</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <MenuItem icon={LogOut} title="Cerrar Sesión" subtitle="Salir de la cuenta de empresa" danger onClick={handleLogout} />
+            <MenuItem icon={LogOut} title="Cerrar Sesión" subtitle="Salir de la cuenta" danger onClick={handleLogout} />
           </div>
         </div>
 
