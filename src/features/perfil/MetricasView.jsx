@@ -56,7 +56,7 @@ export const MetricasView = () => {
             </button>
             <div>
                 <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
-                <Activity size={28} className="mr-3 text-primary" /> Panel de Métricas
+                    Panel de Métricas
                 </h1>
                 <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Análisis Inteligente de Negocio</p>
             </div>
