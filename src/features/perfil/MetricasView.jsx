@@ -43,16 +43,24 @@ export const MetricasView = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-5 md:p-10 font-sans pb-24">
-      <div className="max-w-7xl mx-auto">
-        
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-black text-primary-dark mb-2 flex items-center">
-              <Activity size={32} className="mr-3 text-primary" /> Panel de Métricas
-            </h1>
-            <p className="text-secondary font-bold tracking-widest uppercase text-sm">Análisis Inteligente de Negocio</p>
-          </div>
+    <div className="min-h-screen bg-background pb-24 font-sans">
+      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
+          
+          <div className="flex items-center">
+            <button 
+                onClick={() => navigate(-1)} 
+                className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0"
+            >
+                <ArrowLeft size={28} />
+            </button>
+            <div>
+                <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+                <Activity size={28} className="mr-3 text-primary" /> Panel de Métricas
+                </h1>
+                <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Análisis Inteligente de Negocio</p>
+            </div>
+          </div>  
         </div>
 
         {/* SELECTORES DE COMPARACIÓN */}
