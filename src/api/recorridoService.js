@@ -32,9 +32,13 @@ export const recorridoService = {
   },
 
   // Historial por dia
-  getHistorialPorFecha: async (fecha) => {
-    const query = fecha ? `?fecha=${fecha}` : '';
-    const response = await api.get(`/logistica/historial${query}`);
+  getHistorialPorFecha: async (fecha, choferId, recorridoId) => {
+    const params = new URLSearchParams();
+    if (fecha) params.append('fecha', fecha);
+    if (choferId) params.append('chofer_id', choferId);
+    if (recorridoId) params.append('recorrido_id', recorridoId);
+
+    const response = await api.get(`/logistica/historial?${params.toString()}`);
     return response.data;
   },
 

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays } from 'lucide-react';
+import { ArrowLeft, Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, Map } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
+import { AuthContext } from '../../context/AuthContext';
+import { userService } from '../../api/userService';
 
 const getFechaLocalHoy = () => {
   const hoy = new Date();
@@ -13,22 +15,50 @@ const getFechaLocalHoy = () => {
 
 export const HistorialView = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+
   const [movimientos, setMovimientos] = useState([]);
   const [resumenMes, setResumenMes] = useState({ efectivo: 0, transferencia: 0, fiado: 0 });
   const [loading, setLoading] = useState(true);
   
   const [fechaFiltro, setFechaFiltro] = useState(getFechaLocalHoy());
+  const [choferFiltro, setChoferFiltro] = useState('');
+  const [recorridoFiltro, setRecorridoFiltro] = useState('');
+  
+  const [listaChoferes, setListaChoferes] = useState([]);
+  const [listaRecorridos, setListaRecorridos] = useState([]);
+
+  useEffect(() => {
+    if (user?.role === 'ADMIN') {
+      const cargarFiltros = async () => {
+        try {
+          const recorridos = await recorridoService.getAll();
+          setListaRecorridos(recorridos);
+
+          const equipo = await userService.getEquipo();
+          
+          const choferes = equipo.filter(u => u.role.toUpperCase() === 'REPARTIDOR');
+          setListaChoferes(choferes);
+          
+        } catch (error) {
+          console.error("Error cargando listas de filtros", error);
+        }
+      };
+      cargarFiltros();
+    }
+  }, [user]);
 
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
       try {
-        const [historialDia, datosMes] = await Promise.all([
-          recorridoService.getHistorialPorFecha(fechaFiltro),
-          recorridoService.getResumenMesActual()
-        ]);
+        const historialDia = await recorridoService.getHistorialPorFecha(fechaFiltro, choferFiltro, recorridoFiltro);
         setMovimientos(historialDia);
-        setResumenMes(datosMes);
+
+        if (user?.role === 'ADMIN') {
+          const datosMes = await recorridoService.getResumenMesActual();
+          setResumenMes(datosMes);
+        }
       } catch (error) {
         console.error("Error", error);
       } finally {
@@ -36,13 +66,11 @@ export const HistorialView = () => {
       }
     };
     cargarDatos();
-  }, [fechaFiltro]);
+  }, [fechaFiltro, choferFiltro, recorridoFiltro, user]);
 
   const totalEfectivoDia = movimientos.filter(m => m.metodo_pago === 'efectivo').reduce((acc, m) => acc + m.monto_cobrado, 0);
   const totalTransferenciaDia = movimientos.filter(m => m.metodo_pago === 'transferencia').reduce((acc, m) => acc + m.monto_cobrado, 0);
-  const totalFiadoDia = movimientos.filter(m => m.metodo_pago === 'cta_corriente').reduce((acc, m) => acc + m.monto_total, 0); 
-
-  const esHoy = fechaFiltro === getFechaLocalHoy();
+  const totalFiadoDia = movimientos.filter(m => m.metodo_pago === 'cta_corriente').reduce((acc, m) => acc + m.monto_total, 0);
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
@@ -66,50 +94,72 @@ export const HistorialView = () => {
             </div>
           </div>
 
-          <div className="relative w-full md:w-auto group overflow-hidden rounded-2xl">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-              <CalendarIcon size={22} className="text-primary-dark group-hover:text-primary transition-colors" />
+          <div className="flex flex-col md:flex-row gap-3">
+            {/* Filtro Fecha */}
+            <div className="relative group overflow-hidden rounded-2xl bg-white">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"><CalendarIcon size={20} className="text-primary-dark" /></div>
+              <input 
+                type="date" 
+                value={fechaFiltro} 
+                onChange={(e) => setFechaFiltro(e.target.value)} 
+                className="w-full pl-12 pr-4 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full"
+              />
             </div>
-            <input 
-              type="date" 
-              value={fechaFiltro} 
-              onChange={(e) => setFechaFiltro(e.target.value)} 
-              className="relative w-full md:w-auto pl-12 pr-4 py-3.5 bg-white text-primary-dark font-black tracking-widest text-lg border-4 border-transparent focus:outline-none focus:border-primary/50 shadow-inner cursor-pointer transition-all hover:bg-slate-50 
-              [&::-webkit-calendar-picker-indicator]:opacity-0 
-              [&::-webkit-calendar-picker-indicator]:absolute 
-              [&::-webkit-calendar-picker-indicator]:inset-0 
-              [&::-webkit-calendar-picker-indicator]:w-full 
-              [&::-webkit-calendar-picker-indicator]:h-full 
-              [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-            />
+
+            {/* Filtros Admin */}
+            {user?.role === 'ADMIN' && (
+              <>
+                <div className="relative rounded-2xl bg-white overflow-hidden">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Users size={18} className="text-primary-dark" /></div>
+                  <select 
+                    value={choferFiltro} 
+                    onChange={(e) => setChoferFiltro(e.target.value)}
+                    className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
+                  >
+                    <option value="">Todos los Choferes</option>
+                    {listaChoferes.map(ch => (
+                      <option key={ch.id} value={ch.id}>{ch.nombre} {ch.apellido}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="relative rounded-2xl bg-white overflow-hidden">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Map size={18} className="text-primary-dark" /></div>
+                  <select 
+                    value={recorridoFiltro} 
+                    onChange={(e) => setRecorridoFiltro(e.target.value)}
+                    className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
+                  >
+                    <option value="">Todos los Recorridos</option>
+                    {listaRecorridos.map(rec => (
+                      <option key={rec.id} value={rec.id}>{rec.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
           </div>
+
         </div>
       </div>
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
-        
+
         {/* RECAUDACIÓN DEL MES */}
-        <div className="bg-gradient-to-r from-primary to-primary-dark p-1 rounded-3xl shadow-md">
-          <div className="bg-white rounded-[22px] p-5">
-            <h2 className="text-lg font-bold text-primary-dark uppercase tracking-widest mb-4 flex items-center border-b border-primary-light/30 pb-3">
-               <CalendarDays size={22} className="mr-2 text-primary"/> Total Acumulado del Mes
-            </h2>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div>
-                <p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Efectivo</p>
-                <p className="text-2xl md:text-4xl font-black text-success">${resumenMes.efectivo}</p>
-              </div>
-              <div className="border-x border-primary-light/30">
-                <p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Bancos</p>
-                <p className="text-2xl md:text-4xl font-black text-primary">${resumenMes.transferencia}</p>
-              </div>
-              <div>
-                <p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Fiado</p>
-                <p className="text-2xl md:text-4xl font-black text-orange-500">${resumenMes.fiado}</p>
+        {user?.role === 'ADMIN' && (
+          <div className="bg-gradient-to-r from-primary to-primary-dark p-1 rounded-3xl shadow-md">
+            <div className="bg-white rounded-[22px] p-5">
+              <h2 className="text-lg font-bold text-primary-dark uppercase tracking-widest mb-4 flex items-center border-b border-primary-light/30 pb-3">
+                 <CalendarDays size={22} className="mr-2 text-primary"/> Total Acumulado del Mes
+              </h2>
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Efectivo</p><p className="text-2xl md:text-4xl font-black text-success">${resumenMes.efectivo}</p></div>
+                <div className="border-x border-primary-light/30"><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Bancos</p><p className="text-2xl md:text-4xl font-black text-primary">${resumenMes.transferencia}</p></div>
+                <div><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Fiado</p><p className="text-2xl md:text-4xl font-black text-orange-500">${resumenMes.fiado}</p></div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* RESUMEN DEL DÍA SELECCIONADO */}
         <div>
