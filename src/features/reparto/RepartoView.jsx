@@ -46,6 +46,14 @@ export const RepartoView = () => {
     return viajeValido ? viajeValido.resumenViaje : { efectivo: 0, transferencia: 0, fiado: 0, productos: {} };
   });
 
+  const [clientesRuta, setClientesRuta] = useState(() => {
+    const viajeValido = cargarViajeLocal();
+    if (viajeValido && viajeValido.clientesRuta) {
+      return viajeValido.clientesRuta;
+    }
+    return location.state?.clientes || location.state?.clientesRuta || [];
+  });
+
   const clienteActual = clientesRuta[indiceActual];
   
   const [loading, setLoading] = useState(true);
