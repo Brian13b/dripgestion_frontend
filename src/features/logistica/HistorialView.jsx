@@ -118,7 +118,7 @@ export const HistorialView = () => {
                   >
                     <option value="">Todos los Choferes</option>
                     {listaChoferes.map(ch => (
-                      <option key={ch.id} value={ch.id}>{ch.nombre} {ch.apellido}</option>
+                      <option key={ch.id} value={ch.id}>{ch.full_name}</option>
                     ))}
                   </select>
                 </div>
