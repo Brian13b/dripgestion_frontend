@@ -62,7 +62,9 @@ export const MetricasView = () => {
             </div>
           </div>  
         </div>
+      </div>
 
+      <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
         {/* SELECTORES DE COMPARACIÓN */}
         <div className="bg-white p-5 rounded-3xl shadow-sm border border-primary-light/30 mb-8 flex flex-col md:flex-row gap-4 items-center">
           <div className="flex-1 w-full relative">
