@@ -29,7 +29,7 @@ export const HistorialView = () => {
   const [listaRecorridos, setListaRecorridos] = useState([]);
 
   useEffect(() => {
-    if (user?.role === 'ADMIN') {
+    if (user?.role.toUpperCase() === 'ADMIN') {
       const cargarFiltros = async () => {
         try {
           const recorridos = await recorridoService.getAll();
@@ -39,7 +39,7 @@ export const HistorialView = () => {
           
           const choferes = equipo.filter(u => u.role.toUpperCase() === 'REPARTIDOR');
           setListaChoferes(choferes);
-          
+
         } catch (error) {
           console.error("Error cargando listas de filtros", error);
         }
@@ -55,7 +55,7 @@ export const HistorialView = () => {
         const historialDia = await recorridoService.getHistorialPorFecha(fechaFiltro, choferFiltro, recorridoFiltro);
         setMovimientos(historialDia);
 
-        if (user?.role === 'ADMIN') {
+        if (user?.role.toUpperCase() === 'ADMIN') {
           const datosMes = await recorridoService.getResumenMesActual();
           setResumenMes(datosMes);
         }
@@ -107,7 +107,7 @@ export const HistorialView = () => {
             </div>
 
             {/* Filtros Admin */}
-            {user?.role === 'ADMIN' && (
+            {user?.role.toUpperCase() === 'ADMIN' && (
               <>
                 <div className="relative rounded-2xl bg-white overflow-hidden">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Users size={18} className="text-primary-dark" /></div>
