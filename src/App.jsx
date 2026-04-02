@@ -16,6 +16,7 @@ import { PerfilEmpresa } from './features/perfil/PerfilEmpresa';
 import { PortalClienteView } from './features/portal/PortalClienteView';
 import { ConfiguracionView } from './features/perfil/ConfiguracionView';
 import { EquipoView } from './features/perfil/EquipoView';
+import { MetricasView } from './features/perfil/MetricasView';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
 
@@ -71,6 +72,7 @@ function AppRoutes() {
         <Route path="/reparto/resumen" element={<ResumenReparto />} />
         <Route path="/historial" element={<HistorialView />} />
         <Route path="/perfil" element={<PerfilEmpresa />} />
+        <Route path="/metricas" element={<MetricasView />} />
       </Route>
 
       {/* Rutas Privadas: EMPRESA (Solo Administradores) */}
