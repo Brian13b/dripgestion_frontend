@@ -55,7 +55,7 @@ export const RecorridosList = () => {
   };
 
   const handleComenzarRuta = (recorridoId, clientesActivos) => {
-    navigate(`/reparto/${recorridoId}`, { state: { clientesActivos } });
+    navigate(`/reparto/${recorridoId}`, { state: { clientes: clientesActivos } });
   };
 
   const handleGuardarRuta = async (rutaEditada) => {
