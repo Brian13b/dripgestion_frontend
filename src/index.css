@@ -1,45 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import "tailwindcss";
 
+/* ─── Tokens de Diseño ─────────────────────────────────────────────────────── */
 :root {
   --font-sans: 'Inter', sans-serif;
-  
-  --color-primary: #25A7DA; 
-  --color-primary-light: #00ACC1;
-  --color-primary-dark: #0C4A6E;
-  --color-background: #F0FDFA;
-  
-  --color-success: #10b981;
-  --color-danger: #ef4444;
-  --color-secondary: #64748b;
+
+  /* Naranja profesional calibrado — acento único */
+  --color-primary:       #E86A1F;   /* naranja medio, cálido pero contenido   */
+  --color-primary-light: #F5A474;   /* tint suave para chips, fondos de íconos */
+  --color-primary-dark:  #1C1917;   /* near-black cálido para texto y headers */
+
+  /* Arena — fondos y superficies neutras */
+  --color-background:    #F7F4F0;   /* arena principal, toda la pantalla      */
+  --color-surface:       #FFFFFF;   /* blanco puro para cards y modales       */
+  --color-sand-50:       #FAF8F5;   /* arena casi blanca, hover suave         */
+  --color-sand-100:      #EDE8E1;   /* arena media, bordes y separadores      */
+  --color-sand-200:      #DDD5CB;   /* arena profunda, inputs border          */
+
+  /* Semánticos */
+  --color-success:   #16a34a;
+  --color-danger:    #dc2626;
+  --color-secondary: #78716c;       /* stone-500, gris cálido para texto muted */
 }
 
+/* ─── @theme — Tailwind v4 ─────────────────────────────────────────────────── */
 @theme {
   --font-sans: var(--font-sans);
 
-  --color-primary: var(--color-primary); 
+  /* Colores */
+  --color-primary:       var(--color-primary);
   --color-primary-light: var(--color-primary-light);
-  --color-primary-dark: var(--color-primary-dark);
-  
-  --color-background: var(--color-background);
-  --color-success: var(--color-success);
-  --color-danger: var(--color-danger);
-  --color-secondary: var(--color-secondary);
+  --color-primary-dark:  var(--color-primary-dark);
+  --color-background:    var(--color-background);
+  --color-surface:       var(--color-surface);
+  --color-sand-50:       var(--color-sand-50);
+  --color-sand-100:      var(--color-sand-100);
+  --color-sand-200:      var(--color-sand-200);
+  --color-success:       var(--color-success);
+  --color-danger:        var(--color-danger);
+  --color-secondary:     var(--color-secondary);
+
+  /* Radio de borde — escala sutil y consistente */
+  --radius-sm:   0.375rem;   /*  6px  — inputs pequeños, badges              */
+  --radius-md:   0.625rem;   /* 10px  — inputs estándar, botones secundarios */
+  --radius-lg:   0.875rem;   /* 14px  — botones primarios, chips             */
+  --radius-xl:   1.25rem;    /* 20px  — cards compactas                      */
+  --radius-2xl:  1.75rem;    /* 28px  — cards principales, panels            */
+  --radius-3xl:  2.5rem;     /* 40px  — modales, headers prominentes         */
+  --radius-full: 9999px;     /* cíclicos — avatares, toggles                 */
 }
 
+/* ─── Base ─────────────────────────────────────────────────────────────────── */
 body {
-  background-color: var(--color-background); 
+  background-color: var(--color-background);
   color: var(--color-primary-dark);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+/* ─── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  {
+  background-color: var(--color-sand-200);
+  border-radius: var(--radius-full);
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-secondary); 
-  border-radius: 10px;
-}
+::-webkit-scrollbar-thumb:hover { background-color: var(--color-secondary); }
