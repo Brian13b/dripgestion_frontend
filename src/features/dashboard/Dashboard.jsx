@@ -4,6 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext'
 import { Package, Users, DollarSign, TrendingUp, ChevronRight, Droplet, MapPin } from 'lucide-react';
 import { dashboardService } from '../../api/dashboardService';
+import { Button } from '../../components/primitives/Button';
 
 const StatCard = ({ title, value, subtext, icon: Icon, isPrimary = false }) => (
   <div className={`p-6 rounded-3xl shadow-sm border flex flex-col justify-between transition-transform hover:-translate-y-1 ${isPrimary ? 'bg-primary text-white border-primary shadow-primary/20' : 'bg-white border-primary-light/20'}`}>
@@ -20,17 +21,6 @@ const StatCard = ({ title, value, subtext, icon: Icon, isPrimary = false }) => (
   </div>
 );
 
-const ActionButton = ({ label, primary = false, onClick }) => (
-  <button 
-    onClick={onClick}
-    className={`w-full p-5 rounded-2xl flex items-center justify-between shadow-sm transition-all active:scale-95 hover:shadow-md ${
-      primary ? 'bg-primary hover:bg-primary-dark text-white shadow-primary/30' : 'bg-white hover:bg-slate-50 text-primary-dark border border-primary-light/20'
-    }`}
-  >
-    <span className="font-bold text-lg">{label}</span>
-    <ChevronRight size={24} className={primary ? 'text-white/70' : 'text-primary/50'} />
-  </button>
-);
 
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -96,8 +86,23 @@ export const Dashboard = () => {
         <div className="mt-8 pt-4 border-t border-primary-light/20">
           <h3 className="text-sm font-bold text-secondary uppercase tracking-wider mb-4">Acciones Rápidas</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ActionButton label="Iniciar Recorrido" primary onClick={() => navigate('/recorridos')} />
-            <ActionButton label="Gestionar Clientes" onClick={() => navigate('/clientes')} />
+            <Button
+              size="lg"
+              fullWidth
+              rightIcon={<ChevronRight size={20} className="opacity-70" />}
+              onClick={() => navigate('/recorridos')}
+            >
+              Iniciar Recorrido
+            </Button>
+            <Button
+              variant="secondary"
+              size="lg"
+              fullWidth
+              rightIcon={<ChevronRight size={20} className="opacity-50" />}
+              onClick={() => navigate('/clientes')}
+            >
+              Gestionar Clientes
+            </Button>
           </div>
         </div>
       </div>

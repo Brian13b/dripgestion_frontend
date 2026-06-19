@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Store, MapPin, Phone, MessageSquare, KeyRound, X, Lock, FileText, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { clientesService } from '../../api/clienteService';
+import { Button } from '../../components/primitives/Button';
 
 export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) => {
   const isEditing = Boolean(clienteId);
@@ -163,9 +164,15 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
 
         {/* Footer */}
         <div className="p-5 border-t border-primary-light/20 bg-background shrink-0">
-          <button type="submit" form="cliente-form" disabled={isLoading} className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 disabled:opacity-70 transition-colors text-lg">
-            {isLoading ? 'Guardando...' : 'Guardar Cliente'}
-          </button>
+          <Button
+            type="submit"
+            form="cliente-form"
+            isLoading={isLoading}
+            size="lg"
+            fullWidth
+          >
+            {isEditing ? 'Guardar Cambios' : 'Crear Cliente'}
+          </Button>
         </div>
       </div>
     </div>
