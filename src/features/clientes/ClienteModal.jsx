@@ -7,12 +7,13 @@ import { Button } from '../../components/primitives/Button';
 export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) => {
   const isEditing = Boolean(clienteId);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasPinConfigured, setHasPinConfigured] = useState(false);
 
   const [formData, setFormData] = useState({
-    nombre_negocio: '', 
-    direccion: '', 
-    telefono: '', 
-    observaciones: '', 
+    nombre_negocio: '',
+    direccion: '',
+    telefono: '',
+    observaciones: '',
     pin_acceso: '',
     cuit: '',
     condicion_iva: 'Consumidor Final'
@@ -23,12 +24,13 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
       const fetchCliente = async () => {
         try {
           const data = await clientesService.getById(clienteId);
+          setHasPinConfigured(data.has_pin || false);
           setFormData({
             nombre_negocio: data.nombre_negocio || '',
             direccion: data.direccion || '',
             telefono: data.telefono || '',
             observaciones: data.observaciones || '',
-            pin_acceso: data.pin_acceso || '',
+            pin_acceso: '',
             cuit: data.cuit || '',
             condicion_iva: data.condicion_iva || 'Consumidor Final'
           });
@@ -40,11 +42,12 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
       fetchCliente();
     } else if (isOpen && !isEditing) {
       const randomPin = Math.floor(1000 + Math.random() * 9000).toString();
-      setFormData({ 
-        nombre_negocio: '', 
-        direccion: '', 
-        telefono: '', 
-        observaciones: '', 
+      setHasPinConfigured(false);
+      setFormData({
+        nombre_negocio: '',
+        direccion: '',
+        telefono: '',
+        observaciones: '',
         pin_acceso: randomPin,
         cuit: '',
         condicion_iva: 'Consumidor Final'
@@ -144,10 +147,22 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <div>
                 <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">PIN Acceso</label>
                 <div className="relative">
-                  {isEditing ? <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" /> : <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />}
-                  <input type="text" name="pin_acceso" required={!isEditing} maxLength="4" readOnly={isEditing} value={formData.pin_acceso} onChange={handleChange} 
-                    className={`w-full pl-11 pr-3 py-3 border-2 rounded-2xl tracking-widest font-black text-center ${isEditing ? 'bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed' : 'border-primary-light/30 bg-slate-50 focus:border-primary text-primary-dark'}`} 
-                  />
+                  {isEditing ? (
+                    <div className="flex items-center gap-2 w-full pl-4 pr-3 py-3 border-2 rounded-2xl bg-slate-100 border-slate-200">
+                      <Lock size={18} className="text-slate-400 shrink-0" />
+                      {hasPinConfigured
+                        ? <span className="text-emerald-600 font-bold text-sm">PIN Configurado</span>
+                        : <span className="text-slate-400 font-medium text-sm">Sin PIN</span>
+                      }
+                    </div>
+                  ) : (
+                    <>
+                      <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
+                      <input type="text" name="pin_acceso" required maxLength="4" value={formData.pin_acceso} onChange={handleChange}
+                        className="w-full pl-11 pr-3 py-3 border-2 rounded-2xl tracking-widest font-black text-center border-primary-light/30 bg-slate-50 focus:border-primary text-primary-dark"
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </div>
