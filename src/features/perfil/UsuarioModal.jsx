@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { User, Lock, Contact, X, Save, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { userService } from '../../api/userService';
@@ -26,6 +26,7 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
           });
         } catch (error) {
           toast.error("Error al cargar datos del usuario");
+          console.error(error);
           onClose();
         }
       };
@@ -33,7 +34,7 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
     } else if (isOpen) {
       setFormData({ username: '', full_name: '', password: '', role: 'repartidor' });
     }
-  }, [isOpen, userId, isEditing]);
+  }, [isOpen, userId, isEditing, onClose]);
 
   if (!isOpen) return null;
 
@@ -60,8 +61,8 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/80 z-[100] flex items-end md:items-center justify-center backdrop-blur-sm p-4">
-      <div className="bg-white w-full max-w-md rounded-t-[2rem] md:rounded-[2rem] shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 bg-primary-dark/80 z-100 flex items-end md:items-center justify-center backdrop-blur-sm p-4">
+      <div className="bg-white w-full max-w-md rounded-t-4xl md:rounded-4xl shadow-2xl overflow-hidden">
         <div className="p-6 border-b border-primary-light/20 flex justify-between items-center bg-background">
           <h2 className="text-2xl font-black text-primary-dark tracking-tight">
             {isEditing ? 'Editar Integrante' : 'Nuevo Integrante'}

@@ -40,6 +40,15 @@ export const MetricasView = () => {
     fetchMetricas();
   }, [mesA, mesB]);
 
+  if (loading && !data) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-bold text-secondary text-xl">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p className="animate-pulse tracking-widest uppercase text-sm">Calculando estadísticas...</p>
+      </div>
+    );
+  }
+  
   if (!data) {
     return <div className="min-h-screen flex items-center justify-center font-bold text-secondary text-xl animate-pulse">Cargando estadísticas...</div>;
   }

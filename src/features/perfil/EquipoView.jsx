@@ -18,6 +18,7 @@ export const EquipoView = () => {
       setEquipo(data);
     } catch (error) {
       toast.error("Error al cargar equipo");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -43,6 +44,7 @@ export const EquipoView = () => {
       fetchEquipo();
     } catch (error) {
       toast.error("No se pudo eliminar el usuario");
+      console.error(error);
     }
   };
 

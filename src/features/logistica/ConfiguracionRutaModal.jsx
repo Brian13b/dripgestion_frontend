@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { X, Search, ArrowUp, ArrowDown, Users } from 'lucide-react';
 
 const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave }) => {
-  const [rutaEditando, setRutaEditando] = useState({ nombre: '', dia_semana: 0, clientes_orden: [] });
-  const [busquedaCliente, setBusquedaCliente] = useState('');
-
-  useEffect(() => {
+  const [rutaEditando, setRutaEditando] = useState(() => {
     if (rutaInicial) {
-      setRutaEditando({ ...rutaInicial, clientes_orden: [...rutaInicial.clientes_orden] });
-    } else {
-      setRutaEditando({ id: null, nombre: '', dia_semana: 0, clientes_orden: [] });
+      return { ...rutaInicial, clientes_orden: [...rutaInicial.clientes_orden] };
     }
-  }, [rutaInicial]);
+    return { id: null, nombre: '', dia_semana: 0, clientes_orden: [] };
+  });
+  
+  const [busquedaCliente, setBusquedaCliente] = useState('');
 
   const moverClienteConfig = (index, direccion) => {
     const nuevaLista = [...rutaEditando.clientes_orden];
@@ -37,8 +35,8 @@ export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave 
   const clientesBuscados = busquedaCliente ? clientes.filter(c => c.nombre_negocio.toLowerCase().includes(busquedaCliente.toLowerCase())) : [];
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/90 z-[70] flex items-center justify-center p-2 md:p-4 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col h-[90vh]">
+    <div className="fixed inset-0 bg-primary-dark/90 z-70 flex items-center justify-center p-2 md:p-4 backdrop-blur-sm">
+      <div className="bg-white w-full max-w-md rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col h-[90vh]">
         <div className="p-5 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
           <h2 className="text-xl font-bold text-primary-dark tracking-wide">{rutaEditando.id ? 'Editar Ruta Fija' : 'Nueva Ruta'}</h2>
           <button onClick={onClose} className="text-secondary hover:text-primary-dark bg-white rounded-full p-2 shadow-sm border border-primary-light/30"><X size={20}/></button>
@@ -59,7 +57,7 @@ export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave 
               <Search className="absolute left-3 top-3.5 text-primary" size={20}/>
               <input type="text" placeholder="Buscar cliente para agregar..." value={busquedaCliente} onChange={e=>setBusquedaCliente(e.target.value)} className="w-full pl-11 py-3.5 rounded-2xl bg-slate-50 border-2 border-primary-light/20 focus:border-primary font-medium text-primary-dark outline-none"/>
               {busquedaCliente && (
-                <div className="absolute top-[60px] left-0 w-full bg-white shadow-2xl border border-primary-light/20 rounded-2xl max-h-48 overflow-y-auto">
+                <div className="absolute top-15 left-0 w-full bg-white shadow-2xl border border-primary-light/20 rounded-2xl max-h-48 overflow-y-auto">
                   {clientesBuscados.map(c => (
                      <button key={c.id} onClick={() => {toggleClienteConfig(c.id); setBusquedaCliente('');}} className="w-full text-left p-4 hover:bg-slate-50 border-b border-primary-light/10 font-bold text-primary-dark flex justify-between">
                        {c.nombre_negocio} <span className="text-secondary font-medium text-sm">{rutaEditando.clientes_orden.includes(c.id) ? '(Ya en ruta)' : '+ Agregar'}</span>
@@ -92,7 +90,7 @@ export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave 
           </div>
         </div>
 
-        <div className="p-5 border-t border-primary-light/20 bg-background shrink-0 rounded-b-[2rem]">
+        <div className="p-5 border-t border-primary-light/20 bg-background shrink-0 rounded-b-4xl">
           <button onClick={handleGuardar} className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-colors text-lg tracking-wide">
             Guardar
           </button>

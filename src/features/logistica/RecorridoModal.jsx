@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Play, X, Search, ArrowUp, ArrowDown, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => {
-  const [clientesEnVistaPrevia, setClientesEnVistaPrevia] = useState([]);
-  const [busquedaExcepcion, setBusquedaExcepcion] = useState('');
-
-  useEffect(() => {
-    if (recorrido) {
-      const clientesCompletos = recorrido.clientes_orden.map(id => clientes.find(c => c.id === id)).filter(Boolean);
-      setClientesEnVistaPrevia(clientesCompletos);
+  const [clientesEnVistaPrevia, setClientesEnVistaPrevia] = useState(() => {
+    if (recorrido?.clientes_orden) {
+      return recorrido.clientes_orden.map(id => clientes.find(c => c.id === id)).filter(Boolean);
     }
-  }, [recorrido, clientes]);
+    return [];
+  });
+  
+  const [busquedaExcepcion, setBusquedaExcepcion] = useState('');
 
   const quitarCliente = (clienteId) => setClientesEnVistaPrevia(prev => prev.filter(c => c.id !== clienteId));
   
@@ -36,8 +35,8 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
   if (!recorrido) return null;
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/80 z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 bg-primary-dark/80 z-70 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-white w-full max-w-md rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
         <div className="p-5 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
           <div>
             <h2 className="text-xl font-bold text-primary-dark tracking-wide">Previa: {recorrido.nombre}</h2>
@@ -48,14 +47,13 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
           </button>
         </div>
         
-        {/* Buscador de clientes */}
         <div className="p-4 bg-slate-50 border-b border-primary-light/20 relative z-20 shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-3 text-primary" size={20}/>
             <input type="text" placeholder="Buscar cliente para agregar hoy..." value={busquedaExcepcion} onChange={e=>setBusquedaExcepcion(e.target.value)} className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-primary-light/30 focus:border-primary font-medium text-primary-dark outline-none"/>
           </div>
           {busquedaExcepcion && (
-            <div className="absolute top-[60px] left-4 right-4 bg-white rounded-xl shadow-xl border border-gray-100 max-h-40 overflow-y-auto z-50">
+            <div className="absolute top-15 left-4 right-4 bg-white rounded-xl shadow-xl border border-gray-100 max-h-40 overflow-y-auto z-50">
               {excepcionesBuscadas.map(c => (
                 <button key={c.id} onClick={() => agregarExcepcion(c)} className="w-full text-left p-3 hover:bg-slate-50 border-b flex justify-between items-center text-primary-dark font-bold">
                   {c.nombre_negocio} <Plus className="text-primary"/>

@@ -179,7 +179,7 @@ export const ConfiguracionView = () => {
               </div>
 
               <div className="max-w-xl">
-                <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-3 flex items-center"><Type size={18} className="mr-2"/> Tipografía Principal</label>
+                <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-4 border-b border-primary-light/20 pb-2">Tipografía Principal</label>
                 <select 
                   value={formData.font_sans} 
                   onChange={(e) => setFormData({...formData, font_sans: e.target.value})} 
@@ -256,6 +256,7 @@ export const ConfiguracionView = () => {
                       setNewPassword('');
                     } catch (error) {
                       toast.error("Contraseña actual incorrecta");
+                      console.error(error);
                     }
                   }}
                   className="mt-2 bg-primary-dark hover:bg-primary text-white font-bold py-3 px-6 rounded-xl transition-all shadow-sm active:scale-95"

@@ -1,8 +1,23 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
 import { Store, Clock, Tag, LogOut, ChevronRight, Settings, Users, Activity } from 'lucide-react';
+
+const MenuItem = ({ icon: Icon, title, subtitle, onClick, danger }) => (
+  <button onClick={onClick} className="w-full bg-white p-5 rounded-3xl shadow-sm border border-primary-light/20 flex items-center justify-between hover:bg-background hover:border-primary transition-all active:scale-95 group">
+    <div className="flex items-center space-x-5">
+      <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm ${danger ? 'bg-danger/10 text-danger' : 'bg-primary-light/30 text-primary'}`}>
+        <Icon size={28} />
+      </div>
+      <div className="text-left">
+        <p className={`font-bold text-xl tracking-wide ${danger ? 'text-danger' : 'text-primary-dark'}`}>{title}</p>
+        {subtitle && <p className="text-sm text-secondary font-medium mt-1">{subtitle}</p>}
+      </div>
+    </div>
+    <ChevronRight size={24} className={`transition-transform group-hover:translate-x-1 ${danger ? 'text-danger/50' : 'text-primary/50'}`} />
+  </button>
+);
 
 export const PerfilEmpresa = () => {
   const { user, logout } = useContext(AuthContext);
@@ -10,21 +25,6 @@ export const PerfilEmpresa = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
-
-  const MenuItem = ({ icon: Icon, title, subtitle, onClick, danger }) => (
-    <button onClick={onClick} className="w-full bg-white p-5 rounded-3xl shadow-sm border border-primary-light/20 flex items-center justify-between hover:bg-background hover:border-primary transition-all active:scale-95 group">
-      <div className="flex items-center space-x-5">
-        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm ${danger ? 'bg-danger/10 text-danger' : 'bg-primary-light/30 text-primary'}`}>
-          <Icon size={28} />
-        </div>
-        <div className="text-left">
-          <p className={`font-bold text-xl tracking-wide ${danger ? 'text-danger' : 'text-primary-dark'}`}>{title}</p>
-          {subtitle && <p className="text-sm text-secondary font-medium mt-1">{subtitle}</p>}
-        </div>
-      </div>
-      <ChevronRight size={24} className={`transition-transform group-hover:translate-x-1 ${danger ? 'text-danger/50' : 'text-primary/50'}`} />
-    </button>
-  );
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
