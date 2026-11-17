@@ -4,6 +4,14 @@ export const TenantContext = createContext(null);
 
 export const useTenant = () => useContext(TenantContext);
 
+const ROOT_DOMAINS = [
+  'localhost',
+  '127.0.0.1',
+  'dripgestion.vercel.app',
+  'dripgestion.com',
+  'www.dripgestion.com',
+];
+
 export const TenantProvider = ({ children }) => {
   const [tenant, setTenant] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,13 +20,16 @@ export const TenantProvider = ({ children }) => {
   useEffect(() => {
     const fetchTenantConfig = async () => {
       try {
-        let hostname = window.location.hostname;
-        let subdominio = hostname.split('.')[0];
-        
-        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === 'dripgestion.vercel.app') {
-          subdominio = import.meta.env.VITE_DEFAULT_TENANT || 'demo';
+        const hostname = window.location.hostname;
+
+        if (ROOT_DOMAINS.includes(hostname)) {
+          setTenant(null);
+          document.title = 'Drip Gestión — Administración Central';
+          setLoading(false);
+          return;
         }
 
+        const subdominio = hostname.split('.')[0];
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
         const response = await fetch(`${apiUrl}/tenants/info/${subdominio}`);
 
@@ -29,10 +40,9 @@ export const TenantProvider = ({ children }) => {
         const data = await response.json();
         setTenant(data);
 
-        document.title = `${data.nombre || 'Cargando'} - Logística`;
+        document.title = `${data.nombre || 'Drip'} — Gestión`;
 
         const root = document.documentElement;
-        
         if (data.font_sans) root.style.setProperty('--font-sans', data.font_sans);
         if (data.color_primario) root.style.setProperty('--color-primary', data.color_primario);
         if (data.color_primario_light) root.style.setProperty('--color-primary-light', data.color_primario_light);
@@ -41,9 +51,8 @@ export const TenantProvider = ({ children }) => {
         if (data.color_success) root.style.setProperty('--color-success', data.color_success);
         if (data.color_danger) root.style.setProperty('--color-danger', data.color_danger);
         if (data.color_secondary) root.style.setProperty('--color-secondary', data.color_secondary);
-
       } catch (err) {
-        console.error("Error cargando Tenant:", err);
+        console.error('Error cargando Tenant:', err);
         setError('Acceso denegado o empresa inactiva.');
       } finally {
         setLoading(false);
@@ -53,31 +62,35 @@ export const TenantProvider = ({ children }) => {
     fetchTenantConfig();
   }, []);
 
-  if (loading) return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center font-sans">
-      <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-      <p className="mt-4 text-slate-500 font-bold tracking-widest uppercase text-xs">DripGestión</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans">
-      <div className="bg-white p-10 rounded-[40px] shadow-xl text-center border border-red-50">
-        <h1 className="text-4xl font-black text-slate-800 mb-3">DripGestión</h1>
-        <p className="text-slate-500 font-medium italic">{error}</p>
+  if (loading)
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center font-sans">
+        <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="mt-4 text-slate-500 font-bold tracking-widest uppercase text-xs">
+          DripGestión
+        </p>
       </div>
-    </div>
-  );
+    );
+
+  if (error)
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans">
+        <div className="bg-white p-10 rounded-3xl shadow-xl text-center border border-red-50">
+          <h1 className="text-4xl font-black text-slate-800 mb-3">DripGestión</h1>
+          <p className="text-slate-500 font-medium italic">{error}</p>
+        </div>
+      </div>
+    );
 
   const actualizarLogoEnContexto = (nuevaUrl) => {
-    setTenant(prev => ({
+    setTenant((prev) => ({
       ...prev,
-      logo_url: nuevaUrl
+      logo_url: nuevaUrl,
     }));
   };
 
   return (
-    <TenantContext.Provider value={{ tenant, actualizarLogoEnContexto,}}>
+    <TenantContext.Provider value={{ tenant, actualizarLogoEnContexto }}>
       {children}
     </TenantContext.Provider>
   );
