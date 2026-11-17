@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, MapPin, Phone, Package, DollarSign, Pencil, Trash2, User } from 'lucide-react';
-import api from '../../api/axios';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService'; 
@@ -19,8 +17,6 @@ export const ClientesList = () => {
   
   const [cobroModalAbierto, setCobroModalAbierto] = useState(false);
   const [clienteParaCobrar, setClienteParaCobrar] = useState(null);
-  
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,8 +74,9 @@ export const ClientesList = () => {
   const renderEnvases = (stock) => {
     if (!stock || Object.keys(stock).length === 0) return <span className="text-secondary font-medium">Sin envases</span>;
     
-    const items = Object.entries(stock).filter(([_, cant]) => cant > 0);
-    if (items.length === 0) return <span className="text-secondary font-medium">Sin envases</span>;
+    const items = Object.entries(stock).filter(([cant]) => cant > 0);
+    if (items.length === 0) 
+      return <span className="text-secondary font-medium">Sin envases</span>;
 
     return (
       <div className="flex flex-wrap gap-2 mt-1">

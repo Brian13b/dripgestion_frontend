@@ -4,12 +4,12 @@ import { LayoutGrid, Users, MapPin, Tag, UserCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { AuthContext } from '../../context/AuthContext';
 
-const NavItem = ({ to, icon: Icon, label, matchPrefixes = [] }) => {
+const NavItem = ({ to, icon, label, matchPrefixes = [] }) => {
   const location = useLocation();
   const isActive =
     location.pathname === to ||
     matchPrefixes.some((prefix) => location.pathname.startsWith(prefix));
-
+  const IconComponent = icon;
   return (
     <Link
       to={to}
@@ -18,7 +18,7 @@ const NavItem = ({ to, icon: Icon, label, matchPrefixes = [] }) => {
         isActive ? 'text-primary-dark font-bold scale-105' : 'text-slate-400 hover:text-primary'
       )}
     >
-      <Icon size={24} strokeWidth={isActive ? 2.5 : 2} className="md:w-6 md:h-6" />
+      <IconComponent size={24} strokeWidth={isActive ? 2.5 : 2} className="md:w-6 md:h-6" />
       <span className="text-[10px] md:text-xs tracking-wide">{label}</span>
     </Link>
   );

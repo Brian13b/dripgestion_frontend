@@ -5,11 +5,12 @@ import clsx from 'clsx';
 import { AuthContext } from '../../context/AuthContext';
 import { TenantContext } from '../../context/TenantContext';
 
-const SidebarItem = ({ to, icon: Icon, label, matchPrefixes = [] }) => {
+const SidebarItem = ({ to, icon, label, matchPrefixes = [] }) => {
   const location = useLocation();
   const isActive =
     location.pathname === to ||
     matchPrefixes.some((prefix) => location.pathname.startsWith(prefix));
+  const IconComponent = icon;
 
   return (
     <Link
@@ -21,7 +22,7 @@ const SidebarItem = ({ to, icon: Icon, label, matchPrefixes = [] }) => {
           : 'text-slate-600 hover:bg-primary/10 hover:text-primary-dark'
       )}
     >
-      <Icon size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+      <IconComponent size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
       <span className="truncate">{label}</span>
     </Link>
   );
