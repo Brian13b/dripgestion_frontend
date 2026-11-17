@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { TenantProvider } from './context/TenantContext';
 import { BottomNav } from './components/layout/BottomNav';
+import { Sidebar } from './components/layout/Sidebar';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/auth/Login';
 import { ClientesList } from './features/clientes/ClientesList';
@@ -42,8 +43,11 @@ const RequireEmpresa = ({ adminOnly = false }) => {
   if (adminOnly && role === 'repartidor') return <Navigate to="/dashboard" replace />;
 
   return (
-    <div className="min-h-screen bg-background text-primary-dark pb-20 md:pb-24 overflow-x-hidden">
-      <Outlet />
+    <div className="min-h-screen bg-background text-primary-dark pb-20 lg:pb-8 lg:pl-64 overflow-x-hidden">
+      <Sidebar />
+      <main className="w-full min-h-screen">
+        <Outlet />
+      </main>
       <BottomNav />
     </div>
   );

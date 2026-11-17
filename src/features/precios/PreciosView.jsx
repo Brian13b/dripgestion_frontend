@@ -17,11 +17,17 @@ export const PreciosView = () => {
     try {
       const data = await productosService.getAll();
       setProductos(data);
-    } catch (error) { toast.error("Error al cargar lista"); } 
+    } catch (error) { 
+      toast.error("Error al cargar lista"); 
+      console.error("Error al cargar productos", error);
+    } 
     finally { setLoading(false); }
   };
 
-  const iniciarEdicion = (producto) => { setEditandoId(producto.id); setNuevoPrecio(producto.precio_actual.toString()); };
+  const iniciarEdicion = (producto) => { 
+    setEditandoId(producto.id); 
+    setNuevoPrecio(producto.precio_actual.toString()); 
+  };
 
   const guardarPrecio = async (id) => {
     try {
@@ -31,6 +37,7 @@ export const PreciosView = () => {
       cargarProductos();
     } catch (error) { 
       toast.error("Error al actualizar"); 
+      console.error("Error al actualizar precio", error);
     }
   };
 
@@ -47,7 +54,10 @@ export const PreciosView = () => {
       setMostrandoFormulario(false);
       setNuevoProducto({ nombre: '', codigo: '', precio_actual: '' });
       cargarProductos();
-    } catch (error) { toast.error("Error al crear"); }
+    } catch (error) { 
+      toast.error("Error al crear"); 
+      console.error("Error al crear producto", error);
+    }
   };
 
   const handleToggleActivo = async (id) => {
@@ -55,7 +65,10 @@ export const PreciosView = () => {
       await productosService.toggleActivo(id);
       cargarProductos();
       toast.success("Estado actualizado");
-    } catch (error) { toast.error("Error al cambiar estado"); }
+    } catch (error) { 
+      toast.error("Error al cambiar estado"); 
+      console.error("Error al cambiar estado", error);
+    }
   };
 
   return (

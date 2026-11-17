@@ -58,6 +58,7 @@ export const ClientesList = () => {
         toast.success("Cliente eliminado exitosamente");
       } catch (error) {
         toast.error("No se pudo eliminar el cliente");
+        console.error("Error al eliminar cliente", error);
       }
     }
   };
