@@ -1,18 +1,20 @@
 import api from './axios';
 
 export const authService = {
-  login: async (username, password, tenantId) => {
-
+  login: async (username, password, tenantId = null) => {
     const params = new URLSearchParams();
     params.append('username', username);
     params.append('password', password);
 
-    const response = await api.post('/auth/login/access-token', params, {
-      headers: { 
-        'X-Tenant-ID': tenantId, 
-        'Content-Type': 'application/x-www-form-urlencoded' 
-      }
-    });
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    if (tenantId) {
+      headers['X-Tenant-ID'] = tenantId;
+    }
+
+    const response = await api.post('/auth/login/access-token', params, { headers });
     
     if (response.data.access_token) {
       localStorage.setItem('token', response.data.access_token);

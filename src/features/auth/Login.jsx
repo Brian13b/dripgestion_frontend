@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
-import { Droplet, Lock, Phone, MessageCircle } from 'lucide-react';
+import { Droplet, Lock, Phone, ShieldCheck } from 'lucide-react';
 import { BotonInstalar } from '../../components/ui/BotonInstalar';
 
 export const Login = () => {
@@ -15,11 +15,14 @@ export const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const isRootDomain = !tenant || !tenant.id;
 
   useEffect(() => {
     if (user) {
-      if (user.role?.toUpperCase() === 'CLIENTE') navigate('/mi-portal');
-      else navigate('/dashboard'); 
+      const role = user.role?.toLowerCase();
+      if (role === 'superadmin') navigate('/superadmin');
+      else if (role === 'cliente') navigate('/mi-portal');
+      else navigate('/dashboard');
     }
   }, [user, navigate]);
 
@@ -28,29 +31,29 @@ export const Login = () => {
     setIsLoading(true);
     setError('');
 
-    if (!tenant || !tenant.id) {
-      setError("Esperando datos de conexión de la empresa...");
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const userData = await login(username, password, tenant.id);
-      
+      const userData = await login(username, password, tenant?.id);
+
       if (!userData) {
-        setError("Credenciales incorrectas");
+        setError('Credenciales incorrectas');
         setIsLoading(false);
         return;
       }
-      
-      if (userData.role?.toLowerCase() === 'cliente') {
+
+      const role = userData.role?.toLowerCase();
+      if (role === 'superadmin') {
+        navigate('/superadmin');
+      } else if (role === 'cliente') {
         navigate('/mi-portal');
       } else {
         navigate('/dashboard');
       }
     } catch (error) {
-      console.error("Error en login:", error);
-      setError("Credenciales incorrectas o problemas de conexión");
+      console.error('Error en login:', error);
+      setError(
+        error.response?.data?.detail ||
+          'Credenciales incorrectas o problemas de conexión'
+      );
     } finally {
       setIsLoading(false);
     }
@@ -65,25 +68,26 @@ export const Login = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row">
-      
       {/* Lado Izquierdo */}
-      <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-[40px] md:rounded-none md:rounded-r-[60px] z-10">
+      <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-3xl md:rounded-none md:rounded-r-[60px] z-10">
         <div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full mb-6 border-4 border-white/30 flex items-center justify-center overflow-hidden shrink-0 mx-auto shadow-xl">
           {tenant?.logo_url ? (
-            <img 
-              src={tenant.logo_url} 
-              alt={`Logo de ${tenant.nombre}`} 
-              className="w-full h-full object-contain p-2" 
+            <img
+              src={tenant.logo_url}
+              alt={`Logo de ${tenant.nombre}`}
+              className="w-full h-full object-contain p-2"
             />
+          ) : isRootDomain ? (
+            <ShieldCheck size={56} className="text-primary" strokeWidth={1.5} />
           ) : (
             <Droplet size={56} className="text-primary" strokeWidth={1.5} />
           )}
         </div>
         <h1 className="text-5xl md:text-7xl font-black mb-2 tracking-tight text-center">
-          {tenant?.nombre || 'Logística'}
+          {tenant?.nombre || 'Drip Gestión'}
         </h1>
         <p className="text-primary-light font-medium tracking-wide md:text-xl uppercase text-center">
-          Gestión & Distribución
+          {isRootDomain ? 'Administración Central SaaS' : 'Gestión & Distribución'}
         </p>
       </div>
 
@@ -91,8 +95,12 @@ export const Login = () => {
       <div className="flex-1 px-5 -mt-16 mb-8 md:mt-0 z-20 flex items-center justify-center">
         <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 w-full max-w-md border border-primary-light/20">
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-primary-dark tracking-tight">Bienvenido</h2>
-            <p className="text-secondary mt-2 font-medium">Ingresá tus credenciales de acceso</p>
+            <h2 className="text-3xl font-bold text-primary-dark tracking-tight">
+              Bienvenido
+            </h2>
+            <p className="text-secondary mt-2 font-medium">
+              Ingresá tus credenciales de acceso
+            </p>
           </div>
 
           {error && (
@@ -103,7 +111,9 @@ export const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-bold text-primary-dark uppercase tracking-wider mb-2">Usuario / Teléfono</label>
+              <label className="block text-sm font-bold text-primary-dark uppercase tracking-wider mb-2">
+                {isRootDomain ? 'Usuario Administrador' : 'Usuario / Teléfono'}
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Phone size={20} className="text-primary" />
@@ -113,14 +123,16 @@ export const Login = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="block w-full pl-12 pr-4 py-4 border-2 border-primary-light/30 rounded-2xl focus:ring-0 focus:border-primary bg-slate-50 text-primary-dark font-medium transition-colors text-lg"
-                  placeholder="Ej: 261-1234567"
+                  placeholder={isRootDomain ? 'Ej: brian_admin' : 'Ej: 261-1234567'}
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-primary-dark uppercase tracking-wider mb-2">Contraseña / PIN</label>
+              <label className="block text-sm font-bold text-primary-dark uppercase tracking-wider mb-2">
+                Contraseña / PIN
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Lock size={20} className="text-primary" />
@@ -144,18 +156,24 @@ export const Login = () => {
               {isLoading ? 'Verificando...' : 'Ingresar al sistema'}
             </button>
           </form>
-          <button onClick={handlePedirPorWhatsApp} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide">
-            ¿No tenés PIN? Contactanos.
-          </button>
+
+          {!isRootDomain && (
+            <button
+              onClick={handlePedirPorWhatsApp}
+              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide"
+            >
+              ¿No tenés PIN? Contactanos.
+            </button>
+          )}
 
           <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col items-center">
-            <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mb-3">Mejorá tu experiencia</p>
+            <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mb-3">
+              Mejorá tu experiencia
+            </p>
             <BotonInstalar />
           </div>
-
         </div>
       </div>
-      
     </div>
   );
 };

@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthProvider, AuthContext } from './context/AuthContext';
-import { TenantProvider } from './context/TenantContext'
+import { TenantProvider } from './context/TenantContext';
 import { BottomNav } from './components/layout/BottomNav';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Login } from './features/auth/Login';
 import { ClientesList } from './features/clientes/ClientesList';
 import { RecorridosList } from './features/logistica/RecorridosList';
 import { RecorridoModal } from './features/logistica/RecorridoModal';
-import { RepartoView } from './features/reparto/RepartoView'
+import { RepartoView } from './features/reparto/RepartoView';
 import { ResumenReparto } from './features/reparto/ResumenReparto';
 import { PreciosView } from './features/precios/PreciosView';
 import { HistorialView } from './features/logistica/HistorialView';
@@ -17,18 +17,30 @@ import { PortalClienteView } from './features/portal/PortalClienteView';
 import { ConfiguracionView } from './features/perfil/ConfiguracionView';
 import { EquipoView } from './features/perfil/EquipoView';
 import { MetricasView } from './features/perfil/MetricasView';
+import SuperAdminDashboard from './features/superadmin/SuperAdminDashboard';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
+
+const RequireSuperAdmin = () => {
+  const { user } = useContext(AuthContext);
+  if (!user) return <Navigate to="/login" replace />;
+
+  const role = user.role?.toLowerCase();
+  if (role !== 'superadmin') return <Navigate to="/dashboard" replace />;
+
+  return <Outlet />;
+};
 
 const RequireEmpresa = ({ adminOnly = false }) => {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
-  
+
   const role = user.role?.toLowerCase();
+  if (role === 'superadmin') return <Navigate to="/superadmin" replace />;
   if (role === 'cliente') return <Navigate to="/mi-portal" replace />;
-  
+
   if (adminOnly && role === 'repartidor') return <Navigate to="/dashboard" replace />;
-  
+
   return (
     <div className="min-h-screen bg-background text-primary-dark pb-20 md:pb-24 overflow-x-hidden">
       <Outlet />
@@ -41,7 +53,7 @@ const RequireCliente = () => {
   const { user } = useContext(AuthContext);
   if (!user) return <Navigate to="/login" replace />;
   if (user.role?.toLowerCase() !== 'cliente') return <Navigate to="/dashboard" replace />;
-  
+
   return (
     <div className="min-h-screen bg-slate-200 flex justify-center selection:bg-primary-light selection:text-primary-dark">
       <div className="w-full max-w-md bg-background min-h-screen relative shadow-2xl overflow-x-hidden">
@@ -51,17 +63,29 @@ const RequireCliente = () => {
   );
 };
 
+const getHomeRouteByRole = (role) => {
+  const r = role?.toLowerCase();
+  if (r === 'superadmin') return '/superadmin';
+  if (r === 'cliente') return '/mi-portal';
+  return '/dashboard';
+};
+
 function AppRoutes() {
   const { user } = useContext(AuthContext);
 
   return (
     <Routes>
       {/* Ruta pública */}
-      <Route 
-        path="/login" 
-        element={!user ? <Login /> : <Navigate to={user.role?.toLowerCase() === 'cliente' ? '/mi-portal' : '/dashboard'} />} 
+      <Route
+        path="/login"
+        element={!user ? <Login /> : <Navigate to={getHomeRouteByRole(user.role)} replace />}
       />
       <Route path="/" element={<Navigate to="/login" replace />} />
+
+      {/* Rutas Privadas: SUPERADMIN (Dueño del SaaS) */}
+      <Route element={<RequireSuperAdmin />}>
+        <Route path="/superadmin" element={<SuperAdminDashboard />} />
+      </Route>
 
       {/* Rutas Privadas: EMPRESA */}
       <Route element={<RequireEmpresa />}>
@@ -83,7 +107,7 @@ function AppRoutes() {
         <Route path="/recorridos/editar/:id" element={<RecorridoModal />} />
         <Route path="/equipo" element={<EquipoView />} />
       </Route>
-      
+
       {/* Rutas Privadas: CLIENTE */}
       <Route element={<RequireCliente />}>
         <Route path="/mi-portal" element={<PortalClienteView />} />
