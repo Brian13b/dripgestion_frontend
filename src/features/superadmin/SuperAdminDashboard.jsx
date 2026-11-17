@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../api/axios';
-import { ShieldCheck, LogOut, Building2, Plus, Power, PowerOff } from 'lucide-react';
+import { ShieldCheck, LogOut, Building2, Plus, Power, PowerOff, ExternalLink, Pencil, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function SuperAdminDashboard() {
@@ -22,6 +22,41 @@ export default function SuperAdminDashboard() {
     admin_username: '',
     admin_password: '',
   });
+
+  const BASE_DOMAIN = import.meta.env.VITE_BASE_DOMAIN || 'vercel.app';
+
+  const [editingTenant, setEditingTenant] = useState(null);
+  const [updating, setUpdating] = useState(false);
+
+  const handleOpenEdit = (tenant) => {
+    setEditingTenant({
+      id: tenant.id,
+      nombre: tenant.nombre || '',
+      subdominio: tenant.subdominio || '',
+      whatsapp: tenant.whatsapp || '',
+      color_primario: tenant.color_primario || '#25A7DA',
+    });
+  };
+
+  const handleUpdateTenant = async (e) => {
+    e.preventDefault();
+    setUpdating(true);
+    try {
+      const { data } = await api.put(`/tenants/${editingTenant.id}`, {
+        nombre: editingTenant.nombre,
+        subdominio: editingTenant.subdominio.toLowerCase().trim(),
+        whatsapp: editingTenant.whatsapp,
+        color_primario: editingTenant.color_primario,
+      });
+      setTenants((prev) => prev.map((t) => (t.id === data.id ? data : t)));
+      toast.success(`Datos de "${data.nombre}" actualizados.`);
+      setEditingTenant(null);
+    } catch (err) {
+      toast.error(err.response?.data?.detail || 'Error al actualizar la distribuidora.');
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -261,8 +296,16 @@ export default function SuperAdminDashboard() {
                     <tr key={tenant.id} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-4 px-5 font-mono text-secondary font-bold">#{tenant.id}</td>
                       <td className="py-4 px-5 font-bold text-primary-dark">{tenant.nombre}</td>
-                      <td className="py-4 px-5 text-primary font-medium">
-                        {tenant.subdominio}.dripgestion.com
+                      <td className="py-4 px-5">
+                        <a
+                          href={`https://${tenant.subdominio}.${BASE_DOMAIN}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:text-primary-dark font-bold inline-flex items-center gap-1.5 underline decoration-primary/40 hover:decoration-primary transition"
+                        >
+                          {tenant.subdominio}.{BASE_DOMAIN}
+                          <ExternalLink size={14} />
+                        </a>
                       </td>
                       <td className="py-4 px-5 text-secondary">{tenant.whatsapp || '-'}</td>
                       <td className="py-4 px-5">
@@ -277,24 +320,34 @@ export default function SuperAdminDashboard() {
                         </span>
                       </td>
                       <td className="py-4 px-5 text-right">
-                        <button
-                          onClick={() => handleToggleEstado(tenant)}
-                          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 ${
-                            tenant.is_active
-                              ? 'bg-danger/10 text-danger hover:bg-danger/20'
-                              : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                          }`}
-                        >
-                          {tenant.is_active ? (
-                            <>
-                              <PowerOff size={14} /> Quitar Acceso
-                            </>
-                          ) : (
-                            <>
-                              <Power size={14} /> Habilitar Acceso
-                            </>
-                          )}
-                        </button>
+                        <div className="inline-flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => handleOpenEdit(tenant)}
+                            className="px-3 py-2 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary/20 transition inline-flex items-center gap-1.5"
+                            title="Editar datos de la empresa"
+                          >
+                            <Pencil size={14} /> Editar
+                          </button>
+
+                          <button
+                            onClick={() => handleToggleEstado(tenant)}
+                            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 ${
+                              tenant.is_active
+                                ? 'bg-danger/10 text-danger hover:bg-danger/20'
+                                : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                            }`}
+                          >
+                            {tenant.is_active ? (
+                              <>
+                                <PowerOff size={14} /> Quitar Acceso
+                              </>
+                            ) : (
+                              <>
+                                <Power size={14} /> Habilitar Acceso
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -304,6 +357,116 @@ export default function SuperAdminDashboard() {
           </div>
         </div>
       </div>
+      {editingTenant && (
+        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white w-full max-w-lg rounded-3xl shadow-xl border border-primary-light/20 overflow-hidden">
+            <div className="bg-primary-dark px-6 py-4 flex items-center justify-between text-white">
+              <div className="flex items-center gap-2 font-bold">
+                <Pencil size={18} className="text-primary-light" />
+                <span>Editar Distribuidora #{editingTenant.id}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingTenant(null)}
+                className="p-1.5 rounded-xl hover:bg-white/10 transition"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateTenant} className="p-6 space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-primary-dark uppercase tracking-wider mb-1.5">
+                  Nombre Comercial *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingTenant.nombre}
+                  onChange={(e) => setEditingTenant({ ...editingTenant, nombre: e.target.value })}
+                  className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-primary-dark uppercase tracking-wider mb-1.5">
+                  Subdominio *
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={editingTenant.subdominio}
+                    onChange={(e) =>
+                      setEditingTenant({
+                        ...editingTenant,
+                        subdominio: e.target.value.toLowerCase().trim(),
+                      })
+                    }
+                    className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  />
+                  <span className="text-xs font-bold text-secondary shrink-0">.{BASE_DOMAIN}</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-primary-dark uppercase tracking-wider mb-1.5">
+                    WhatsApp Empresa
+                  </label>
+                  <input
+                    type="text"
+                    value={editingTenant.whatsapp}
+                    onChange={(e) => setEditingTenant({ ...editingTenant, whatsapp: e.target.value })}
+                    className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-primary-dark uppercase tracking-wider mb-1.5">
+                    Color Principal
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={editingTenant.color_primario}
+                      onChange={(e) =>
+                        setEditingTenant({ ...editingTenant, color_primario: e.target.value })
+                      }
+                      className="h-10 w-12 rounded-xl border border-slate-200 cursor-pointer bg-slate-50 p-1"
+                    />
+                    <input
+                      type="text"
+                      value={editingTenant.color_primario}
+                      onChange={(e) =>
+                        setEditingTenant({ ...editingTenant, color_primario: e.target.value })
+                      }
+                      className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-3 py-2 text-sm bg-slate-50 font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setEditingTenant(null)}
+                  className="px-4 py-2.5 rounded-2xl text-sm font-bold text-secondary hover:bg-slate-100 transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={updating}
+                  className="bg-primary-dark hover:bg-primary text-white font-bold px-5 py-2.5 rounded-2xl text-sm transition shadow-sm active:scale-95 disabled:opacity-60"
+                >
+                  {updating ? 'Guardando...' : 'Guardar Cambios'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
