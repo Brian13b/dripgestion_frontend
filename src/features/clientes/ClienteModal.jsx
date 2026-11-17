@@ -36,6 +36,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
           });
         } catch (error) {
           toast.error("Error al cargar cliente");
+          console.error(error);
           onClose();
         }
       };
@@ -85,8 +86,8 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/80 z-[70] flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-primary-dark/80 z-70 flex items-center justify-center p-4 backdrop-blur-sm">
+      <div className="bg-white w-full max-w-md rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
         
         {/* Header */}
         <div className="p-5 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
