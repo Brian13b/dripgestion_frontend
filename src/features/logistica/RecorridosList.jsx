@@ -28,6 +28,7 @@ export const RecorridosList = () => {
       setClientes(clientesRes);
     } catch (error) {
       toast.error("Error al cargar los datos");
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -50,6 +51,7 @@ export const RecorridosList = () => {
         toast.success("Recorrido eliminado");
       } catch (error) {
         toast.error("No se pudo eliminar el recorrido");
+        console.error(error);
       }
     }
   };
@@ -71,7 +73,8 @@ export const RecorridosList = () => {
       setRutaParaConfigurar(null); 
       fetchData();
     } catch (e) { 
-      toast.error("Error al guardar"); 
+      toast.error("Error al guardar");
+      console.error(e);
     }
   };
 
