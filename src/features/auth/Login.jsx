@@ -14,6 +14,8 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const isRootDomain = !tenant || !tenant.id;
 
@@ -40,36 +42,60 @@ export const Login = () => {
         return;
       }
 
+      setIsTransitioning(true);
+
       const role = userData.role?.toLowerCase();
-      if (role === 'superadmin') {
-        navigate('/superadmin');
-      } else if (role === 'cliente') {
-        navigate('/mi-portal');
-      } else {
-        navigate('/dashboard');
-      }
+      setTimeout(() => {
+        if (role === 'superadmin') {
+          navigate('/superadmin');
+        } else if (role === 'cliente') {
+          navigate('/mi-portal');
+        } else {
+          navigate('/dashboard');
+        }
+      }, 700);
+
     } catch (error) {
       console.error('Error en login:', error);
       setError(
         error.response?.data?.detail ||
           'Credenciales incorrectas o problemas de conexión'
       );
-    } finally {
       setIsLoading(false);
     }
   };
 
   const handlePedirPorWhatsApp = () => {
     const numeroDestino = tenant?.whatsapp || "5491100000000"; 
-    
     const mensaje = `Hola! Necesito saber mi PIN.`;
     window.open(`https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col md:flex-row">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row relative overflow-hidden">
+      
+      {/* CAPA DE TRANSICIÓN TIPO GOTA / EXPANSIÓN */}
+      <div 
+        className={`absolute inset-0 bg-primary-dark z-50 flex flex-col items-center justify-center text-white transition-all duration-700 ease-in-out pointer-events-none ${
+          isTransitioning 
+            ? 'opacity-100 scale-100 rounded-none' 
+            : 'opacity-0 scale-95 clip-path-drop'
+        }`}
+        style={{
+          clipPath: isTransitioning 
+            ? 'circle(150% at 50% 50%)' 
+            : 'circle(0% at 20% 50%)',
+          transition: 'clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s ease-in-out'
+        }}
+      >
+        <div className="w-28 h-28 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center animate-bounce mb-4">
+          <Droplet size={64} className="text-white fill-white/20 animate-pulse" />
+        </div>
+        <h2 className="text-4xl md:text-6xl font-black tracking-tight">Cargando tu espacio...</h2>
+      </div>
+
       {/* Lado Izquierdo */}
-      <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-3xl md:rounded-none md:rounded-r-[60px] z-10">
+      <div className="bg-primary-dark md:w-1/2 md:min-h-screen flex flex-col items-center justify-center text-white pt-12 pb-24 md:py-12 px-4 shadow-2xl rounded-b-3xl md:rounded-none md:rounded-r-[60px] z-10 transition-transform duration-500">
         <div className="w-32 h-32 md:w-40 md:h-40 bg-white rounded-full mb-6 border-4 border-white/30 flex items-center justify-center overflow-hidden shrink-0 mx-auto shadow-xl">
           {tenant?.logo_url ? (
             <img
@@ -151,7 +177,7 @@ export const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-dark hover:bg-primary text-white font-bold py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide"
+              className="w-full bg-primary-dark hover:bg-primary text-white font-bold py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide cursor-pointer"
             >
               {isLoading ? 'Verificando...' : 'Ingresar al sistema'}
             </button>
@@ -160,7 +186,7 @@ export const Login = () => {
           {!isRootDomain && (
             <button
               onClick={handlePedirPorWhatsApp}
-              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide"
+              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide cursor-pointer"
             >
               ¿No tenés PIN? Contactanos.
             </button>
