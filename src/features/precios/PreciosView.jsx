@@ -408,109 +408,121 @@ export const PreciosView = () => {
             )}
 
             {/* GRILLA DE PRODUCTOS */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-              {productos.map((prod) => (
-                <div
-                  key={prod.id}
-                  className={`bg-white p-6 rounded-3xl shadow-sm border-2 transition-all flex flex-col justify-between ${
-                    !prod.activo
-                      ? 'border-dashed border-slate-300 opacity-60 grayscale'
-                      : 'border-primary-light/20 hover:border-primary hover:shadow-md'
-                  }`}
-                >
-                  <div>
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center space-x-3.5">
-                        <div
-                          className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+            {productos.length === 0 ? (
+              <div className="bg-white rounded-3xl p-10 text-center border border-slate-200 max-w-xl mx-auto mt-6">
+                <Package size={40} className="mx-auto text-primary/50 mb-3" />
+                <h3 className="font-bold text-lg text-primary-dark">
+                  Sin productos en el catálogo
+                </h3>
+                <p className="text-sm text-slate-500 mt-1">
+                  Agregá los productos o servicios que comercializás (ej. Bidón 20L, Pack de Cerveza, Hielo) para empezar a registrar ventas.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                {productos.map((prod) => (
+                  <div
+                    key={prod.id}
+                    className={`bg-white p-6 rounded-3xl shadow-sm border-2 transition-all flex flex-col justify-between ${
+                      !prod.activo
+                        ? 'border-dashed border-slate-300 opacity-60 grayscale'
+                        : 'border-primary-light/20 hover:border-primary hover:shadow-md'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center space-x-3.5">
+                          <div
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
+                              prod.activo
+                                ? 'bg-primary/10 text-primary'
+                                : 'bg-slate-100 text-slate-400'
+                            }`}
+                          >
+                            <Package size={24} />
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-primary-dark text-lg tracking-wide leading-tight">
+                              {prod.nombre}
+                            </h3>
+                            <p className="text-[11px] text-secondary font-mono mt-0.5 tracking-widest uppercase">
+                              {prod.codigo}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleToggleActivo(prod.id)}
+                          className={`p-2 rounded-xl transition-colors ${
                             prod.activo
-                              ? 'bg-primary/10 text-primary'
-                              : 'bg-slate-100 text-slate-400'
+                              ? 'text-primary hover:bg-primary/10'
+                              : 'text-slate-400 hover:bg-slate-100'
                           }`}
+                          title={prod.activo ? 'Desactivar' : 'Activar'}
                         >
-                          <Package size={24} />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-primary-dark text-lg tracking-wide leading-tight">
-                            {prod.nombre}
-                          </h3>
-                          <p className="text-[11px] text-secondary font-mono mt-0.5 tracking-widest uppercase">
-                            {prod.codigo}
-                          </p>
-                        </div>
+                          {prod.activo ? <Eye size={20} /> : <EyeOff size={20} />}
+                        </button>
                       </div>
-                      <button
-                        onClick={() => handleToggleActivo(prod.id)}
-                        className={`p-2 rounded-xl transition-colors ${
-                          prod.activo
-                            ? 'text-primary hover:bg-primary/10'
-                            : 'text-slate-400 hover:bg-slate-100'
-                        }`}
-                        title={prod.activo ? 'Desactivar' : 'Activar'}
-                      >
-                        {prod.activo ? <Eye size={20} /> : <EyeOff size={20} />}
-                      </button>
+
+                      {/* BADGES MULTI-RUBRO */}
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 uppercase">
+                          <Layers size={12} />
+                          {prod.unidad_medida || 'unidad'}
+                        </span>
+                        {prod.es_retornable ? (
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <Recycle size={12} />
+                            {prod.tipo_envase?.nombre || 'Retornable'}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700">
+                            <Box size={12} />
+                            Descartable / Directo
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    {/* BADGES MULTI-RUBRO */}
-                    <div className="flex flex-wrap gap-2 mb-5">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 uppercase">
-                        <Layers size={12} />
-                        {prod.unidad_medida || 'unidad'}
-                      </span>
-                      {prod.es_retornable ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <Recycle size={12} />
-                          {prod.tipo_envase?.nombre || 'Retornable'}
-                        </span>
+                    {/* PRECIO */}
+                    <div className="flex items-center justify-between bg-background p-3.5 rounded-2xl border border-primary-light/30">
+                      {editandoId === prod.id ? (
+                        <div className="flex items-center space-x-2 w-full justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-primary font-bold text-lg">$</span>
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={nuevoPrecio}
+                              onChange={(e) => setNuevoPrecio(e.target.value)}
+                              className="w-28 border-2 border-primary bg-white rounded-xl p-2 font-black text-primary-dark text-lg text-center focus:outline-none"
+                              autoFocus
+                            />
+                          </div>
+                          <button
+                            onClick={() => guardarPrecio(prod.id)}
+                            className="bg-success text-white p-2.5 rounded-xl hover:bg-emerald-600 shadow-sm"
+                          >
+                            <Save size={18} />
+                          </button>
+                        </div>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-lg bg-sky-50 text-sky-700">
-                          <Box size={12} />
-                          Descartable / Directo
-                        </span>
+                        <div className="flex items-center justify-between w-full">
+                          <span className="font-black text-lg text-primary-dark">
+                            ${prod.precio_actual}
+                          </span>
+                          <button
+                            onClick={() => iniciarEdicion(prod)}
+                            className="text-primary bg-primary/10 hover:bg-primary hover:text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-colors tracking-wide"
+                          >
+                            Modificar
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
-
-                  {/* PRECIO */}
-                  <div className="flex items-center justify-between bg-background p-3.5 rounded-2xl border border-primary-light/30">
-                    {editandoId === prod.id ? (
-                      <div className="flex items-center space-x-2 w-full justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-primary font-bold text-lg">$</span>
-                          <input
-                            type="number"
-                            step="0.01"
-                            value={nuevoPrecio}
-                            onChange={(e) => setNuevoPrecio(e.target.value)}
-                            className="w-28 border-2 border-primary bg-white rounded-xl p-2 font-black text-primary-dark text-lg text-center focus:outline-none"
-                            autoFocus
-                          />
-                        </div>
-                        <button
-                          onClick={() => guardarPrecio(prod.id)}
-                          className="bg-success text-white p-2.5 rounded-xl hover:bg-emerald-600 shadow-sm"
-                        >
-                          <Save size={18} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between w-full">
-                        <span className="font-black text-lg text-primary-dark">
-                          ${prod.precio_actual}
-                        </span>
-                        <button
-                          onClick={() => iniciarEdicion(prod)}
-                          className="text-primary bg-primary/10 hover:bg-primary hover:text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-colors tracking-wide"
-                        >
-                          Modificar
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </>
         ) : (
           <>
