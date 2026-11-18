@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { ArrowLeft, Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, Map } from 'lucide-react';
+import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, Map } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
 import { AuthContext } from '../../context/AuthContext';
 import { userService } from '../../api/userService';
@@ -27,17 +27,15 @@ export const HistorialView = () => {
   const [listaRecorridos, setListaRecorridos] = useState([]);
 
   useEffect(() => {
-    if (user?.role.toUpperCase() === 'ADMIN') {
+    if (user?.role?.toUpperCase() === 'ADMIN') {
       const cargarFiltros = async () => {
         try {
           const recorridos = await recorridoService.getAll();
           setListaRecorridos(recorridos);
 
           const equipo = await userService.getEquipo();
-          
           const choferes = equipo.filter(u => u.role.toUpperCase() === 'REPARTIDOR');
           setListaChoferes(choferes);
-
         } catch (error) {
           console.error("Error cargando listas de filtros", error);
         }
@@ -53,7 +51,7 @@ export const HistorialView = () => {
         const historialDia = await recorridoService.getHistorialPorFecha(fechaFiltro, choferFiltro, recorridoFiltro);
         setMovimientos(historialDia);
 
-        if (user?.role.toUpperCase() === 'ADMIN') {
+        if (user?.role?.toUpperCase() === 'ADMIN') {
           const datosMes = await recorridoService.getResumenMesActual();
           setResumenMes(datosMes);
         }
@@ -72,70 +70,73 @@ export const HistorialView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
-
-          <div className="flex items-center">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
-                Auditoría de Caja
-              </h1>
-              <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">
-                Control Financiero
-              </p>
-            </div>
+      {/* Header Limpio */}
+      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 text-white shadow-md border-b-4 border-primary">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+              Auditoría de Caja
+            </h1>
+            <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">
+              Control Financiero
+            </p>
           </div>
-
-          <div className="flex flex-col md:flex-row gap-3">
-            {/* Filtro Fecha */}
-            <div className="relative group overflow-hidden rounded-2xl bg-white">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10"><CalendarIcon size={20} className="text-primary-dark" /></div>
-              <input 
-                type="date" 
-                value={fechaFiltro} 
-                onChange={(e) => setFechaFiltro(e.target.value)} 
-                className="w-full pl-12 pr-4 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full"
-              />
-            </div>
-
-            {/* Filtros Admin */}
-            {user?.role.toUpperCase() === 'ADMIN' && (
-              <>
-                <div className="relative rounded-2xl bg-white overflow-hidden">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Users size={18} className="text-primary-dark" /></div>
-                  <select 
-                    value={choferFiltro} 
-                    onChange={(e) => setChoferFiltro(e.target.value)}
-                    className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
-                  >
-                    <option value="">Todos los Choferes</option>
-                    {listaChoferes.map(ch => (
-                      <option key={ch.id} value={ch.id}>{ch.full_name}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="relative rounded-2xl bg-white overflow-hidden">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Map size={18} className="text-primary-dark" /></div>
-                  <select 
-                    value={recorridoFiltro} 
-                    onChange={(e) => setRecorridoFiltro(e.target.value)}
-                    className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
-                  >
-                    <option value="">Todos los Recorridos</option>
-                    {listaRecorridos.map(rec => (
-                      <option key={rec.id} value={rec.id}>{rec.nombre}</option>
-                    ))}
-                  </select>
-                </div>
-              </>
-            )}
-          </div>
-
         </div>
       </div>
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
+
+        {/* BARRA DE FILTROS */}
+        <div className="bg-white p-4 rounded-3xl shadow-xs border border-primary-light/20 flex flex-col md:flex-row items-center gap-3">
+          {/* Filtro Fecha */}
+          <div className="relative group overflow-hidden rounded-2xl bg-slate-50 border border-primary-light/30 w-full md:w-auto flex-1">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+              <CalendarIcon size={18} className="text-primary" />
+            </div>
+            <input 
+              type="date" 
+              value={fechaFiltro} 
+              onChange={(e) => setFechaFiltro(e.target.value)} 
+              className="w-full pl-12 pr-4 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer"
+            />
+          </div>
+
+          {/* Filtros Admin (Chofer y Recorrido) */}
+          {user?.role?.toUpperCase() === 'ADMIN' && (
+            <>
+              <div className="relative rounded-2xl bg-slate-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Users size={18} className="text-primary" />
+                </div>
+                <select 
+                  value={choferFiltro} 
+                  onChange={(e) => setChoferFiltro(e.target.value)}
+                  className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
+                >
+                  <option value="">Todos los Choferes</option>
+                  {listaChoferes.map(ch => (
+                    <option key={ch.id} value={ch.id}>{ch.full_name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="relative rounded-2xl bg-slate-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                </div>
+                <select 
+                  value={recorridoFiltro} 
+                  onChange={(e) => setRecorridoFiltro(e.target.value)}
+                  className="w-full pl-10 pr-8 py-3 bg-transparent text-primary-dark font-bold text-sm outline-none cursor-pointer appearance-none"
+                >
+                  <option value="">Todos los Recorridos</option>
+                  {listaRecorridos.map(rec => (
+                    <option key={rec.id} value={rec.id}>{rec.nombre}</option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
+        </div>
 
         {/* RECAUDACIÓN DEL MES */}
         {user?.role?.toUpperCase() === 'ADMIN' && (
