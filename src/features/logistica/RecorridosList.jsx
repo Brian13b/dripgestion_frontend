@@ -88,11 +88,13 @@ export const RecorridosList = () => {
               <Package size={32} className="mr-3 text-white" />
               Rutas de Reparto
             </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">Organiza la logística de entregas</p>
+            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
+              Organiza la logística de entregas
+            </p>
           </div>
           <button 
             onClick={() => setRutaParaConfigurar({ id: null, nombre: '', dia_semana: 0, clientes_orden: [] })} 
-            className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg"
+            className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg cursor-pointer"
           >
             <Plus size={22} className="md:mr-2" />
             <span className="hidden md:inline tracking-wider">Nueva Ruta</span>

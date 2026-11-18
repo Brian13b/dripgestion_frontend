@@ -15,7 +15,7 @@ export const ClientesList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [paginaActual, setPaginaActual] = useState(1);
-  const elementosPorPagina = 9; // Cantidad de clientes por página
+  const elementosPorPagina = 9;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [clienteEditandoId, setClienteEditandoId] = useState(null);
@@ -23,11 +23,10 @@ export const ClientesList = () => {
   const [cobroModalAbierto, setCobroModalAbierto] = useState(false);
   const [clienteParaCobrar, setClienteParaCobrar] = useState(null);
 
-  // Efecto de Debounce para el buscador (espera 400ms después de que frena de escribir)
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchTerm);
-      setPaginaActual(1); // Volver a la primera página al buscar
+      setPaginaActual(1);
     }, 400);
 
     return () => clearTimeout(timer);
@@ -58,7 +57,6 @@ export const ClientesList = () => {
     return acc;
   }, {});
 
-  // Filtrado de clientes según el texto buscado (con debounce)
   const clientesFiltrados = clientes.filter(
     (c) =>
       c.nombre_negocio.toLowerCase().includes(debouncedSearch.toLowerCase()) ||

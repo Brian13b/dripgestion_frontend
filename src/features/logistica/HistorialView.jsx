@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, Map } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
 import { AuthContext } from '../../context/AuthContext';
@@ -14,7 +13,6 @@ const getFechaLocalHoy = () => {
 };
 
 export const HistorialView = () => {
-  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
 
   const [movimientos, setMovimientos] = useState([]);
@@ -78,12 +76,6 @@ export const HistorialView = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
 
           <div className="flex items-center">
-            <button 
-              onClick={() => navigate(-1)} 
-              className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0"
-            >
-              <ArrowLeft size={28} />
-            </button>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
                 Auditoría de Caja
