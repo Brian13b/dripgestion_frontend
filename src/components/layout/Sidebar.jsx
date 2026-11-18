@@ -43,23 +43,23 @@ export const Sidebar = () => {
   return (
     <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-64 bg-white border-r border-primary-light/25 shadow-sm">
       {/* Cabecera: Marca / Empresa */}
-      <div className="px-5 py-6 border-b border-slate-100 flex items-center gap-3">
+      <div className="bg-primary-dark px-5 py-6 border-b-4 border-primary flex items-center gap-3 shadow-md">
         {tenant?.logo_url ? (
           <img
             src={tenant.logo_url}
             alt={tenant.nombre}
-            className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0"
+            className="w-10 h-10 rounded-xl object-cover border border-white/30 shrink-0 bg-white p-1"
           />
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0 border border-white/20">
             <Droplets size={22} />
           </div>
         )}
         <div className="min-w-0">
-          <p className="text-sm font-black text-primary-dark truncate">
+          <p className="text-sm font-black text-white truncate">
             {tenant?.nombre || 'Drip Gestión'}
           </p>
-          <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md mt-0.5">
+          <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary-dark bg-primary-light px-2 py-0.5 rounded-md mt-0.5">
             {isAdmin ? 'Administrador' : 'Repartidor'}
           </span>
         </div>
