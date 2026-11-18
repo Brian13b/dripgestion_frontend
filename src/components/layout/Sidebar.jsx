@@ -41,7 +41,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-64 bg-white border-r border-primary-light/25 shadow-sm">
+    <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-64 bg-white shadow-sm">
       {/* Cabecera: Marca / Empresa */}
       <div className="bg-primary-dark px-5 py-6 border-b-4 border-primary flex items-center gap-3 shadow-md">
         {tenant?.logo_url ? (
