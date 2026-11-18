@@ -147,7 +147,7 @@ export const HistorialView = () => {
 
         {/* RECAUDACIÓN DEL MES */}
         {user?.role?.toUpperCase() === 'ADMIN' && (
-          <div className="bg-linear-to-r from-primary to-primary-dark p-1 rounded-3xl shadow-md">
+          <div className="p-1 shadow-md">
             <div className="bg-white rounded-[22px] p-5">
               <h2 className="text-lg font-bold text-primary-dark uppercase tracking-widest mb-4 flex items-center border-b border-primary-light/30 pb-3">
                  <CalendarDays size={22} className="mr-2 text-primary"/> Total Acumulado del Mes
