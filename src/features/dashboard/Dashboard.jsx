@@ -77,7 +77,7 @@ export const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark px-5 md:px-12 lg:px-16 pt-8 pb-8 md:pb-10 mb-8 shadow-md border-b-4 border-primary">
+      <div className="bg-primary-dark max-h-32 px-5 md:px-12 lg:px-16 pt-8 pb-8 md:pb-10 mb-8 shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
             Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}

@@ -67,12 +67,13 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       <div className={clsx('bg-primary-dark h-32 border-b-4 border-primary shadow-md flex flex-col justify-between py-3 transition-all duration-300', collapsed ? 'items-center px-2' : 'px-4')}>
         <button type="button" onClick={onToggleCollapse} title={collapsed ? 'Expandir menú' : 'Colapsar menú'} aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           className={clsx(
-            'p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer',
+            'flex items-center gap-1.5 p-0.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer',
             collapsed ? 'self-center' : 'self-end'
           )}
         >
-          {collapsed ? (<PanelLeftOpen size={18} />) : ( <> <PanelLeftClose size={18} /> <span className="sr-only">Colapsar menú</span> </>)}
+          {collapsed ? (<PanelLeftOpen size={18} />) : ( <> <PanelLeftClose size={18} /> <span className="text-xs font-semibold">Colapsar menú</span> </>)}
         </button>
+
         <div className={clsx('flex items-center min-w-0', collapsed ? 'justify-center' : 'gap-3')}>
           {tenant?.logo_url ? (
             <img
@@ -91,7 +92,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
               <p className="text-sm font-black text-white truncate">
                 {tenant?.nombre || 'Drip Gestión'}
               </p>
-              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary-dark bg-primary-light px-2 py-0.5 rounded-md mt-0.5">
+              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary-dark bg-primary-light px-2 py-1.5 rounded-md mt-0.5">
                 {isAdmin ? 'Administrador' : 'Repartidor'}
               </span>
             </div>
