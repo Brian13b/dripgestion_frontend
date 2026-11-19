@@ -1,19 +1,6 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  LayoutGrid,
-  Users,
-  MapPin,
-  Tag,
-  UserCircle,
-  History,
-  Settings,
-  UserCog,
-  LogOut,
-  Droplets,
-  PanelLeftClose,
-  PanelLeftOpen,
-} from 'lucide-react';
+import { LayoutGrid, Users, MapPin, Tag, UserCircle, History, Settings, UserCog, LogOut, Droplets, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import clsx from 'clsx';
 import { AuthContext } from '../../context/AuthContext';
 import { TenantContext } from '../../context/TenantContext';
@@ -57,11 +44,10 @@ const SectionLabel = ({ text, collapsed }) => {
   );
 };
 
-export const Sidebar = () => {
+export const Sidebar = ({ collapsed, onToggleCollapse }) => {
   const { user, logout } = useContext(AuthContext);
   const { tenant } = useContext(TenantContext);
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = useState(false);
 
   const isAdmin = user?.role?.toLowerCase() === 'admin';
 
@@ -111,7 +97,7 @@ export const Sidebar = () => {
 
         <button
           type="button"
-          onClick={() => setCollapsed((prev) => !prev)}
+          onClick={onToggleCollapse}
           title={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           className="p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer"
@@ -159,14 +145,6 @@ export const Sidebar = () => {
 
       {/* Pie: Usuario actual + Cerrar sesión */}
       <div className="p-3 border-t border-slate-100 bg-slate-50/60">
-        {!collapsed && (
-          <div className="mb-3 px-2">
-            <p className="text-xs font-bold text-primary-dark truncate">
-              {user?.full_name || user?.username}
-            </p>
-            <p className="text-[11px] text-slate-400 truncate">@{user?.username}</p>
-          </div>
-        )}
         <button
           type="button"
           onClick={handleLogout}
