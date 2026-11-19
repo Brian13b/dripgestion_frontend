@@ -66,11 +66,16 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       {/* Cabecera: Marca + Botón Colapsar */}
       <div
         className={clsx(
-          'bg-primary-dark h-24 border-b-4 border-primary shadow-md flex items-center transition-all duration-300',
-          collapsed ? 'justify-center gap-1 px-2' : 'justify-between gap-2 px-4'
+          'bg-primary-dark h-32 border-b-4 border-primary shadow-md flex flex-col justify-between py-3 transition-all duration-300',
+          collapsed ? 'items-center px-2' : 'px-4'
         )}
       >
-        <div className={clsx('flex items-center min-w-0', collapsed ? 'justify-center' : 'gap-3')}>
+        <div
+          className={clsx(
+            'flex items-center min-w-0',
+            collapsed ? 'justify-center' : 'gap-3'
+          )}
+        >
           {tenant?.logo_url ? (
             <img
               src={tenant.logo_url}
@@ -100,7 +105,10 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
           onClick={onToggleCollapse}
           title={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
-          className="p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer"
+          className={clsx(
+            'p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer',
+            collapsed ? 'self-center' : 'self-end'
+          )}
         >
           {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
         </button>
