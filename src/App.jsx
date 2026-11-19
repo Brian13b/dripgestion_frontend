@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import clsx from 'clsx';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { TenantProvider } from './context/TenantContext';
 import { BottomNav } from './components/layout/BottomNav';
@@ -34,6 +35,8 @@ const RequireSuperAdmin = () => {
 
 const RequireEmpresa = ({ adminOnly = false }) => {
   const { user } = useContext(AuthContext);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
   if (!user) return <Navigate to="/login" replace />;
 
   const role = user.role?.toLowerCase();
@@ -43,8 +46,16 @@ const RequireEmpresa = ({ adminOnly = false }) => {
   if (adminOnly && role === 'repartidor') return <Navigate to="/dashboard" replace />;
 
   return (
-    <div className="min-h-screen bg-background text-primary-dark pb-20 lg:pb-8 lg:pl-64 overflow-x-hidden">
-      <Sidebar />
+    <div
+      className={clsx(
+        'min-h-screen bg-background text-primary-dark pb-20 lg:pb-8 overflow-x-hidden transition-all duration-300',
+        sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'
+      )}
+    >
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
+      />
       <main className="w-full min-h-screen">
         <Outlet />
       </main>
