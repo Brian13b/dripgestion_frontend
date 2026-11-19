@@ -22,13 +22,13 @@ export const ConfiguracionView = () => {
     nombre: tenant?.nombre || '',
     whatsapp: tenant?.whatsapp || '',
     font_sans: tenant?.font_sans || "'Inter', sans-serif",
-    color_primario: tenant?.color_primario || '#25A7DA',
-    color_primario_light: tenant?.color_primario_light || '#00ACC1',
-    color_primario_dark: tenant?.color_primario_dark || '#0C4A6E',
-    color_background: tenant?.color_background || '#F0FDFA',
-    color_success: tenant?.color_success || '#10b981',
-    color_danger: tenant?.color_danger || '#ef4444',
-    color_secondary: tenant?.color_secondary || '#64748b',
+    color_primario: tenant?.color_primario || '#E86A1F',
+    color_primario_light: tenant?.color_primario_light || '#F5A474',
+    color_primario_dark: tenant?.color_primario_dark || '#1C1917',
+    color_background: tenant?.color_background || '#F7F4F0',
+    color_success: tenant?.color_success || '#16a34a',
+    color_danger: tenant?.color_danger || '#dc2626',
+    color_secondary: tenant?.color_secondary || '#78716c',
   });
 
   const handleLogoUpload = async (event) => {
@@ -51,7 +51,7 @@ export const ConfiguracionView = () => {
       
     } catch (error) {
       console.error(error);
-      notify.error('Error al subir el logo a la nube');
+      notify.error(error, 'Error al subir el logo a la nube');
     } finally {
       setIsUploadingLogo(false);
       if (fileInputRef.current) fileInputRef.current.value = ''; 
@@ -66,7 +66,7 @@ export const ConfiguracionView = () => {
       
     } catch (error) {
       console.error(error);
-      notify.error('Error al guardar la configuración');
+      notify.error(error, 'Error al guardar la configuración');
     } finally {
       setIsSaving(false);
     }
@@ -236,7 +236,7 @@ export const ConfiguracionView = () => {
                       setCurrentPassword('');
                       setNewPassword('');
                     } catch (error) {
-                      notify.error("Contraseña actual incorrecta");
+                      notify.error(error, "No se pudo actualizar la contraseña");
                       console.error(error);
                     }
                   }}

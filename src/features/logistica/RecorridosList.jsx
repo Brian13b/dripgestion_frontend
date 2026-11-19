@@ -33,7 +33,7 @@ export const RecorridosList = () => {
       setRecorridos(recorridosRes);
       setClientes(clientesRes);
     } catch (error) {
-      notify.error("Error al cargar los datos");
+      notify.error(error, "Error al cargar los datos");
       console.error(error);
     } finally {
       setLoading(false);
@@ -79,7 +79,7 @@ export const RecorridosList = () => {
       setRutaParaConfigurar(null); 
       fetchData();
     } catch (e) { 
-      notify.error("Error al guardar");
+      notify.error(e, "Error al guardar");
       console.error(e);
     }
   };

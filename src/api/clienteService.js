@@ -3,9 +3,18 @@ import { headersIdempotencia } from '../lib/idempotency';
 
 export const clientesService = {
   // Traer todos
+  // El backend pagina (limit=100 por defecto): se recorren todas las paginas para no
+  // dejar clientes afuera de la lista, del recorrido ni de la visita excepcional.
   getAll: async () => {
-    const response = await api.get('/clientes');
-    return response.data.items || [];
+    const PAGE = 100;
+    const items = [];
+    for (let skip = 0, total = Infinity; skip < total; skip += PAGE) {
+      const { data } = await api.get('/clientes', { params: { skip, limit: PAGE } });
+      items.push(...(data.items || []));
+      total = data.total ?? items.length;
+      if (!data.items?.length) break;
+    }
+    return items;
   },
   
   // Traer uno solo

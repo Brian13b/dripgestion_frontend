@@ -19,7 +19,7 @@ export const HistorialView = () => {
   const { user } = useContext(AuthContext);
 
   const [movimientos, setMovimientos] = useState([]);
-  const [resumenMes, setResumenMes] = useState({ efectivo: 0, transferencia: 0, fiado: 0 });
+  const [resumenMes, setResumenMes] = useState({ efectivo: 0, transferencia: 0, fiado: 0, visitas_excepcionales: 0, cobrado_en_visitas_excepcionales: 0 });
   const [loading, setLoading] = useState(true);
   
   const [fechaFiltro, setFechaFiltro] = useState(getFechaLocalHoy());
@@ -147,6 +147,11 @@ export const HistorialView = () => {
                 <div className="border-x border-primary-light/30"><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Transferencia</p><p className="text-2xl md:text-4xl font-black text-primary">${resumenMes.transferencia}</p></div>
                 <div><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Fiado</p><p className="text-2xl md:text-4xl font-black text-orange-500">${resumenMes.fiado}</p></div>
               </div>
+              {resumenMes.visitas_excepcionales > 0 && (
+                <p className="mt-4 pt-3 border-t border-primary-light/30 text-sm font-semibold text-secondary text-center">
+                  {resumenMes.visitas_excepcionales} visita{resumenMes.visitas_excepcionales === 1 ? '' : 's'} excepcional{resumenMes.visitas_excepcionales === 1 ? '' : 'es'} este mes · ${resumenMes.cobrado_en_visitas_excepcionales} cobrados (incluidos arriba)
+                </p>
+              )}
             </div>
           </div>
         )}
@@ -173,6 +178,11 @@ export const HistorialView = () => {
                   <div>
                     <span className="font-bold text-primary-dark text-xl tracking-wide block leading-tight pr-2">{mov.cliente}</span>
                     <span className="text-sm text-secondary font-medium block mt-1">{mov.hora}</span>
+                    {mov.visita_excepcional && (
+                      <span className="inline-block mt-2 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded-md">
+                        Visita excepcional
+                      </span>
+                    )}
                   </div>
                   <div className="text-right">
                     <span className={`font-black text-2xl block ${mov.metodo_pago === 'cta_corriente' ? 'text-orange-500' : 'text-primary-dark'}`}>${mov.metodo_pago === 'cta_corriente' ? mov.monto_total : mov.monto_cobrado}</span>

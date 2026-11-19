@@ -32,14 +32,14 @@ export const CobroModal = ({ isOpen, onClose, cliente, onSuccess }) => {
       );
       claveEnvioRef.current = null;
       notify.success('Pago registrado con éxito');
+      setMonto('');
       onSuccess();
       onClose();
     } catch (error) {
-      notify.error('Error al registrar el pago');
+      notify.error(error, 'Error al registrar el pago');
       console.error(error);
     } finally {
       setLoading(false);
-      setMonto('');
     }
   };
 

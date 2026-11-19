@@ -36,7 +36,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
             condicion_iva: data.condicion_iva || 'Consumidor Final'
           });
         } catch (error) {
-          notify.error("Error al cargar cliente");
+          notify.error(error, "Error al cargar cliente");
           console.error(error);
           onClose();
         }

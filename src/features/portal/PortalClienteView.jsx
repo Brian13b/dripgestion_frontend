@@ -1,5 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { notify } from '../../lib/notify';
+import { urlWhatsapp } from '../../lib/whatsapp';
+import { LoadingState } from '../../components/primitives/StateBlock';
 import { Button } from '../../components/primitives/Button';
 import { LogOut, Package, DollarSign, MessageCircle, AlertCircle, FileText, Droplet } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
@@ -29,19 +31,19 @@ export const PortalClienteView = () => {
     cargarDatos();
   }, []);
 
+  // Si la empresa no cargo su WhatsApp no se ofrece un enlace a un numero inexistente.
+  const whatsappPedido = urlWhatsapp(
+    tenant?.whatsapp,
+    `Hola! Necesito hacer un pedido para *${cuenta?.nombre_negocio}* (${cuenta?.direccion}).`
+  );
   const handlePedirPorWhatsApp = () => {
-    const numeroDestino = tenant?.whatsapp || '5491100000000';
-    const mensaje = `Hola! Necesito hacer un pedido para *${cuenta?.nombre_negocio}* (${cuenta?.direccion}).`;
-    window.open(
-      `https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`,
-      '_blank'
-    );
+    if (whatsappPedido) window.open(whatsappPedido, '_blank', 'noopener,noreferrer');
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center animate-pulse text-primary font-bold text-2xl tracking-widest">
-        Cargando tu cuenta...
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <LoadingState label="Cargando tu cuenta..." />
       </div>
     );
   }
@@ -145,12 +147,21 @@ export const PortalClienteView = () => {
           </div>
         </div>
 
-        <Button
-          onClick={handlePedirPorWhatsApp}
-          variant="whatsapp" size="lg" fullWidth
-        >
-          <MessageCircle size={28} className="mr-3" /> Hacer Pedido por WhatsApp
-        </Button>
+        {whatsappPedido ? (
+          <Button
+            onClick={handlePedirPorWhatsApp}
+            variant="whatsapp" size="lg" fullWidth
+          >
+            <MessageCircle size={28} className="mr-3" /> Hacer Pedido por WhatsApp
+          </Button>
+        ) : (
+          <div className="rounded-3xl border border-sand-200 bg-sand-50 p-5 text-center">
+            <p className="font-bold text-primary-dark">Pedidos por WhatsApp no disponibles</p>
+            <p className="text-sm text-secondary font-medium mt-1">
+              {tenant?.nombre || 'Tu distribuidora'} todavía no cargó un número de contacto. Pedile el pedido directamente al repartidor.
+            </p>
+          </div>
+        )}
 
         {/* SECCIÓN DE HISTORIAL DEL CLIENTE */}
         <div className="mt-8 pt-6 border-t border-primary-light/30">

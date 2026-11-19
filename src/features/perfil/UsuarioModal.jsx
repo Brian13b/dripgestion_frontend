@@ -27,7 +27,7 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
             password: ''
           });
         } catch (error) {
-          notify.error("Error al cargar datos del usuario");
+          notify.error(error, "Error al cargar datos del usuario");
           console.error(error);
           onClose();
         }
@@ -90,7 +90,7 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
                 disabled={isEditing}
                 type="text"
                 value={formData.username}
-                className={`w-full pl-12 pr-4 py-3 border-2 rounded-2xl ${isEditing ? 'bg-sand-100 border-sand-200 text-secondary' : 'border-primary-light/30 bg-sand-50 focus:border-primary'}`}
+                className="field pl-12 pr-4"
                 onChange={(e) => setFormData({...formData, username: e.target.value})}
               />
             </div>

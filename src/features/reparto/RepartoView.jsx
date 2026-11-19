@@ -135,7 +135,7 @@ export const RepartoView = () => {
         setCatalogo(prods);
         setTiposEnvase(envases);
       } catch (error) {
-        notify.error('Error al cargar datos del recorrido');
+        notify.error(error, 'Error al cargar datos del recorrido');
         console.error(error);
       } finally {
         setLoading(false);
@@ -202,14 +202,16 @@ export const RepartoView = () => {
       setClientesDisponibles(todos.filter((c) => !idsEnRuta.includes(c.id)));
       setModalAgregarAbierto(true);
     } catch (e) {
-      notify.error('Error al buscar clientes');
+      notify.error(e, 'Error al buscar clientes');
       console.error(e);
     }
   };
 
   const agregarClienteAlPaso = (cliente) => {
     const nuevasRutas = [...clientesRuta];
-    nuevasRutas.splice(indiceActual + 1, 0, cliente);
+    // Fuera del recorrido: queda marcada como visita excepcional (se envia al backend y
+    // se ve en el historial y la auditoria de caja).
+    nuevasRutas.splice(indiceActual + 1, 0, { ...cliente, visita_excepcional: true });
     setClientesRuta(nuevasRutas);
     setModalAgregarAbierto(false);
     notify.success('Agregado como próxima parada');
@@ -230,6 +232,7 @@ export const RepartoView = () => {
     const payload = {
       cliente_id: clienteActual.id,
       recorrido_id: recorrido.id,
+      visita_excepcional: Boolean(clienteActual.visita_excepcional),
       detalles: movimientos,
       devoluciones_envases:
         Object.keys(devolucionesDirectas).length > 0
@@ -348,7 +351,7 @@ export const RepartoView = () => {
         {/* INFO CLIENTE */}
         <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6 relative overflow-hidden">
           <span className="float-right bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">
-            Pendiente
+            {clienteActual.visita_excepcional ? 'Visita excepcional' : 'Pendiente'}
           </span>
           <h2 className="text-2xl md:text-3xl font-bold text-primary-dark mb-2 tracking-wide pr-20">
             {clienteActual.nombre_negocio}

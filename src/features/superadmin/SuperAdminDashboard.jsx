@@ -6,7 +6,8 @@ import { PageHeader } from '../../components/primitives/PageHeader';
 import { Modal, ModalHeader } from '../../components/primitives/Modal';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import api from '../../api/axios';
+import { tenantService } from '../../api/tenantService';
+import { LoadingState } from '../../components/primitives/StateBlock';
 import { ShieldCheck, LogOut, Building2, Plus, Power, PowerOff, ExternalLink, Pencil, X } from 'lucide-react';
 import { notify } from '../../lib/notify';
 
@@ -23,7 +24,7 @@ export default function SuperAdminDashboard() {
     nombre: '',
     subdominio: '',
     whatsapp: '',
-    color_primario: '#25A7DA',
+    color_primario: '#E86A1F',
     admin_full_name: '',
     admin_username: '',
     admin_password: '',
@@ -40,7 +41,7 @@ export default function SuperAdminDashboard() {
       nombre: tenant.nombre || '',
       subdominio: tenant.subdominio || '',
       whatsapp: tenant.whatsapp || '',
-      color_primario: tenant.color_primario || '#25A7DA',
+      color_primario: tenant.color_primario || '#E86A1F',
     });
   };
 
@@ -48,7 +49,7 @@ export default function SuperAdminDashboard() {
     e.preventDefault();
     setUpdating(true);
     try {
-      const { data } = await api.put(`/tenants/${editingTenant.id}`, {
+      const data = await tenantService.actualizar(editingTenant.id, {
         nombre: editingTenant.nombre,
         subdominio: editingTenant.subdominio.toLowerCase().trim(),
         whatsapp: editingTenant.whatsapp,
@@ -71,10 +72,9 @@ export default function SuperAdminDashboard() {
 
   const fetchTenants = async () => {
     try {
-      const { data } = await api.get('/tenants/');
-      setTenants(data);
+      setTenants(await tenantService.listar());
     } catch (err) {
-      notify.error('Error al cargar las distribuidoras.');
+      notify.error(err, 'Error al cargar las distribuidoras.');
         console.error(err);
     } finally {
       setLoading(false);
@@ -89,13 +89,13 @@ export default function SuperAdminDashboard() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await api.post('/tenants/onboarding', formData);
+      await tenantService.crearConAdmin(formData);
       notify.success(`Distribuidora "${formData.nombre}" creada con éxito.`);
       setFormData({
         nombre: '',
         subdominio: '',
         whatsapp: '',
-        color_primario: '#25A7DA',
+        color_primario: '#E86A1F',
         admin_full_name: '',
         admin_username: '',
         admin_password: '',
@@ -114,7 +114,7 @@ export default function SuperAdminDashboard() {
     if (!(await confirm({ title: `${nuevoEstado ? 'Habilitar' : 'Suspender'} acceso`, message: `¿Querés ${accion} el acceso a ${tenant.nombre}?`, confirmLabel: nuevoEstado ? 'Habilitar' : 'Suspender', tone: nuevoEstado ? 'primary' : 'danger' }))) return;
 
     try {
-      await api.patch(`/tenants/${tenant.id}/estado?activo=${nuevoEstado}`);
+      await tenantService.cambiarEstado(tenant.id, nuevoEstado);
       setTenants((prev) =>
         prev.map((t) => (t.id === tenant.id ? { ...t, is_active: nuevoEstado } : t))
       );
@@ -267,8 +267,8 @@ export default function SuperAdminDashboard() {
               <tbody className="divide-y divide-sand-100 text-sm">
                 {loading ? (
                   <tr>
-                    <td colSpan="6" className="p-8 text-center text-secondary font-medium">
-                      Cargando empresas...
+                    <td colSpan="6">
+                      <LoadingState label="Cargando empresas..." className="py-10" />
                     </td>
                   </tr>
                 ) : tenants.length === 0 ? (

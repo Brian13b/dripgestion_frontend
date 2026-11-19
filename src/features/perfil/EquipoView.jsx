@@ -21,7 +21,7 @@ export const EquipoView = () => {
       const data = await userService.getEquipo();
       setEquipo(data);
     } catch (error) {
-      notify.error("Error al cargar equipo");
+      notify.error(error, "Error al cargar equipo");
       console.error(error);
     } finally {
       setLoading(false);

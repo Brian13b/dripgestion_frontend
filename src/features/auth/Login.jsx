@@ -6,6 +6,7 @@ import { useTenant } from '../../context/TenantContext';
 import { Droplet, Lock, Phone, ShieldCheck } from 'lucide-react';
 import { BotonInstalar } from '../../components/ui/BotonInstalar';
 import { notify } from '../../lib/notify';
+import { urlWhatsapp } from '../../lib/whatsapp';
 
 export const Login = () => {
   const { login, user } = useContext(AuthContext);
@@ -66,10 +67,10 @@ export const Login = () => {
     }
   };
 
+  // Sin WhatsApp cargado por la empresa no hay a quien escribir: no se muestra el boton.
+  const whatsappPin = urlWhatsapp(tenant?.whatsapp, 'Hola! Necesito saber mi PIN.');
   const handlePedirPorWhatsApp = () => {
-    const numeroDestino = tenant?.whatsapp || "5491100000000"; 
-    const mensaje = `Hola! Necesito saber mi PIN.`;
-    window.open(`https://wa.me/${numeroDestino}?text=${encodeURIComponent(mensaje)}`, '_blank');
+    if (whatsappPin) window.open(whatsappPin, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -182,7 +183,7 @@ export const Login = () => {
             </Button>
           </form>
 
-          {!isRootDomain && (
+          {!isRootDomain && whatsappPin && (
             <Button
               onClick={handlePedirPorWhatsApp}
               variant="whatsapp" size="lg" fullWidth

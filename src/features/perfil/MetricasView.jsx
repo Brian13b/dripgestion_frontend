@@ -2,10 +2,10 @@ import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader
 import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { notify } from '../../lib/notify';
+import { dashboardService } from '../../api/dashboardService';
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
 import { TrendingUp, Package, Wallet, Activity, Calendar, GitCompare, ArrowLeft } from 'lucide-react';
-import api from '../../api/axios';
 
 const getMesActualStr = () => {
   const d = new Date();
@@ -24,15 +24,15 @@ export const MetricasView = () => {
       setLoading(true);
       try {
         const [anioA, mA] = mesA.split('-');
-        let url = `/dashboard/resumen?mes_a=${mA}&anio_a=${anioA}`;
-        
+        const params = { mes_a: mA, anio_a: anioA };
+
         if (mesB) {
           const [anioB, mB] = mesB.split('-');
-          url += `&mes_b=${mB}&anio_b=${anioB}`;
+          params.mes_b = mB;
+          params.anio_b = anioB;
         }
-        
-        const response = await api.get(url);
-        setData(response.data);
+
+        setData(await dashboardService.getResumen(params));
       } catch (error) {
         console.error("Error cargando métricas:", error);
         notify.error(error, 'No se pudieron cargar las métricas');
@@ -110,7 +110,7 @@ export const MetricasView = () => {
             <p className="text-2xl font-black text-primary-dark">${data.kpis.deuda_en_calle}</p>
           </div>
           <div className="bg-white p-5 rounded-3xl shadow-sm border border-primary-light/20">
-            <Package size={24} className="text-blue-500 mb-2" />
+            <Package size={24} className="text-primary mb-2" />
             <p className="text-xs font-bold text-secondary uppercase">Envases Prestados</p>
             <p className="text-2xl font-black text-primary-dark">{data.kpis.total_envases}</p>
           </div>

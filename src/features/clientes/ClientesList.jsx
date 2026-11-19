@@ -48,7 +48,7 @@ export const ClientesList = () => {
       setTiposEnvase(envasesData);
     } catch (error) {
       console.error('Error al cargar datos', error);
-      notify.error('Error al cargar la lista de clientes');
+      notify.error(error, 'Error al cargar la lista de clientes');
     } finally {
       setLoading(false);
     }
