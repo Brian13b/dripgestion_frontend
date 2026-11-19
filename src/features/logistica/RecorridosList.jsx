@@ -1,17 +1,20 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
+import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Play, Pencil, Trash2, Package } from 'lucide-react';
 import { clientesService } from '../../api/clienteService';
 import { recorridoService } from '../../api/recorridoService';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { RecorridoModal } from './RecorridoModal';
 import { ConfiguracionRutaModal } from './ConfiguracionRutaModal';
 
 const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
 export const RecorridosList = () => {
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const [recorridos, setRecorridos] = useState([]);
   const [clientes, setClientes] = useState([]); 
@@ -29,7 +32,7 @@ export const RecorridosList = () => {
       setRecorridos(recorridosRes);
       setClientes(clientesRes);
     } catch (error) {
-      toast.error("Error al cargar los datos");
+      notify.error("Error al cargar los datos");
       console.error(error);
     } finally {
       setLoading(false);
@@ -46,13 +49,13 @@ export const RecorridosList = () => {
   };
 
   const handleDelete = async (id, nombre) => {
-    if (window.confirm(`¿Estás seguro que querés eliminar el recorrido "${nombre}"?`)) {
+    if (await confirm({ title: 'Eliminar recorrido', message: `Vas a eliminar "${nombre}". No se puede deshacer.`, confirmLabel: 'Eliminar' })) {
       try {
         await recorridoService.delete(id);
         setRecorridos(recorridos.filter(r => r.id !== id));
-        toast.success("Recorrido eliminado");
+        notify.success("Recorrido eliminado");
       } catch (error) {
-        toast.error("No se pudo eliminar el recorrido");
+        notify.error(error, "No se pudo eliminar el recorrido");
         console.error(error);
       }
     }
@@ -63,19 +66,19 @@ export const RecorridosList = () => {
   };
 
   const handleGuardarRuta = async (rutaEditada) => {
-    if (!rutaEditada.nombre) return toast.error("El nombre es obligatorio");
+    if (!rutaEditada.nombre) return notify.error("El nombre es obligatorio");
     try {
       if (rutaEditada.id) {
         await recorridoService.update(rutaEditada.id, rutaEditada);
-        toast.success("Ruta actualizada");
+        notify.success("Ruta actualizada");
       } else {
         await recorridoService.create(rutaEditada);
-        toast.success("Ruta creada");
+        notify.success("Ruta creada");
       }
       setRutaParaConfigurar(null); 
       fetchData();
     } catch (e) { 
-      toast.error("Error al guardar");
+      notify.error("Error al guardar");
       console.error(e);
     }
   };
@@ -84,9 +87,8 @@ export const RecorridosList = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
       <PageHeader
-        icon={Package}
         title="Rutas de Reparto"
-        subtitle="Organiza la logística de entregas"
+        subtitle="Organizá las entregas"
         actions={
           <HeaderAction
             icon={Plus}
@@ -99,11 +101,13 @@ export const RecorridosList = () => {
       {/* LISTA DE RECORRIDOS */}
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2">
         {loading ? (
-          <p className="text-center text-secondary mt-10 text-xl tracking-wider">Cargando rutas...</p>
+          <LoadingState label="Cargando rutas..." />
         ) : recorridos.length === 0 ? (
-          <div className="text-center mt-10">
-            <p className="text-secondary mb-4 text-xl">No hay recorridos configurados.</p>
-          </div>
+          <EmptyState
+            icon={Package}
+            title="No hay rutas configuradas"
+            description='Creá la primera con el botón "Nueva Ruta".'
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8">
             {recorridos.map((recorrido) => {

@@ -1,8 +1,8 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { notify } from '../../lib/notify';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { useTenant } from '../../context/TenantContext';
 import { Package, Users, DollarSign, TrendingUp, ChevronRight, Droplet, MapPin, Recycle } from 'lucide-react';
 import { dashboardService } from '../../api/dashboardService';
 import { Button } from '../../components/primitives/Button';
@@ -50,7 +50,6 @@ const StatCard = ({ title, value, subtext, icon, isPrimary = false }) => {
 export const Dashboard = () => {
   const { user } = useContext(AuthContext);
   const isAdmin = user?.role?.toUpperCase() === 'ADMIN';
-  const { tenant } = useTenant();
   const navigate = useNavigate();
 
   const [stats, setStats] = useState({
@@ -71,7 +70,7 @@ export const Dashboard = () => {
           setStats(data.kpis || data);
           setEnvasesPorTipo(data.envases_por_tipo || []);
         })
-        .catch(console.error);
+        .catch((error) => { console.error(error); notify.error(error, 'No se pudo cargar el resumen'); });
     }
   }, [isAdmin]);
 
@@ -80,11 +79,7 @@ export const Dashboard = () => {
       {/* Header */}
       <PageHeader
         title={`Buenos días, ${user?.full_name?.split(' ')[0] || 'Equipo'}`}
-        subtitle={
-          isAdmin
-            ? `Resumen operativo de ${tenant?.nombre}`
-            : 'Listo para iniciar tu recorrido de hoy.'
-        }
+        subtitle={isAdmin ? 'Resumen operativo' : 'Tu recorrido de hoy'}
       />
 
       <div className="px-5 md:px-12 lg:px-16 max-w-7xl mx-auto">

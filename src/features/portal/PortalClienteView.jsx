@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { notify } from '../../lib/notify';
 import { Button } from '../../components/primitives/Button';
 import { LogOut, Package, DollarSign, MessageCircle, AlertCircle, FileText, Droplet } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
@@ -20,6 +21,7 @@ export const PortalClienteView = () => {
         setMovimientos(dataCuenta.ultimos_movimientos || []);
       } catch (error) {
         console.error('Error cargando portal', error);
+        notify.error(error, 'No se pudo cargar tu portal');
       } finally {
         setLoading(false);
       }

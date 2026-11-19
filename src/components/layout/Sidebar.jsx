@@ -17,7 +17,7 @@ const SidebarItem = ({ to, icon, label, collapsed, matchPrefixes = [] }) => {
       to={to}
       title={collapsed ? label : undefined}
       className={clsx(
-        'flex items-center rounded-2xl text-sm font-semibold transition-all duration-200',
+        'flex items-center rounded-2xl text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-150 active:scale-[0.98]',
         collapsed ? 'justify-center px-2 py-3' : 'gap-3.5 px-4 py-3',
         isActive
           ? 'bg-primary text-white shadow-md shadow-primary/25 font-bold'

@@ -2,15 +2,13 @@ import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Button } from '../../components/primitives/Button';
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../../context/TenantContext';
 import { ArrowLeft, Store, Palette, Shield, Save, Image as ImageIcon, Type } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { tenantService } from '../../api/tenantService';
 import { authService } from '../../api/authService'
 
 export const ConfiguracionView = () => {
-  const navigate = useNavigate();
   const { tenant, actualizarLogoEnContexto } = useTenant();
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
@@ -37,14 +35,14 @@ export const ConfiguracionView = () => {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error('Por favor, seleccioná un archivo de imagen válido');
+      notify.error('Por favor, seleccioná un archivo de imagen válido');
       return;
     }
 
     setIsUploadingLogo(true);
     try {
       const response = await tenantService.uploadLogo(file);
-      toast.success('Logo actualizado con éxito');
+      notify.success('Logo actualizado con éxito');
       
       if (response && response.logo_url) {
         actualizarLogoEnContexto(response.logo_url);
@@ -52,7 +50,7 @@ export const ConfiguracionView = () => {
       
     } catch (error) {
       console.error(error);
-      toast.error('Error al subir el logo a la nube');
+      notify.error('Error al subir el logo a la nube');
     } finally {
       setIsUploadingLogo(false);
       if (fileInputRef.current) fileInputRef.current.value = ''; 
@@ -63,11 +61,11 @@ export const ConfiguracionView = () => {
     setIsSaving(true);
     try {
       await tenantService.updateConfig(formData);
-      toast.success('Configuración guardada exitosamente');
+      notify.success('Configuración guardada exitosamente');
       
     } catch (error) {
       console.error(error);
-      toast.error('Error al guardar la configuración');
+      notify.error('Error al guardar la configuración');
     } finally {
       setIsSaving(false);
     }
@@ -94,9 +92,8 @@ export const ConfiguracionView = () => {
       
       {/* HEADER */}
       <PageHeader
-        onBack={() => navigate(-1)}
         title="Configuración"
-        subtitle="Ajustes del sistema"
+        subtitle="Empresa, logo y seguridad"
       />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8 flex flex-col md:flex-row gap-6 md:gap-8">        
@@ -116,7 +113,7 @@ export const ConfiguracionView = () => {
           
           {/* GENERAL */}
           {activeTab === 'general' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="space-y-6 anim-page">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Store className="mr-3 text-primary"/> Datos de la Empresa</h2>
               <div className="space-y-5 max-w-lg">
                 <div>
@@ -134,7 +131,7 @@ export const ConfiguracionView = () => {
 
           {/* APARIENCIA */}
           {activeTab === 'apariencia' && (
-            <div className="space-y-8 animate-in fade-in duration-300">
+            <div className="space-y-8 anim-page">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Palette className="mr-3 text-primary"/> Branding Visual</h2>
               
               <div className="p-5 bg-sand-50 border border-primary-light/30 rounded-3xl flex flex-col md:flex-row items-center gap-6 max-w-xl">
@@ -204,7 +201,7 @@ export const ConfiguracionView = () => {
 
           {/* SEGURIDAD */}
           {activeTab === 'seguridad' && (
-            <div className="space-y-6 animate-in fade-in duration-300">
+            <div className="space-y-6 anim-page">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Shield className="mr-3 text-primary"/> Seguridad de Cuenta</h2>
               
               <div className="space-y-5 max-w-lg">
@@ -231,14 +228,14 @@ export const ConfiguracionView = () => {
                 
                 <button 
                   onClick={async () => {
-                    if(!currentPassword || !newPassword) return toast.error("Completá ambos campos");
+                    if(!currentPassword || !newPassword) return notify.error("Completá ambos campos");
                     try {
                       await authService.changePassword(currentPassword, newPassword);
-                      toast.success("Contraseña actualizada con éxito");
+                      notify.success("Contraseña actualizada con éxito");
                       setCurrentPassword('');
                       setNewPassword('');
                     } catch (error) {
-                      toast.error("Contraseña actual incorrecta");
+                      notify.error("Contraseña actual incorrecta");
                       console.error(error);
                     }
                   }}

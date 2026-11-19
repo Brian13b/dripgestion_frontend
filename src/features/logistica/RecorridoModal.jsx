@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
 import { Play, X, Search, ArrowUp, ArrowDown, Plus } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 
 export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => {
   const [clientesEnVistaPrevia, setClientesEnVistaPrevia] = useState(() => {
@@ -19,7 +19,7 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
   const agregarExcepcion = (cliente) => {
     if (!clientesEnVistaPrevia.find(c => c.id === cliente.id)) {
       setClientesEnVistaPrevia([...clientesEnVistaPrevia, cliente]);
-      toast.success("Agregado al recorrido de hoy");
+      notify.success("Agregado al recorrido de hoy");
     }
     setBusquedaExcepcion('');
   };

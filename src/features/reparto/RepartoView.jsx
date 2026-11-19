@@ -10,7 +10,7 @@ import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService';
 import { ClienteModal } from '../clientes/ClienteModal';
 import { useTenant } from '../../context/TenantContext';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 
 export const RepartoView = () => {
   const { id } = useParams();
@@ -127,7 +127,7 @@ export const RepartoView = () => {
         setCatalogo(prods);
         setTiposEnvase(envases);
       } catch (error) {
-        toast.error('Error al cargar datos del recorrido');
+        notify.error('Error al cargar datos del recorrido');
         console.error(error);
       } finally {
         setLoading(false);
@@ -194,7 +194,7 @@ export const RepartoView = () => {
       setClientesDisponibles(todos.filter((c) => !idsEnRuta.includes(c.id)));
       setModalAgregarAbierto(true);
     } catch (e) {
-      toast.error('Error al buscar clientes');
+      notify.error('Error al buscar clientes');
       console.error(e);
     }
   };
@@ -204,7 +204,7 @@ export const RepartoView = () => {
     nuevasRutas.splice(indiceActual + 1, 0, cliente);
     setClientesRuta(nuevasRutas);
     setModalAgregarAbierto(false);
-    toast.success('Agregado como próxima parada');
+    notify.success('Agregado como próxima parada');
   };
 
   const clientesFiltrados = clientesDisponibles.filter(
@@ -296,11 +296,11 @@ export const RepartoView = () => {
       };
 
       setResumenViaje(nuevoResumen);
-      toast.success(`Guardado. Nuevo saldo: $${Math.abs(nuevoSaldoProyectado)}`);
+      notify.success(`Guardado. Nuevo saldo: $${Math.abs(nuevoSaldoProyectado)}`);
 
       avanzarOSalir(nuevoResumen);
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Error al guardar la entrega');
+      notify.error(error, 'Error al guardar la entrega');
     } finally {
       setIsSubmitting(false);
     }
@@ -329,9 +329,8 @@ export const RepartoView = () => {
       {/* HEADER */}
       <PageHeader
         maxWidth="max-w-3xl"
-        eyebrow="Recorrido en curso"
-        title={`Cliente ${indiceActual + 1} de ${clientesRuta.length}`}
-        actions={<HeaderAction icon={Check} label="Finalizar Viaje" onClick={() => avanzarOSalir()} />}
+        title="Recorrido en curso"
+        subtitle={`Cliente ${indiceActual + 1} de ${clientesRuta.length}`}
       />
 
       {/* CONTENEDOR PRINCIPAL */}
@@ -699,6 +698,14 @@ export const RepartoView = () => {
             Siguiente &gt;
           </Button>
         </div>
+
+        <Button
+          variant="secondary" size="lg" fullWidth
+          onClick={() => avanzarOSalir()}
+          leftIcon={<Check size={20} strokeWidth={3} />}
+        >
+          Finalizar viaje
+        </Button>
       </div>
 
       {/* MODALES */}

@@ -1,6 +1,7 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
+import { notify } from '../../lib/notify';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
 import { TrendingUp, Package, Wallet, Activity, Calendar, GitCompare, ArrowLeft } from 'lucide-react';
 import api from '../../api/axios';
@@ -11,7 +12,6 @@ const getMesActualStr = () => {
 };
 
 export const MetricasView = () => {
-  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   
@@ -34,6 +34,7 @@ export const MetricasView = () => {
         setData(response.data);
       } catch (error) {
         console.error("Error cargando métricas:", error);
+        notify.error(error, 'No se pudieron cargar las métricas');
       } finally {
         setLoading(false);
       }
@@ -43,23 +44,25 @@ export const MetricasView = () => {
 
   if (loading && !data) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-bold text-secondary text-xl">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-        <p className="animate-pulse tracking-widest uppercase text-sm">Calculando estadísticas...</p>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <LoadingState label="Calculando estadísticas..." />
       </div>
     );
   }
   
   if (!data) {
-    return <div className="min-h-screen flex items-center justify-center font-bold text-secondary text-xl animate-pulse">Cargando estadísticas...</div>;
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <EmptyState title="No hay estadísticas para mostrar" description="Probá con otro período." />
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       <PageHeader
-        onBack={() => navigate(-1)}
-        title="Panel de Métricas"
-        subtitle="Análisis inteligente de negocio"
+        title="Métricas"
+        subtitle="Estadísticas del negocio"
       />
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">

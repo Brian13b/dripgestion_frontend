@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Button } from '../../components/primitives/Button';
+import { PageHeader } from '../../components/primitives/PageHeader';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
@@ -29,21 +29,22 @@ export const PerfilEmpresa = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <div className="bg-primary-dark px-5 pt-16 pb-12 text-center relative mx-auto shadow-md border-b-4 border-primary rounded-b-3xl">
-        <div className="w-28 h-28 bg-white rounded-full mx-auto mb-5 flex items-center justify-center shadow-xl border-4 border-white/20 overflow-hidden shrink-0">
-          {tenant?.logo_url ? (
-            <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-2" />
-          ) : (
-            <Store size={40} className="text-primary" />
-          )}
+      <PageHeader title="Portal Empresa" subtitle="Tu cuenta y accesos rápidos" maxWidth="max-w-4xl" />
+
+      <div className="max-w-4xl mx-auto px-5 md:px-8 pt-6">
+        <div className="card p-5 flex items-center gap-4">
+          <div className="w-16 h-16 bg-sand-50 rounded-2xl flex items-center justify-center border border-sand-100 overflow-hidden shrink-0">
+            {tenant?.logo_url ? (
+              <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-1.5" />
+            ) : (
+              <Store size={28} className="text-primary" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="text-xl font-bold text-primary-dark tracking-tight truncate">{user?.full_name || 'Mi Distribuidora'}</p>
+            <p className="text-secondary font-medium truncate">{tenant?.nombre || 'Gestión Logística'}</p>
+          </div>
         </div>
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">{user?.full_name || 'Mi Distribuidora'}</h1>
-        <p className="text-primary-light font-medium text-lg mt-2 tracking-wide">{tenant?.nombre || 'Gestión Logística'}</p>
-        {user?.role?.toUpperCase() === 'ADMIN' && (
-           <Button variant="onDarkGhost" iconOnly onClick={() => navigate('/configuracion')} aria-label="Configuración" className="absolute top-8 right-6 md:right-12">
-            <Settings size={20} />
-          </Button>
-        )}
       </div>
 
       <div className="max-w-4xl mx-auto p-5 md:p-8 space-y-8 mt-2">
@@ -54,6 +55,7 @@ export const PerfilEmpresa = () => {
             <MenuItem icon={Tag} title="Lista de Precios" subtitle="Configurar catálogo y valores" onClick={() => navigate('/precios')} />
             {user?.role?.toUpperCase() === 'ADMIN' && (
               <>
+                <MenuItem icon={Settings} title="Configuración" subtitle="Empresa, logo y seguridad" onClick={() => navigate('/configuracion')} />
                 <MenuItem icon={Activity} title="Métricas y Reportes" subtitle="Gráficos y estadísticas" onClick={() => navigate('/metricas')} />
                 <MenuItem icon={Users} title="Mi Equipo" subtitle="Gestionar repartidores" onClick={() => navigate('/equipo')} />
               </>

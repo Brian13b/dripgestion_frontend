@@ -1,9 +1,10 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Button } from '../../components/primitives/Button';
 import { useState, useEffect } from 'react';
 import { Tag, Save, Package, Plus, X, Eye, EyeOff, Recycle, Box, Layers } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { productosService } from '../../api/productoService';
 
 const UNIDADES_MEDIDA = [
@@ -14,25 +15,6 @@ const UNIDADES_MEDIDA = [
   { value: 'kg', label: 'Kilogramo (kg)' },
   { value: 'litro', label: 'Litro (L)' },
 ];
-
-const extractErrorMessage = (error, fallback) => {
-  const detail = error?.response?.data?.detail;
-  if (!detail) return fallback;
-  if (typeof detail === 'string') return detail;
-  if (Array.isArray(detail)) {
-    return detail
-      .map((item) => {
-        if (typeof item === 'string') return item;
-        const field = Array.isArray(item?.loc) ? item.loc[item.loc.length - 1] : '';
-        return field ? `${field}: ${item.msg}` : item?.msg || JSON.stringify(item);
-      })
-      .join(' | ');
-  }
-  if (typeof detail === 'object') {
-    return detail.msg || detail.message || JSON.stringify(detail);
-  }
-  return fallback;
-};
 
 export const PreciosView = () => {
   const [tabActiva, setTabActiva] = useState('productos');
@@ -74,7 +56,7 @@ export const PreciosView = () => {
       setProductos(prodsData);
       setTiposEnvase(envasesData);
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al cargar el catálogo'));
+      notify.error(error, 'Error al cargar el catálogo');
       console.error('Error al cargar catálogo y envases', error);
     } finally {
       setLoading(false);
@@ -95,18 +77,18 @@ export const PreciosView = () => {
   const guardarPrecio = async (id) => {
     try {
       await productosService.updatePrecio(id, nuevoPrecio);
-      toast.success('Precio actualizado');
+      notify.success('Precio actualizado');
       setEditandoId(null);
       cargarTodo();
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al actualizar'));
+      notify.error(error, 'Error al actualizar');
     }
   };
 
   const handleCrearProducto = async (e) => {
     e.preventDefault();
     if (nuevoProducto.es_retornable && !nuevoProducto.tipo_envase_id) {
-      toast.error('Seleccioná el tipo de envase retornable');
+      notify.error('Seleccioná el tipo de envase retornable');
       return;
     }
 
@@ -125,7 +107,7 @@ export const PreciosView = () => {
           : null,
         activo: true,
       });
-      toast.success('Producto agregado al catálogo');
+      notify.success('Producto agregado al catálogo');
       setMostrandoFormProducto(false);
       setNuevoProducto({
         nombre: '',
@@ -137,7 +119,7 @@ export const PreciosView = () => {
       });
       cargarTodo();
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al crear producto'));
+      notify.error(error, 'Error al crear producto');
     }
   };
 
@@ -145,9 +127,9 @@ export const PreciosView = () => {
     try {
       await productosService.toggleActivo(id);
       cargarTodo();
-      toast.success('Estado actualizado');
+      notify.success('Estado actualizado');
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al cambiar estado'));
+      notify.error(error, 'Error al cambiar estado');
       console.error(error);
     }
   };
@@ -165,12 +147,12 @@ export const PreciosView = () => {
         valor_reposicion: parseFloat(nuevoEnvase.valor_reposicion || 0),
         activo: true,
       });
-      toast.success('Tipo de envase creado');
+      notify.success('Tipo de envase creado');
       setMostrandoFormEnvase(false);
       setNuevoEnvase({ nombre: '', codigo: '', valor_reposicion: '' });
       cargarTodo();
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al crear tipo de envase'));
+      notify.error(error, 'Error al crear tipo de envase');
     }
   };
 
@@ -184,11 +166,11 @@ export const PreciosView = () => {
       await productosService.updateTipoEnvase(id, {
         valor_reposicion: parseFloat(nuevoValorReposicion || 0),
       });
-      toast.success('Valor de reposición actualizado');
+      notify.success('Valor de reposición actualizado');
       setEditandoEnvaseId(null);
       cargarTodo();
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al actualizar envase'));
+      notify.error(error, 'Error al actualizar envase');
     }
   };
 
@@ -196,9 +178,9 @@ export const PreciosView = () => {
     try {
       await productosService.toggleTipoEnvase(id);
       cargarTodo();
-      toast.success('Estado del envase actualizado');
+      notify.success('Estado del envase actualizado');
     } catch (error) {
-      toast.error(extractErrorMessage(error, 'Error al cambiar estado del envase'));
+      notify.error(error, 'Error al cambiar estado del envase');
       console.error(error);
     }
   };
@@ -209,9 +191,8 @@ export const PreciosView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
       <PageHeader
-        icon={Tag}
         title="Catálogo y Envases"
-        subtitle="Precios, presentaciones y control de retornables"
+        subtitle="Precios y retornables"
         actions={
           tabActiva === 'productos' ? (
             <HeaderAction
@@ -232,9 +213,7 @@ export const PreciosView = () => {
       {/* CONTENIDO PRINCIPAL */}
       <div className="p-5 md:p-10 lg:px-16 max-w-7xl mx-auto mt-2">
         {loading ? (
-          <p className="text-center text-secondary text-lg tracking-wider mt-10">
-            Cargando catálogo...
-          </p>
+          <LoadingState label="Cargando catálogo..." />
         ) : (
           <>
             {/* TABS FUERA DEL HEADER Y SIEMPRE VISIBLES */}

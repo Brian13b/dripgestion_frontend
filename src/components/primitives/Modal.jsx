@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { Button } from './Button';
@@ -5,36 +6,56 @@ import { Button } from './Button';
 /**
  * Cascarón estándar de modal (ver DESIGN_SYSTEM.md → "Modales").
  * Uso:
- *   <Modal>
+ *   <Modal onClose={onClose}>
  *     <ModalHeader title="..." subtitle="..." onClose={onClose} />
  *     <div className="p-6 overflow-y-auto flex-1">...</div>
  *     <ModalFooter><Button .../></ModalFooter>
  *   </Modal>
  *
- * - size:   'md' (default, max-w-md) | 'lg' (max-w-2xl)
+ * - size:   'sm' (max-w-sm) | 'md' (default) | 'lg' (max-w-2xl)
  * - tall:   true → alto fijo 90vh (listas largas)
  * - sheet:  true → en mobile sube desde abajo como bottom-sheet
+ * - onClose: si existe, Escape y click en el fondo cierran el modal
  */
-export const Modal = ({ children, size = 'md', tall = false, sheet = false, className }) => (
-  <div
-    className={clsx(
-      'fixed inset-0 z-100 flex justify-center bg-primary-dark/70 backdrop-blur-sm',
-      sheet ? 'items-end md:items-center p-0 md:p-4' : 'items-center p-4',
-    )}
-  >
+export const Modal = ({
+  children,
+  size = 'md',
+  tall = false,
+  sheet = false,
+  onClose,
+  overlayClassName,
+  className,
+}) => {
+  useEffect(() => {
+    if (!onClose) return undefined;
+    const onKey = (e) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
     <div
+      onMouseDown={(e) => e.target === e.currentTarget && onClose?.()}
       className={clsx(
-        'bg-white w-full shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200',
-        size === 'lg' ? 'max-w-2xl' : 'max-w-md',
-        tall ? 'h-[90vh]' : 'max-h-[90vh]',
-        sheet ? 'rounded-t-3xl md:rounded-3xl' : 'rounded-3xl',
-        className,
+        'fixed inset-0 z-100 flex justify-center bg-primary-dark/70 backdrop-blur-sm anim-overlay',
+        sheet ? 'items-end md:items-center p-0 md:p-4' : 'items-center p-4',
+        overlayClassName,
       )}
     >
-      {children}
+      <div
+        className={clsx(
+          'bg-white w-full shadow-2xl overflow-hidden flex flex-col anim-modal',
+          size === 'lg' ? 'max-w-2xl' : size === 'sm' ? 'max-w-sm' : 'max-w-md',
+          tall ? 'h-[90vh]' : 'max-h-[90vh]',
+          sheet ? 'rounded-t-3xl md:rounded-3xl' : 'rounded-3xl',
+          className,
+        )}
+      >
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const ModalHeader = ({ title, subtitle, onClose }) => (
   <div className="px-5 py-4 border-b border-sand-100 bg-background flex items-center justify-between gap-3 shrink-0">

@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { notify } from '../../lib/notify';
 import React, { useState, useEffect, useContext } from 'react';
 import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, ReceiptText } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
@@ -39,6 +40,7 @@ export const HistorialView = () => {
           setListaChoferes(choferes);
         } catch (error) {
           console.error("Error cargando listas de filtros", error);
+          notify.error(error, 'No se pudieron cargar los filtros');
         }
       };
       cargarFiltros();
@@ -58,6 +60,7 @@ export const HistorialView = () => {
         }
       } catch (error) {
         console.error("Error", error);
+        notify.error(error, 'No se pudo cargar el historial');
       } finally {
         setLoading(false);
       }
@@ -73,9 +76,8 @@ export const HistorialView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
       <PageHeader
-        icon={ReceiptText}
         title="Auditoría de Caja"
-        subtitle="Control financiero, arqueo por recorrido y conciliación de cobranzas"
+        subtitle="Cobranzas y arqueo por recorrido"
       />
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">

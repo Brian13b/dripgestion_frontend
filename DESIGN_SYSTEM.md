@@ -69,12 +69,15 @@ Estados incluidos: hover, press (`scale 0.964`), foco visible, disabled, loading
 ## 6. Page header — `components/primitives/PageHeader.jsx`
 
 ```jsx
-<PageHeader icon={Users} title="Clientes" subtitle="Gestión y saldo"
+<PageHeader title="Clientes" subtitle="Cuentas corrientes y saldos"
   actions={<HeaderAction icon={Plus} label="Nuevo Cliente" onClick={...} />} />
 ```
 
-`onBack` muestra el botón volver; `eyebrow` el texto chico superior; `maxWidth` ajusta el ancho (reparto usa `max-w-3xl`).
-`HeaderAction` muestra ícono + texto en desktop y solo ícono (44×44) en mobile.
+Reglas fijas (no hay props para saltearlas):
+- Misma altura que el header del Sidebar: 128px en lg+ (96px en mobile). Esquinas rectas.
+- Sin botón de volver, sin íconos: solo `<h1>` (sección) + `<p>` (qué se hace acá, muy breve).
+- Como máximo **una** acción a la derecha y solo para crear/agregar. Otras acciones (finalizar viaje, salir) van en el contenido.
+- `HeaderAction` muestra ícono + texto en desktop y solo ícono (44×44) en mobile.
 
 ## 7. Modales — `components/primitives/Modal.jsx`
 
@@ -101,10 +104,9 @@ Overlay `primary-dark/70` + blur, panel `rounded-3xl`, header/footer con la mism
 
 Sidebar colapsable (`lg:w-20` / `lg:w-64`) sincronizada con `lg:pl-20` / `lg:pl-64` en `App.jsx`, `BottomNav` en mobile.
 
-## 10. Headers "hero"
+## 10. Excepción: portal del cliente
 
-`PerfilEmpresa`, `ResumenReparto` y `PortalClienteView` son pantallas de contexto propio (perfil, cierre de viaje, portal del cliente) y mantienen un header centrado más alto. Reglas compartidas: fondo `primary-dark` (o `success` en el resumen), `border-b-4 border-primary`, `rounded-b-3xl` y botones de ícono con `Button variant="onDarkGhost" iconOnly`.
-Todo lo demás (incluido el panel SuperAdmin) usa `PageHeader`.
+`PortalClienteView` es una app aparte (sin sidebar) y mantiene su cabecera centrada con logo. El resto de las pantallas, incluidos Perfil, Resumen de viaje y SuperAdmin, usan `PageHeader`.
 
 ## 11. Pasos de reparto
 
@@ -121,7 +123,33 @@ Contadores +/− en `Button secondary iconOnly` (md en productos, sm en devoluci
 Aplica a `input`, `select` y `textarea`: `rounded-xl`, borde 2px `sand-200`, hover `primary-light`, foco `primary` + halo suave, texto 16px (evita el zoom de iOS). Está en `@layer components`, así que `pl-*`, `text-center`, `tracking-*` etc. la pisan sin problemas.
 Excepciones: checkboxes, selector de color, filtros con fondo transparente dentro de barras y el input del contador de precios.
 
-## 13. Pendiente
+## 13. Avisos — `lib/notify.js`
 
-- Mensajes de lint previos (AuthContext, etc.), fuera del alcance del Design System.
-- Revisión visual con sesión iniciada de cada pantalla (alineación de íconos dentro de inputs, altura de filas).
+```js
+notify.success('Cliente creado');
+notify.error(error, 'No se pudo guardar');   // acepta un error de axios o un texto
+```
+
+`notify.error` normaliza el `detail` de FastAPI (texto, lista de validaciones u objeto) para que nunca se renderice un objeto. El mensaje es el `id` del toast: el mismo aviso no se apila. No usar `toast.*` directo ni `alert()`. El `<Toaster>` está estilizado una sola vez en `App.jsx`.
+
+## 14. Confirmaciones — `ConfirmProvider` + `useConfirm`
+
+```jsx
+const confirm = useConfirm();
+if (!(await confirm({ title: 'Eliminar cliente', message: '...', confirmLabel: 'Eliminar' }))) return;
+```
+
+Opciones: `tone` (`danger` | `primary`), `cancelLabel`, `hideCancel` (aviso informativo). Nunca `window.confirm`. Escape y click en el fondo cancelan.
+
+## 15. Movimiento
+
+Curva `cubic-bezier(0.23, 1, 0.32, 1)` (ease-out fuerte), 150–220 ms; nada de rebotes.
+`anim-overlay` (160ms), `anim-modal` (200ms), `anim-page` (220ms, cada cambio de ruta), `anim-pulse-soft` (cargas). Botones: press `scale 0.964`; ítems del sidebar: `active:scale-[0.98]`.
+Se respeta `prefers-reduced-motion` (todo se reduce a ~0ms).
+Estados: `LoadingState` y `EmptyState` (`StateBlock.jsx`) para cargas y listas vacías.
+Login: la capa de entrada se abre como círculo en 600ms, el contenido aparece a los 250ms y se redirige a los 1100ms. La ruta `/login` queda montada hasta redirigir.
+
+## 16. Pendiente
+
+- Revisión visual con sesión iniciada de cada pantalla.
+- Ver las recomendaciones de diseño entregadas aparte (no aplicadas).

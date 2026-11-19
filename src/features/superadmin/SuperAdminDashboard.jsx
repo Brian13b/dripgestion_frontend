@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import { PageHeader } from '../../components/primitives/PageHeader';
 import { Modal, ModalHeader } from '../../components/primitives/Modal';
@@ -6,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../api/axios';
 import { ShieldCheck, LogOut, Building2, Plus, Power, PowerOff, ExternalLink, Pencil, X } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 
 export default function SuperAdminDashboard() {
+  const confirm = useConfirm();
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -52,10 +54,10 @@ export default function SuperAdminDashboard() {
         color_primario: editingTenant.color_primario,
       });
       setTenants((prev) => prev.map((t) => (t.id === data.id ? data : t)));
-      toast.success(`Datos de "${data.nombre}" actualizados.`);
+      notify.success(`Datos de "${data.nombre}" actualizados.`);
       setEditingTenant(null);
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Error al actualizar la distribuidora.');
+      notify.error(err, 'Error al actualizar la distribuidora.');
     } finally {
       setUpdating(false);
     }
@@ -71,7 +73,7 @@ export default function SuperAdminDashboard() {
       const { data } = await api.get('/tenants/');
       setTenants(data);
     } catch (err) {
-      toast.error('Error al cargar las distribuidoras.');
+      notify.error('Error al cargar las distribuidoras.');
         console.error(err);
     } finally {
       setLoading(false);
@@ -87,7 +89,7 @@ export default function SuperAdminDashboard() {
     setSubmitting(true);
     try {
       await api.post('/tenants/onboarding', formData);
-      toast.success(`Distribuidora "${formData.nombre}" creada con éxito.`);
+      notify.success(`Distribuidora "${formData.nombre}" creada con éxito.`);
       setFormData({
         nombre: '',
         subdominio: '',
@@ -99,7 +101,7 @@ export default function SuperAdminDashboard() {
       });
       fetchTenants();
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Error al registrar la empresa.');
+      notify.error(err, 'Error al registrar la empresa.');
     } finally {
       setSubmitting(false);
     }
@@ -108,16 +110,16 @@ export default function SuperAdminDashboard() {
   const handleToggleEstado = async (tenant) => {
     const nuevoEstado = !tenant.is_active;
     const accion = nuevoEstado ? 'habilitar' : 'suspender';
-    if (!window.confirm(`¿Seguro que querés ${accion} el acceso a ${tenant.nombre}?`)) return;
+    if (!(await confirm({ title: `${nuevoEstado ? 'Habilitar' : 'Suspender'} acceso`, message: `¿Querés ${accion} el acceso a ${tenant.nombre}?`, confirmLabel: nuevoEstado ? 'Habilitar' : 'Suspender', tone: nuevoEstado ? 'primary' : 'danger' }))) return;
 
     try {
       await api.patch(`/tenants/${tenant.id}/estado?activo=${nuevoEstado}`);
       setTenants((prev) =>
         prev.map((t) => (t.id === tenant.id ? { ...t, is_active: nuevoEstado } : t))
       );
-      toast.success(`Acceso ${nuevoEstado ? 'habilitado' : 'suspendido'} para ${tenant.nombre}`);
+      notify.success(`Acceso ${nuevoEstado ? 'habilitado' : 'suspendido'} para ${tenant.nombre}`);
     } catch (err) {
-      toast.error('No se pudo actualizar el estado de la empresa.');
+      notify.error(err, 'No se pudo actualizar el estado de la empresa.');
       console.error(err);
     }
   };
@@ -127,23 +129,20 @@ export default function SuperAdminDashboard() {
       <PageHeader
         className="mb-8"
         maxWidth="max-w-6xl"
-        icon={ShieldCheck}
-        title="Panel SuperAdmin — Drip Gestión"
-        subtitle={`Hola, ${user?.full_name || 'Administrador'}. Gestioná las distribuidoras y sus accesos.`}
-        actions={
-          <>
-            <span className="hidden sm:flex h-9 px-3.5 items-center gap-2 bg-white/10 text-white text-sm font-bold rounded-xl border border-white/15">
-              <Building2 size={16} className="text-primary-light" />
-              {tenants.length} Empresas
-            </span>
-            <Button variant="danger" size="md" onClick={handleLogout} leftIcon={<LogOut size={16} />}>
-              Salir
-            </Button>
-          </>
-        }
+        title="Panel SuperAdmin"
+        subtitle="Distribuidoras y accesos"
       />
 
       <div className="px-5 md:px-12 lg:px-20 max-w-6xl mx-auto space-y-8">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-secondary font-medium">
+            Hola, {user?.full_name || 'Administrador'} · <span className="font-bold text-primary-dark">{tenants.length} empresas</span>
+          </p>
+          <Button variant="dangerSoft" size="md" onClick={handleLogout} leftIcon={<LogOut size={16} />}>
+            Salir
+          </Button>
+        </div>
+
         {/* Formulario: Nueva Empresa + Admin */}
         <form
           onSubmit={handleCreateTenant}

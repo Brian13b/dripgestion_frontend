@@ -1,4 +1,5 @@
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { PageHeader } from '../../components/primitives/PageHeader';
 import { Button } from '../../components/primitives/Button';
 import { Check, Banknote, CreditCard, BookOpen, Package, Recycle } from 'lucide-react';
 
@@ -15,19 +16,16 @@ export const ResumenReparto = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans selection:bg-primary-light selection:text-primary-dark">
-      <div className="bg-success text-white py-12 px-5 flex flex-col items-center justify-center shadow-lg rounded-b-3xl">
-        <div className="bg-white/20 p-4 rounded-full mb-4">
-          <Check size={48} strokeWidth={3} />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">
-          Viaje Finalizado
-        </h1>
-        <p className="text-success-100 font-bold tracking-widest uppercase text-sm md:text-base">
-          {nombreRuta || 'Ruta Completada'}
-        </p>
-      </div>
+      <PageHeader title="Viaje Finalizado" subtitle={nombreRuta || 'Ruta completada'} maxWidth="max-w-xl" />
 
-      <div className="max-w-xl mx-auto p-5 space-y-5 -mt-6">
+      <div className="max-w-xl mx-auto p-5 space-y-5 mt-2">
+        <div className="flex justify-center">
+          <span className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-success/10 text-success font-bold">
+            <Check size={20} strokeWidth={3} /> Todo registrado
+          </span>
+        </div>
+
+
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-primary rounded-3xl p-6 text-white shadow-xl flex flex-col items-center text-center">
             <Banknote size={32} className="mb-2 opacity-80" />

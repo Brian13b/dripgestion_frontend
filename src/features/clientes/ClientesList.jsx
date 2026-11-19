@@ -1,14 +1,17 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
+import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import { useState, useEffect } from 'react';
 import { Search, Plus, MapPin, Phone, Package, DollarSign, Pencil, Trash2, User, ChevronLeft, ChevronRight } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService';
 import { ClienteModal } from './ClienteModal';
 import { CobroModal } from './CobroModal';
 
 export const ClientesList = () => {
+  const confirm = useConfirm();
   const [clientes, setClientes] = useState([]);
   const [tiposEnvase, setTiposEnvase] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +47,7 @@ export const ClientesList = () => {
       setTiposEnvase(envasesData);
     } catch (error) {
       console.error('Error al cargar datos', error);
-      toast.error('Error al cargar la lista de clientes');
+      notify.error('Error al cargar la lista de clientes');
     } finally {
       setLoading(false);
     }
@@ -72,13 +75,13 @@ export const ClientesList = () => {
   const clientesPaginados = clientesFiltrados.slice(indicePrimerElemento, indiceUltimoElemento);
 
   const handleDelete = async (id, nombre) => {
-    if (window.confirm(`¿Estás seguro que querés eliminar a "${nombre}"?`)) {
+    if (await confirm({ title: 'Eliminar cliente', message: `Vas a eliminar a "${nombre}". No se puede deshacer.`, confirmLabel: 'Eliminar' })) {
       try {
         await clientesService.delete(id);
         setClientes(clientes.filter((cliente) => cliente.id !== id));
-        toast.success('Cliente eliminado exitosamente');
+        notify.success('Cliente eliminado exitosamente');
       } catch (error) {
-        toast.error('No se pudo eliminar el cliente');
+        notify.error(error, 'No se pudo eliminar el cliente');
         console.error('Error al eliminar cliente', error);
       }
     }
@@ -151,9 +154,8 @@ export const ClientesList = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
       <PageHeader
-        icon={User}
         title="Clientes"
-        subtitle="Gestión y saldo de cuentas corrientes"
+        subtitle="Cuentas corrientes y saldos"
         actions={<HeaderAction icon={Plus} label="Nuevo Cliente" onClick={abrirModalNuevo} />}
       />
 
@@ -182,13 +184,13 @@ export const ClientesList = () => {
       {/* Listado de Clientes */}
       <div className="p-5 md:p-10 lg:px-16 max-w-7xl mx-auto pt-0">
         {loading ? (
-          <p className="text-center text-secondary mt-10 text-xl tracking-wider animate-pulse">
-            Cargando clientes...
-          </p>
+          <LoadingState label="Cargando clientes..." />
         ) : clientesPaginados.length === 0 ? (
-          <p className="text-center text-secondary mt-10 text-xl tracking-wide">
-            No se encontraron resultados para "{searchTerm}".
-          </p>
+          <EmptyState
+            icon={User}
+            title={searchTerm ? 'Sin resultados' : 'Todavía no hay clientes'}
+            description={searchTerm ? `No encontramos clientes para "${searchTerm}".` : 'Cargá el primero con el botón "Nuevo Cliente".'}
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {clientesPaginados.map((cliente) => (

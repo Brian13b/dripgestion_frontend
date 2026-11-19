@@ -1,14 +1,15 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
+import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, Trash2, Shield, Truck, Pencil, LogOut } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { userService } from '../../api/userService';
 import { UsuarioModal } from './UsuarioModal';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 
 export const EquipoView = () => {
-  const navigate = useNavigate();
+  const confirm = useConfirm();
   const [equipo, setEquipo] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ export const EquipoView = () => {
       const data = await userService.getEquipo();
       setEquipo(data);
     } catch (error) {
-      toast.error("Error al cargar equipo");
+      notify.error("Error al cargar equipo");
       console.error(error);
     } finally {
       setLoading(false);
@@ -39,43 +40,40 @@ export const EquipoView = () => {
   };
 
   const handleEliminar = async (id) => {
-    if (!window.confirm("¿Estás seguro? El usuario ya no podrá ingresar al sistema.")) return;
+    if (!(await confirm({ title: 'Eliminar usuario', message: 'El usuario ya no va a poder ingresar al sistema.', confirmLabel: 'Eliminar' }))) return;
     try {
       await userService.eliminarUsuario(id);
-      toast.success("Usuario eliminado");
+      notify.success("Usuario eliminado");
       fetchEquipo();
     } catch (error) {
-      toast.error("No se pudo eliminar el usuario");
+      notify.error(error, "No se pudo eliminar el usuario");
       console.error(error);
     }
   };
 
   const handleLogoutRemoto = async (id, nombre) => {
-    if (!window.confirm(`¿Estás seguro que querés cerrar todas las sesiones activas de ${nombre}?`)) return;
+    if (!(await confirm({ title: 'Cerrar sesiones', message: `Se van a cerrar todas las sesiones activas de ${nombre}.`, confirmLabel: 'Cerrar sesiones' }))) return;
     try {
       await userService.logoutAllDevices(id);
-      toast.success(`Sesiones de ${nombre} cerradas correctamente`);
+      notify.success(`Sesiones de ${nombre} cerradas correctamente`);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "No se pudo cerrar la sesión");
+      notify.error(error, "No se pudo cerrar la sesión");
     }
   };
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       <PageHeader
-        onBack={() => navigate('/perfil')}
         title="Mi Equipo"
+        subtitle="Repartidores y accesos"
         actions={<HeaderAction icon={Plus} label="Nuevo Usuario" onClick={handleNuevo} />}
       />
 
       <div className="max-w-4xl mx-auto p-5 space-y-4">
         {loading ? (
-          <div className="flex flex-col items-center py-20 opacity-30">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-            <p className="font-black uppercase tracking-widest">Cargando...</p>
-          </div>
+          <LoadingState label="Cargando equipo..." />
         ) : equipo.map(miembro => (
-          <div key={miembro.id} className="bg-white p-5 rounded-3xl border border-primary-light/20 flex items-center justify-between shadow-sm animate-in fade-in duration-500">
+          <div key={miembro.id} className="bg-white p-5 rounded-3xl border border-primary-light/20 flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${miembro.role === 'admin' ? 'bg-amber-100 text-amber-600' : 'bg-primary-light/20 text-primary'}`}>
                 {miembro.role === 'admin' ? <Shield size={24}/> : <Truck size={24}/>}

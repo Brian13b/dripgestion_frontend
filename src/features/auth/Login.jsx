@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import { Button } from '../../components/primitives/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
 import { Droplet, Lock, Phone, ShieldCheck } from 'lucide-react';
 import { BotonInstalar } from '../../components/ui/BotonInstalar';
+import { notify } from '../../lib/notify';
 
 export const Login = () => {
   const { login, user } = useContext(AuthContext);
@@ -13,55 +14,54 @@ export const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // true mientras este componente hace el login: evita que el efecto de abajo
+  // navegue antes de que termine la animación de entrada.
+  const loginInFlight = useRef(false);
+  const redirectTimer = useRef(null);
 
   const isRootDomain = !tenant || !tenant.id;
 
+  const homeByRole = (role) => {
+    const r = role?.toLowerCase();
+    if (r === 'superadmin') return '/superadmin';
+    if (r === 'cliente') return '/mi-portal';
+    return '/dashboard';
+  };
+
+  // Sesión ya iniciada (ej. volver a /login): redirigir sin animación.
   useEffect(() => {
-    if (user) {
-      const role = user.role?.toLowerCase();
-      if (role === 'superadmin') navigate('/superadmin');
-      else if (role === 'cliente') navigate('/mi-portal');
-      else navigate('/dashboard');
-    }
+    if (user && !loginInFlight.current) navigate(homeByRole(user.role), { replace: true });
   }, [user, navigate]);
+
+  useEffect(() => () => clearTimeout(redirectTimer.current), []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    loginInFlight.current = true;
 
     try {
       const userData = await login(username, password, tenant?.id);
 
       if (!userData) {
-        setError('Credenciales incorrectas');
+        loginInFlight.current = false;
+        notify.error('Credenciales incorrectas');
         setIsLoading(false);
         return;
       }
 
+      // 1) la capa se expande (600ms)  2) el contenido aparece  3) navegamos
       setIsTransitioning(true);
-
-      const role = userData.role?.toLowerCase();
-      setTimeout(() => {
-        if (role === 'superadmin') {
-          navigate('/superadmin');
-        } else if (role === 'cliente') {
-          navigate('/mi-portal');
-        } else {
-          navigate('/dashboard');
-        }
-      }, 700);
-
+      redirectTimer.current = setTimeout(() => {
+        navigate(homeByRole(userData.role), { replace: true });
+      }, 1100);
     } catch (error) {
       console.error('Error en login:', error);
-      setError(
-        error.response?.data?.detail ||
-          'Credenciales incorrectas o problemas de conexión'
-      );
+      loginInFlight.current = false;
+      notify.error(error, 'Credenciales incorrectas o problemas de conexión');
       setIsLoading(false);
     }
   };
@@ -75,24 +75,28 @@ export const Login = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row relative overflow-hidden">
       
-      {/* CAPA DE TRANSICIÓN TIPO GOTA / EXPANSIÓN */}
-      <div 
-        className={`absolute inset-0 bg-primary-dark z-50 flex flex-col items-center justify-center text-white transition-all duration-700 ease-in-out pointer-events-none ${
-          isTransitioning 
-            ? 'opacity-100 scale-100 rounded-none' 
-            : 'opacity-0 scale-95 clip-path-drop'
-        }`}
+      {/* CAPA DE TRANSICIÓN: círculo que se expande desde el botón de ingreso */}
+      <div
+        aria-hidden={!isTransitioning}
+        className="absolute inset-0 bg-primary-dark z-50 flex flex-col items-center justify-center text-white pointer-events-none"
         style={{
-          clipPath: isTransitioning 
-            ? 'circle(150% at 50% 50%)' 
-            : 'circle(0% at 20% 50%)',
-          transition: 'clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s ease-in-out'
+          clipPath: isTransitioning ? 'circle(150% at 50% 75%)' : 'circle(0% at 50% 75%)',
+          transition: 'clip-path 600ms cubic-bezier(0.23, 1, 0.32, 1)',
         }}
       >
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center animate-bounce mb-4">
-          <Droplet size={64} className="text-white fill-white/20 animate-pulse" />
+        <div
+          className="flex flex-col items-center"
+          style={{
+            opacity: isTransitioning ? 1 : 0,
+            transform: isTransitioning ? 'none' : 'translateY(8px)',
+            transition: 'opacity 300ms ease-out 250ms, transform 300ms cubic-bezier(0.23, 1, 0.32, 1) 250ms',
+          }}
+        >
+          <div className="w-24 h-24 bg-white/10 backdrop-blur-xl rounded-full flex items-center justify-center mb-5 anim-pulse-soft">
+            <Droplet size={52} className="text-white fill-white/20" />
+          </div>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight">Cargando tu espacio...</h2>
         </div>
-        <h2 className="text-4xl md:text-6xl font-black tracking-tight">Cargando tu espacio...</h2>
       </div>
 
       {/* Lado Izquierdo */}
@@ -129,12 +133,6 @@ export const Login = () => {
               Ingresá tus credenciales de acceso
             </p>
           </div>
-
-          {error && (
-            <div className="bg-danger/10 border border-danger/20 text-danger p-3 rounded-xl text-sm text-center mb-5 font-bold">
-              {error}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>

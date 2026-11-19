@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import clsx from 'clsx';
 import { AuthProvider, AuthContext } from './context/AuthContext';
@@ -22,6 +22,7 @@ import { MetricasView } from './features/perfil/MetricasView';
 import SuperAdminDashboard from './features/superadmin/SuperAdminDashboard';
 import { OfflineBanner } from './components/ui/OfflineBanner';
 import { Toaster } from 'react-hot-toast';
+import { ConfirmProvider } from './components/primitives/ConfirmProvider';
 
 const RequireSuperAdmin = () => {
   const { user } = useContext(AuthContext);
@@ -36,6 +37,7 @@ const RequireSuperAdmin = () => {
 const RequireEmpresa = ({ adminOnly = false }) => {
   const { user } = useContext(AuthContext);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const location = useLocation();
 
   if (!user) return <Navigate to="/login" replace />;
 
@@ -57,7 +59,9 @@ const RequireEmpresa = ({ adminOnly = false }) => {
         onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
       />
       <main className="w-full min-h-screen">
-        <Outlet />
+        <div key={location.pathname} className="anim-page">
+          <Outlet />
+        </div>
       </main>
       <BottomNav />
     </div>
@@ -78,22 +82,14 @@ const RequireCliente = () => {
   );
 };
 
-const getHomeRouteByRole = (role) => {
-  const r = role?.toLowerCase();
-  if (r === 'superadmin') return '/superadmin';
-  if (r === 'cliente') return '/mi-portal';
-  return '/dashboard';
-};
-
 function AppRoutes() {
-  const { user } = useContext(AuthContext);
 
   return (
     <Routes>
       {/* Ruta pública */}
       <Route
         path="/login"
-        element={!user ? <Login /> : <Navigate to={getHomeRouteByRole(user.role)} replace />}
+        element={<Login />}
       />
       <Route path="/" element={<Navigate to="/login" replace />} />
 
@@ -136,9 +132,27 @@ function App() {
     <BrowserRouter>
       <TenantProvider>
         <AuthProvider>
-          <Toaster position="top-center" reverseOrder={false} />
-          <OfflineBanner />
-          <AppRoutes />
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3500,
+              style: {
+                background: 'rgba(28, 25, 23, 0.92)',
+                color: '#fff',
+                backdropFilter: 'blur(12px)',
+                borderRadius: '14px',
+                fontWeight: 600,
+                fontSize: '14px',
+                padding: '12px 16px',
+              },
+              success: { duration: 2800, iconTheme: { primary: '#16a34a', secondary: '#fff' } },
+              error: { duration: 5000, iconTheme: { primary: '#dc2626', secondary: '#fff' } },
+            }}
+          />
+          <ConfirmProvider>
+            <OfflineBanner />
+            <AppRoutes />
+          </ConfirmProvider>
         </AuthProvider>
       </TenantProvider>
     </BrowserRouter>

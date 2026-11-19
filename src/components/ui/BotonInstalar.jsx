@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
+import { Button } from '../primitives/Button';
+import { useConfirm } from '../primitives/ConfirmContext';
 
 export const BotonInstalar = () => {
+  const confirm = useConfirm();
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
@@ -27,7 +30,13 @@ export const BotonInstalar = () => {
 
   const handleInstallClick = async () => {
     if (isIOS) {
-      alert('Para instalar en iPhone:\n\n1. Tocá el botón de "Compartir" (el cuadradito con la flecha hacia arriba en la barra de abajo).\n2. Elegí la opción "Agregar a inicio".');
+      await confirm({
+        title: 'Instalar en iPhone',
+        message: '1. Tocá el botón "Compartir" (el cuadradito con la flecha hacia arriba, en la barra de abajo).\n2. Elegí "Agregar a inicio".',
+        confirmLabel: 'Entendido',
+        hideCancel: true,
+        tone: 'primary',
+      });
       return;
     }
 
@@ -48,12 +57,8 @@ export const BotonInstalar = () => {
   }
 
   return (
-    <button 
-      onClick={handleInstallClick} 
-      className="bg-primary hover:bg-primary-dark text-white text-sm font-bold py-2.5 px-4 rounded-xl flex items-center justify-center shadow-md transition-colors active:scale-95 w-full md:w-auto"
-    >
-      <Download size={18} className="mr-2" />
+    <Button onClick={handleInstallClick} variant="primary" size="md" leftIcon={<Download size={18} />} className="w-full md:w-auto">
       Instalar App
-    </button>
+    </Button>
   );
 };

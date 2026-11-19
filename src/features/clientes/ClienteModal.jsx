@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Store, MapPin, Phone, MessageSquare, KeyRound, X, Lock, FileText, CheckCircle } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { clientesService } from '../../api/clienteService';
 import { Button } from '../../components/primitives/Button';
 
@@ -36,7 +36,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
             condicion_iva: data.condicion_iva || 'Consumidor Final'
           });
         } catch (error) {
-          toast.error("Error al cargar cliente");
+          notify.error("Error al cargar cliente");
           console.error(error);
           onClose();
         }
@@ -70,15 +70,15 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
       let clienteGuardado;
       if (isEditing) {
         clienteGuardado = await clientesService.update(clienteId, dataToSend);
-        toast.success('Cliente actualizado');
+        notify.success('Cliente actualizado');
       } else {
         clienteGuardado = await clientesService.create(dataToSend);
-        toast.success('Cliente creado');
+        notify.success('Cliente creado');
       }
       onSuccess(clienteGuardado); 
       onClose(); 
     } catch (err) {
-      toast.error(err.response?.data?.detail || 'Ocurrió un error');
+      notify.error(err, 'Ocurrió un error');
     } finally {
       setIsLoading(false);
     }

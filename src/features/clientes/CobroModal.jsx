@@ -3,7 +3,7 @@ import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
 import { X, Banknote, CreditCard } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { clientesService } from '../../api/clienteService';
 
 export const CobroModal = ({ isOpen, onClose, cliente, onSuccess }) => {
@@ -22,11 +22,11 @@ export const CobroModal = ({ isOpen, onClose, cliente, onSuccess }) => {
         metodo_pago: metodo,
         observacion: '',
       });
-      toast.success('Pago registrado con éxito');
+      notify.success('Pago registrado con éxito');
       onSuccess();
       onClose();
     } catch (error) {
-      toast.error('Error al registrar el pago');
+      notify.error('Error al registrar el pago');
       console.error(error);
     } finally {
       setLoading(false);

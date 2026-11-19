@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
 import { User, Lock, Contact, X, Save, ShieldCheck } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { notify } from '../../lib/notify';
 import { userService } from '../../api/userService';
 
 export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
@@ -27,7 +27,7 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
             password: ''
           });
         } catch (error) {
-          toast.error("Error al cargar datos del usuario");
+          notify.error("Error al cargar datos del usuario");
           console.error(error);
           onClose();
         }
@@ -48,15 +48,15 @@ export const UsuarioModal = ({ isOpen, onClose, userId = null, onSuccess }) => {
         const updateData = { ...formData };
         if (!updateData.password) delete updateData.password;
         await userService.actualizarUsuario(userId, updateData);
-        toast.success("Usuario actualizado");
+        notify.success("Usuario actualizado");
       } else {
         await userService.crearUsuario(formData);
-        toast.success("Usuario creado");
+        notify.success("Usuario creado");
       }
       onSuccess();
       onClose();
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Error en la operación");
+      notify.error(error, "Error en la operación");
     } finally {
       setIsLoading(false);
     }

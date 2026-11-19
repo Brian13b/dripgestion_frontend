@@ -74,7 +74,8 @@ body {
   --h-btn-md: 2.75rem;   /* 44px — target táctil mínimo */
   --h-btn-lg: 3.5rem;    /* 56px — CTA principal en calle */
   --h-input:  2.75rem;   /* 44px */
-  --h-header: 6rem;      /* 96px */
+  --h-header: 6rem;      /* 96px mobile */
+  --h-header-lg: 8rem;   /* 128px = header del Sidebar (lg+) */
 }
 
 /* Superficies Liquid Glass — usar solo donde aporte jerarquía */
@@ -130,4 +131,23 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-secondary);
+}
+
+/* ─── Movimiento (rápido, con intención; ease-out fuerte) ───────────────────── */
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modal-in   { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes page-in    { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes pulse-soft { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .75; transform: scale(0.96); } }
+
+@utility anim-overlay { animation: overlay-in 160ms ease-out both; }
+@utility anim-modal   { animation: modal-in 200ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@utility anim-page    { animation: page-in 220ms cubic-bezier(0.23, 1, 0.32, 1) both; }
+@utility anim-pulse-soft { animation: pulse-soft 1.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
