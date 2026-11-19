@@ -1,4 +1,5 @@
 import api from './axios';
+import { headersIdempotencia } from '../lib/idempotency';
 
 export const clientesService = {
   // Traer todos
@@ -32,8 +33,8 @@ export const clientesService = {
   },
   
   // Registrar pago
-  registrarPago: async (id, data) => {
-    const response = await api.post(`/logistica/movimientos/pago/${id}`, data);
+  registrarPago: async (id, data, idempotencyKey) => {
+    const response = await api.post(`/logistica/movimientos/pago/${id}`, data, headersIdempotencia(idempotencyKey));
     return response.data;
   }
 };

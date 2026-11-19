@@ -2,10 +2,11 @@ import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Modal, ModalHeader } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Check, MapPin, Minus, Plus, Banknote, CreditCard, BookOpen, X, Search, UserPlus, Package, SkipForward, Recycle, Layers } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
+import { nuevaClaveIdempotencia } from '../../lib/idempotency';
 import { clientesService } from '../../api/clienteService';
 import { productosService } from '../../api/productoService';
 import { ClienteModal } from '../clientes/ClienteModal';
@@ -72,6 +73,12 @@ export const RepartoView = () => {
   const [descuento, setDescuento] = useState('');
   const [montoCobrado, setMontoCobrado] = useState('');
   const [metodoPago, setMetodoPago] = useState('efectivo');
+
+  // Clave de idempotencia del guardado en curso: un reintento sin cambios no duplica la entrega.
+  const claveEnvioRef = useRef(null);
+  useEffect(() => {
+    claveEnvioRef.current = null; // si el usuario edita algo, es una operación distinta
+  }, [movimientos, devolucionesDirectas, descuento, montoCobrado, metodoPago, indiceActual]);
 
   // Modales
   const [modalAgregarAbierto, setModalAgregarAbierto] = useState(false);
@@ -235,7 +242,9 @@ export const RepartoView = () => {
     };
 
     try {
-      await recorridoService.registrarMovimiento(payload);
+      if (!claveEnvioRef.current) claveEnvioRef.current = nuevaClaveIdempotencia();
+      await recorridoService.registrarMovimiento(payload, claveEnvioRef.current);
+      claveEnvioRef.current = null;
 
       const nuevosProductos = { ...resumenViaje.productos };
       const nuevosEnvases = { ...(resumenViaje.envases || {}) };

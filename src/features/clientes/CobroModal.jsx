@@ -1,15 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
 import { X, Banknote, CreditCard } from 'lucide-react';
 import { notify } from '../../lib/notify';
 import { clientesService } from '../../api/clienteService';
+import { nuevaClaveIdempotencia } from '../../lib/idempotency';
 
 export const CobroModal = ({ isOpen, onClose, cliente, onSuccess }) => {
   const [monto, setMonto] = useState('');
   const [metodo, setMetodo] = useState('transferencia');
   const [loading, setLoading] = useState(false);
+
+  // Un reintento del mismo cobro (sin cambios) no se descuenta dos veces.
+  const claveEnvioRef = useRef(null);
+  useEffect(() => {
+    claveEnvioRef.current = null;
+  }, [monto, metodo, cliente?.id]);
 
   if (!isOpen || !cliente) return null;
 
@@ -17,11 +24,13 @@ export const CobroModal = ({ isOpen, onClose, cliente, onSuccess }) => {
     e.preventDefault();
     setLoading(true);
     try {
-      await clientesService.registrarPago(cliente.id, {
-        monto: parseFloat(monto),
-        metodo_pago: metodo,
-        observacion: '',
-      });
+      if (!claveEnvioRef.current) claveEnvioRef.current = nuevaClaveIdempotencia();
+      await clientesService.registrarPago(
+        cliente.id,
+        { monto: parseFloat(monto), metodo_pago: metodo, observacion: '' },
+        claveEnvioRef.current,
+      );
+      claveEnvioRef.current = null;
       notify.success('Pago registrado con éxito');
       onSuccess();
       onClose();

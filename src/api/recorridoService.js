@@ -1,4 +1,5 @@
 import api from '../api/axios';
+import { headersIdempotencia } from '../lib/idempotency';
 
 export const recorridoService = {
   // Traer todos los recorridos
@@ -26,8 +27,8 @@ export const recorridoService = {
   },
   
   // Registrar una entrega / movimiento
-  registrarMovimiento: async (data) => {
-    const response = await api.post('/logistica/movimientos', data);
+  registrarMovimiento: async (data, idempotencyKey) => {
+    const response = await api.post('/logistica/movimientos', data, headersIdempotencia(idempotencyKey));
     return response.data;
   },
 
