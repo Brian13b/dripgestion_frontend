@@ -14,6 +14,7 @@ import { RepartoView } from './features/reparto/RepartoView';
 import { ResumenReparto } from './features/reparto/ResumenReparto';
 import { PreciosView } from './features/precios/PreciosView';
 import { HistorialView } from './features/logistica/HistorialView';
+import { CalendarioView } from './features/calendario/CalendarioView';
 import { PerfilEmpresa } from './features/perfil/PerfilEmpresa';
 import { PortalClienteView } from './features/portal/PortalClienteView';
 import { ConfiguracionView } from './features/perfil/ConfiguracionView';
@@ -103,6 +104,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/clientes" element={<ClientesList />} />
         <Route path="/recorridos" element={<RecorridosList />} />
+        <Route path="/calendario" element={<CalendarioView />} />
         <Route path="/reparto/:id" element={<RepartoView />} />
         <Route path="/reparto/resumen" element={<ResumenReparto />} />
         <Route path="/historial" element={<HistorialView />} />

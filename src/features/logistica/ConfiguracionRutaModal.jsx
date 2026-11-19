@@ -5,12 +5,12 @@ import { X, Search, ArrowUp, ArrowDown, Users } from 'lucide-react';
 
 const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave }) => {
+export const ConfiguracionRutaModal = ({ rutaInicial, clientes, repartidores = [], onClose, onSave }) => {
   const [rutaEditando, setRutaEditando] = useState(() => {
     if (rutaInicial) {
       return { ...rutaInicial, clientes_orden: [...rutaInicial.clientes_orden] };
     }
-    return { id: null, nombre: '', dia_semana: 0, clientes_orden: [] };
+    return { id: null, nombre: '', dia_semana: 0, clientes_orden: [], repartidor_id: null };
   });
   
   const [busquedaCliente, setBusquedaCliente] = useState('');
@@ -46,6 +46,20 @@ export const ConfiguracionRutaModal = ({ rutaInicial, clientes, onClose, onSave 
             <select value={rutaEditando.dia_semana} onChange={e => setRutaEditando({...rutaEditando, dia_semana: Number(e.target.value)})} className="field field-lg cursor-pointer">
               {DIAS_SEMANA.map((d, i) => <option key={i} value={i}>{d}</option>)}
             </select>
+            {repartidores.length > 0 && (
+              <div>
+                <label className="block text-xs font-bold text-secondary uppercase mb-2 ml-1 tracking-widest">Chofer habitual</label>
+                <select
+                  value={rutaEditando.repartidor_id ?? ''}
+                  onChange={e => setRutaEditando({...rutaEditando, repartidor_id: e.target.value === '' ? null : Number(e.target.value)})}
+                  className="field cursor-pointer"
+                >
+                  <option value="">Sin chofer habitual</option>
+                  {repartidores.map(r => <option key={r.id} value={r.id}>{r.full_name || r.username}</option>)}
+                </select>
+                <p className="text-xs text-secondary font-medium mt-1.5 ml-1">Quién sale por defecto. El equipo de cada día (hasta 3) se arma en el Calendario.</p>
+              </div>
+            )}
           </div>
 
           <div className="border-t border-primary-light/20 pt-6">

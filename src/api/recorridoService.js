@@ -20,12 +20,24 @@ export const recorridoService = {
     return response.data;
   },
   
+  // Eliminar recorrido
+  delete: async (id) => {
+    const response = await api.delete(`/logistica/recorridos/${id}`);
+    return response.data;
+  },
+
   // Actualizar recorrido
   update: async (id, data) => {
     const response = await api.put(`/logistica/recorridos/${id}`, data);
     return response.data;
   },
   
+  // Chofer habitual de la ruta (null = sin chofer habitual)
+  asignarRepartidor: async (id, repartidorId) => {
+    const response = await api.patch(`/logistica/recorridos/${id}/asignar-repartidor`, { repartidor_id: repartidorId });
+    return response.data;
+  },
+
   // Registrar una entrega / movimiento
   registrarMovimiento: async (data, idempotencyKey) => {
     const response = await api.post('/logistica/movimientos', data, headersIdempotencia(idempotencyKey));

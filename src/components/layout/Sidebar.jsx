@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutGrid, Users, MapPin, Tag, UserCircle, History, Settings, UserCog, LogOut, Droplets, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { CalendarDays, LayoutGrid, Users, MapPin, Tag, UserCircle, History, Settings, UserCog, LogOut, Droplets, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import clsx from 'clsx';
 import { AuthContext } from '../../context/AuthContext';
 import { TenantContext } from '../../context/TenantContext';
@@ -105,6 +105,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
         <SidebarItem to="/dashboard" icon={LayoutGrid} label="Inicio" collapsed={collapsed} />
         <SidebarItem to="/clientes" icon={Users} label="Clientes" collapsed={collapsed} />
         <SidebarItem to="/recorridos" icon={MapPin} label="Rutas y Repartos" collapsed={collapsed} matchPrefixes={['/recorridos', '/reparto']} />
+        <SidebarItem to="/calendario" icon={CalendarDays} label="Calendario" collapsed={collapsed} />
         <SidebarItem to="/historial" icon={History} label="Historial del Día" collapsed={collapsed} />
 
         {isAdmin && (

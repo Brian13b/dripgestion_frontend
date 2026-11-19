@@ -5,7 +5,10 @@ import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Play, Pencil, Trash2, Package } from 'lucide-react';
+import { Plus, Play, Pencil, Trash2, Package, CalendarDays, Truck } from 'lucide-react';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { userService } from '../../api/userService';
 import { clientesService } from '../../api/clienteService';
 import { recorridoService } from '../../api/recorridoService';
 import { notify } from '../../lib/notify';
@@ -17,6 +20,9 @@ const DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sáb
 export const RecorridosList = () => {
   const confirm = useConfirm();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
+  const esAdmin = user?.role?.toLowerCase() === 'admin';
+  const [repartidores, setRepartidores] = useState([]);
   const [recorridos, setRecorridos] = useState([]);
   const [clientes, setClientes] = useState([]); 
   const [loading, setLoading] = useState(true);
@@ -32,6 +38,10 @@ export const RecorridosList = () => {
       ]);
       setRecorridos(recorridosRes);
       setClientes(clientesRes);
+      if (esAdmin) {
+        const equipo = await userService.getEquipo();
+        setRepartidores(equipo.filter(u => u.role?.toLowerCase() === 'repartidor' && u.is_active));
+      }
     } catch (error) {
       notify.error(error, "Error al cargar los datos");
       console.error(error);
@@ -71,6 +81,10 @@ export const RecorridosList = () => {
     try {
       if (rutaEditada.id) {
         await recorridoService.update(rutaEditada.id, rutaEditada);
+        const anterior = recorridos.find(r => r.id === rutaEditada.id);
+        if ((anterior?.repartidor_id ?? null) !== (rutaEditada.repartidor_id ?? null)) {
+          await recorridoService.asignarRepartidor(rutaEditada.id, rutaEditada.repartidor_id ?? null);
+        }
         notify.success("Ruta actualizada");
       } else {
         await recorridoService.create(rutaEditada);
@@ -94,13 +108,18 @@ export const RecorridosList = () => {
           <HeaderAction
             icon={Plus}
             label="Nueva Ruta"
-            onClick={() => setRutaParaConfigurar({ id: null, nombre: '', dia_semana: 0, clientes_orden: [] })}
+            onClick={() => setRutaParaConfigurar({ id: null, nombre: '', dia_semana: 0, clientes_orden: [], repartidor_id: null })}
           />
         }
       />
 
       {/* LISTA DE RECORRIDOS */}
       <PageContent>
+        <div className="mb-5">
+          <Button variant="secondary" size="md" onClick={() => navigate('/calendario')}>
+            <CalendarDays size={18} /> Ver calendario de salidas
+          </Button>
+        </div>
         {loading ? (
           <LoadingState label="Cargando rutas..." />
         ) : recorridos.length === 0 ? (
@@ -130,6 +149,13 @@ export const RecorridosList = () => {
                       {clientesEnRuta.length} paradas
                     </span>
                   </div>
+
+                  {esAdmin && (
+                    <p className="flex items-center gap-2 text-sm font-semibold text-secondary mb-4 -mt-3">
+                      <Truck size={16} className="text-primary shrink-0" />
+                      {repartidores.find(r => r.id === recorrido.repartidor_id)?.full_name || (recorrido.repartidor_id ? 'Chofer asignado' : 'Sin chofer habitual')}
+                    </p>
+                  )}
 
                   <div className="space-y-3 mb-6 flex-1">
                     {clientesEnRuta.slice(0, 3).map((clienteId, index) => (
@@ -167,6 +193,7 @@ export const RecorridosList = () => {
         <ConfiguracionRutaModal 
           rutaInicial={rutaParaConfigurar.id ? rutaParaConfigurar : null} 
           clientes={clientes} 
+          repartidores={repartidores}
           onClose={() => setRutaParaConfigurar(null)} 
           onSave={handleGuardarRuta} 
         />
