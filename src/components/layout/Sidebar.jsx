@@ -64,18 +64,16 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       )}
     >
       {/* Cabecera: Marca + Botón Colapsar */}
-      <div
-        className={clsx(
-          'bg-primary-dark h-32 border-b-4 border-primary shadow-md flex flex-col justify-between py-3 transition-all duration-300',
-          collapsed ? 'items-center px-2' : 'px-4'
-        )}
-      >
-        <div
+      <div className={clsx('bg-primary-dark h-32 border-b-4 border-primary shadow-md flex flex-col justify-between py-3 transition-all duration-300', collapsed ? 'items-center px-2' : 'px-4')}>
+        <button type="button" onClick={onToggleCollapse} title={collapsed ? 'Expandir menú' : 'Colapsar menú'} aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
           className={clsx(
-            'flex items-center min-w-0',
-            collapsed ? 'justify-center' : 'gap-3'
+            'p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer',
+            collapsed ? 'self-center' : 'self-end'
           )}
         >
+          {collapsed ? (<PanelLeftOpen size={18} />) : ( <> <PanelLeftClose size={18} /> <span className="sr-only">Colapsar menú</span> </>)}
+        </button>
+        <div className={clsx('flex items-center min-w-0', collapsed ? 'justify-center' : 'gap-3')}>
           {tenant?.logo_url ? (
             <img
               src={tenant.logo_url}
@@ -99,19 +97,6 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
             </div>
           )}
         </div>
-
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          title={collapsed ? 'Expandir menú' : 'Colapsar menú'}
-          aria-label={collapsed ? 'Expandir menú' : 'Colapsar menú'}
-          className={clsx(
-            'p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition shrink-0 cursor-pointer',
-            collapsed ? 'self-center' : 'self-end'
-          )}
-        >
-          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-        </button>
       </div>
 
       {/* Navegación Principal */}
@@ -126,12 +111,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
             <SectionLabel text="Administración" collapsed={collapsed} />
             <SidebarItem to="/precios" icon={Tag} label="Productos y Envases" collapsed={collapsed} />
             <SidebarItem to="/equipo" icon={UserCog} label="Equipo" collapsed={collapsed} />
-            <SidebarItem
-              to="/configuracion"
-              icon={Settings}
-              label="Configuración"
-              collapsed={collapsed}
-            />
+            <SidebarItem to="/configuracion" icon={Settings} label="Configuración" collapsed={collapsed} />
           </>
         )}
 
