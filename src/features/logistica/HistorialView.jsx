@@ -70,7 +70,7 @@ export const HistorialView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      {/* Header Limpio */}
+      {/* Header */}
       <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 text-white shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
@@ -101,7 +101,7 @@ export const HistorialView = () => {
             />
           </div>
 
-          {/* Filtros Admin (Chofer y Recorrido) */}
+          {/* Filtros Admin */}
           {user?.role?.toUpperCase() === 'ADMIN' && (
             <>
               <div className="relative rounded-2xl bg-slate-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
@@ -140,14 +140,14 @@ export const HistorialView = () => {
 
         {/* RECAUDACIÓN DEL MES */}
         {user?.role?.toUpperCase() === 'ADMIN' && (
-          <div className="p-1 shadow-md">
+          <div className="p-1 shadow-md rounded-[22px]">
             <div className="bg-white rounded-[22px] p-5">
               <h2 className="text-lg font-bold text-primary-dark uppercase tracking-widest mb-4 flex items-center border-b border-primary-light/30 pb-3">
                  <CalendarDays size={22} className="mr-2 text-primary"/> Total Acumulado del Mes
               </h2>
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Efectivo</p><p className="text-2xl md:text-4xl font-black text-success">${resumenMes.efectivo}</p></div>
-                <div className="border-x border-primary-light/30"><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Bancos</p><p className="text-2xl md:text-4xl font-black text-primary">${resumenMes.transferencia}</p></div>
+                <div className="border-x border-primary-light/30"><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Transferencia</p><p className="text-2xl md:text-4xl font-black text-primary">${resumenMes.transferencia}</p></div>
                 <div><p className="text-xs md:text-sm font-bold text-secondary uppercase tracking-wider mb-1">Fiado</p><p className="text-2xl md:text-4xl font-black text-orange-500">${resumenMes.fiado}</p></div>
               </div>
             </div>
