@@ -71,10 +71,10 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
             collapsed ? 'self-center' : 'self-end'
           )}
         >
-          {collapsed ? (<PanelLeftOpen size={18} />) : ( <> <PanelLeftClose size={18} /> <span className="text-xs font-semibold">Colapsar menú</span> </>)}
+          {collapsed ? (<PanelLeftOpen size={18} />) : ( <> <PanelLeftClose size={18} /> <span className="text-sm font-semibold">Colapsar menú</span> </>)}
         </button>
 
-        <div className={clsx('flex items-center min-w-0', collapsed ? 'justify-center' : 'gap-3')}>
+        <div className={clsx('flex items-center min-w-0 mb-1', collapsed ? 'justify-center' : 'gap-3')}>
           {tenant?.logo_url ? (
             <img
               src={tenant.logo_url}
@@ -92,7 +92,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
               <p className="text-sm font-black text-white truncate">
                 {tenant?.nombre || 'Drip Gestión'}
               </p>
-              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary-dark bg-primary-light px-2 py-1.5 rounded-md mt-0.5">
+              <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary-dark bg-primary-light px-2 py-0.5 rounded-md mt-0.5">
                 {isAdmin ? 'Administrador' : 'Repartidor'}
               </span>
             </div>

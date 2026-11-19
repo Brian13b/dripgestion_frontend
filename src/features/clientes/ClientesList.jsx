@@ -147,8 +147,8 @@ export const ClientesList = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      {/* Header Limpio */}
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
+      {/* Header */}
+      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-wide flex items-center">
@@ -169,9 +169,9 @@ export const ClientesList = () => {
         </div>
       </div>
 
-      {/* Barra de Filtros, Buscador y Conteo (Ubicada debajo del header) */}
+      {/* Barra de Filtros, Buscador y Conteo */}
       <div className="max-w-7xl mx-auto px-5 md:px-12 lg:px-16 mt-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Buscador con Delay (Debounce) */}
+        {/* Buscador con Delay */}
         <div className="relative w-full sm:max-w-md">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <Search size={20} className="text-secondary" />

@@ -71,7 +71,7 @@ export const HistorialView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 text-white shadow-md border-b-4 border-primary">
+      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-20 pt-8 md:pt-12 text-white shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
