@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { notify } from '../../lib/notify';
 import React, { useState, useEffect, useContext } from 'react';
 import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, ReceiptText } from 'lucide-react';
@@ -80,7 +81,7 @@ export const HistorialView = () => {
         subtitle="Cobranzas y arqueo por recorrido"
       />
 
-      <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
+      <PageContent className="space-y-6">
 
         {/* BARRA DE FILTROS */}
         <div className="bg-white p-4 rounded-3xl shadow-xs border border-primary-light/20 flex flex-col md:flex-row items-center gap-3">
@@ -186,7 +187,7 @@ export const HistorialView = () => {
             ))}
           </div>
         )}
-      </div>
+      </PageContent>
     </div>
   );
 };

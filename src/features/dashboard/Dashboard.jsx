@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { notify } from '../../lib/notify';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -82,7 +83,7 @@ export const Dashboard = () => {
         subtitle={isAdmin ? 'Resumen operativo' : 'Tu recorrido de hoy'}
       />
 
-      <div className="px-5 md:px-12 lg:px-16 max-w-7xl mx-auto">
+      <PageContent>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {/* VISTA DE ADMIN */}
           {isAdmin ? (
@@ -184,7 +185,7 @@ export const Dashboard = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </PageContent>
     </div>
   );
 };

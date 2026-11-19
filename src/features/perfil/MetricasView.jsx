@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { notify } from '../../lib/notify';
 import React, { useState, useEffect } from 'react';
@@ -65,7 +66,7 @@ export const MetricasView = () => {
         subtitle="Estadísticas del negocio"
       />
 
-      <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
+      <PageContent className="space-y-6">
         {/* SELECTORES DE COMPARACIÓN */}
         <div className="bg-white p-5 rounded-3xl shadow-sm border border-primary-light/30 mb-8 flex flex-col md:flex-row gap-4 items-center">
           <div className="flex-1 w-full relative">
@@ -182,7 +183,7 @@ export const MetricasView = () => {
           </div>
 
         </div>
-      </div>
+      </PageContent>
     </div>
   );
 };

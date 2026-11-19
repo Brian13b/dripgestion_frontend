@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
@@ -63,13 +64,13 @@ export const EquipoView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <PageHeader
+      <PageHeader maxWidth="max-w-4xl"
         title="Mi Equipo"
         subtitle="Repartidores y accesos"
         actions={<HeaderAction icon={Plus} label="Nuevo Usuario" onClick={handleNuevo} />}
       />
 
-      <div className="max-w-4xl mx-auto p-5 space-y-4">
+      <PageContent maxWidth="max-w-4xl" className="space-y-4">
         {loading ? (
           <LoadingState label="Cargando equipo..." />
         ) : equipo.map(miembro => (
@@ -107,7 +108,7 @@ export const EquipoView = () => {
             </div>
           </div>
         ))}
-      </div>
+      </PageContent>
 
       <UsuarioModal 
         isOpen={isModalOpen} 

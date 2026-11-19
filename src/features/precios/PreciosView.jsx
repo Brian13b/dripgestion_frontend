@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Button } from '../../components/primitives/Button';
@@ -211,7 +212,7 @@ export const PreciosView = () => {
       />
 
       {/* CONTENIDO PRINCIPAL */}
-      <div className="p-5 md:p-10 lg:px-16 max-w-7xl mx-auto mt-2">
+      <PageContent>
         {loading ? (
           <LoadingState label="Cargando catálogo..." />
         ) : (
@@ -697,7 +698,7 @@ export const PreciosView = () => {
             )}
           </>
         )}
-      </div>
+      </PageContent>
     </div>
   );
 };

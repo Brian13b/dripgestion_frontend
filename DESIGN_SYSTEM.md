@@ -153,3 +153,18 @@ Login: la capa de entrada se abre como círculo en 600ms, el contenido aparece a
 
 - Revisión visual con sesión iniciada de cada pantalla.
 - Ver las recomendaciones de diseño entregadas aparte (no aplicadas).
+
+## 17. Espaciado de página — `components/primitives/PageContent.jsx`
+
+```jsx
+<PageHeader title="Clientes" subtitle="..." />
+<PageContent className="space-y-6">…</PageContent>              {/* ancho por defecto: max-w-7xl */}
+<PageContent maxWidth="max-w-4xl">…</PageContent>               {/* usar el mismo maxWidth que el PageHeader */}
+<PageContent top={false}>…</PageContent>                       {/* 2.º bloque seguido: no repite el aire superior */}
+```
+
+- Gutter horizontal único `px-5 md:px-12 lg:px-16`, el mismo del `PageHeader`: el contenido queda alineado con el título.
+- Aire entre el header y el primer bloque: `pt-6 md:pt-8`. Nada de `mt-2`, `mt-4` ni `p-*` sueltos en cada vista.
+- El espacio inferior lo da la raíz de la página (`pb-24` por la BottomNav en mobile).
+- Si una página usa un ancho distinto de `max-w-7xl` (Equipo, Perfil, Reparto…), se pasa **el mismo** `maxWidth` al `PageHeader` y al `PageContent`.
+

@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
@@ -160,7 +161,7 @@ export const ClientesList = () => {
       />
 
       {/* Barra de Filtros, Buscador y Conteo */}
-      <div className="max-w-7xl mx-auto px-5 md:px-12 lg:px-16 mt-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <PageContent className="pb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Buscador con Delay */}
         <div className="relative w-full sm:max-w-md">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -179,10 +180,10 @@ export const ClientesList = () => {
         <div className="text-secondary font-bold text-sm bg-white px-5 py-3.5 rounded-2xl border border-primary-light/20 shadow-xs whitespace-nowrap">
           Mostrando <span className="text-primary-dark font-black">{clientesPaginados.length}</span> de <span className="text-primary-dark font-black">{clientesFiltrados.length}</span> registros
         </div>
-      </div>
+      </PageContent>
 
       {/* Listado de Clientes */}
-      <div className="p-5 md:p-10 lg:px-16 max-w-7xl mx-auto pt-0">
+      <PageContent top={false}>
         {loading ? (
           <LoadingState label="Cargando clientes..." />
         ) : clientesPaginados.length === 0 ? (
@@ -309,7 +310,7 @@ export const ClientesList = () => {
             </Button>
           </div>
         )}
-      </div>
+      </PageContent>
 
       <ClienteModal
         isOpen={isModalOpen}

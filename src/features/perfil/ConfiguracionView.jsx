@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Button } from '../../components/primitives/Button';
 import React, { useState, useRef } from 'react';
@@ -96,7 +97,7 @@ export const ConfiguracionView = () => {
         subtitle="Empresa, logo y seguridad"
       />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8 flex flex-col md:flex-row gap-6 md:gap-8">        
+      <PageContent className="flex flex-col md:flex-row gap-6 md:gap-8">        
         {/* ASIDE */}
         <div className="md:w-1/3 lg:w-1/4 shrink-0">
           <div className="card p-3">
@@ -259,7 +260,7 @@ export const ConfiguracionView = () => {
           </div>
 
         </div>
-      </div>
+      </PageContent>
     </div>
   );
 };

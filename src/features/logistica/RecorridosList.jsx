@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { LoadingState, EmptyState } from '../../components/primitives/StateBlock';
 import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
@@ -99,7 +100,7 @@ export const RecorridosList = () => {
       />
 
       {/* LISTA DE RECORRIDOS */}
-      <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2">
+      <PageContent>
         {loading ? (
           <LoadingState label="Cargando rutas..." />
         ) : recorridos.length === 0 ? (
@@ -150,7 +151,7 @@ export const RecorridosList = () => {
             })}
           </div>
         )}
-      </div>
+      </PageContent>
 
       {/* --- MODALES --- */}
       {rutaParaPrevisualizar && (

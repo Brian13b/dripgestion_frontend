@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { PageContent } from '../../components/primitives/PageContent';
 import { PageHeader } from '../../components/primitives/PageHeader';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -31,7 +32,7 @@ export const PerfilEmpresa = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       <PageHeader title="Portal Empresa" subtitle="Tu cuenta y accesos rápidos" maxWidth="max-w-4xl" />
 
-      <div className="max-w-4xl mx-auto px-5 md:px-8 pt-6">
+      <PageContent maxWidth="max-w-4xl">
         <div className="card p-5 flex items-center gap-4">
           <div className="w-16 h-16 bg-sand-50 rounded-2xl flex items-center justify-center border border-sand-100 overflow-hidden shrink-0">
             {tenant?.logo_url ? (
@@ -45,9 +46,9 @@ export const PerfilEmpresa = () => {
             <p className="text-secondary font-medium truncate">{tenant?.nombre || 'Gestión Logística'}</p>
           </div>
         </div>
-      </div>
+      </PageContent>
 
-      <div className="max-w-4xl mx-auto p-5 md:p-8 space-y-8 mt-2">
+      <PageContent maxWidth="max-w-4xl" className="space-y-8">
         <div className="space-y-4">
           <h3 className="text-sm md:text-base font-bold text-secondary uppercase tracking-widest ml-4">Panel de Control</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -76,7 +77,7 @@ export const PerfilEmpresa = () => {
           </p>
           <p className="text-xs text-secondary mt-1 font-medium">Sistema de Gestión de Distribución.</p>
         </div>
-      </div>
+      </PageContent>
     </div>
   );
 };

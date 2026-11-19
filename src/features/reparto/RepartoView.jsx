@@ -1,4 +1,5 @@
 import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { PageContent } from '../../components/primitives/PageContent';
 import { SegmentedControl } from '../../components/primitives/SegmentedControl';
 import { Modal, ModalHeader } from '../../components/primitives/Modal';
 import { Button } from '../../components/primitives/Button';
@@ -337,13 +338,13 @@ export const RepartoView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
       <PageHeader
-        maxWidth="max-w-3xl"
+        maxWidth="max-w-2xl"
         title="Recorrido en curso"
         subtitle={`Cliente ${indiceActual + 1} de ${clientesRuta.length}`}
       />
 
       {/* CONTENEDOR PRINCIPAL */}
-      <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-5 mt-4">
+      <PageContent maxWidth="max-w-2xl" className="space-y-5">
         {/* INFO CLIENTE */}
         <div className="bg-white rounded-3xl shadow-sm border border-primary-light/30 p-5 md:p-6 relative overflow-hidden">
           <span className="float-right bg-primary/10 text-primary text-xs font-bold px-3 py-1.5 rounded-xl uppercase tracking-wider">
@@ -715,7 +716,7 @@ export const RepartoView = () => {
         >
           Finalizar viaje
         </Button>
-      </div>
+      </PageContent>
 
       {/* MODALES */}
       {modalAgregarAbierto && (

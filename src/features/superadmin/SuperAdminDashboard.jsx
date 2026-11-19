@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { PageContent } from '../../components/primitives/PageContent';
 import { useConfirm } from '../../components/primitives/ConfirmContext';
 import { Button } from '../../components/primitives/Button';
 import { PageHeader } from '../../components/primitives/PageHeader';
@@ -127,13 +128,12 @@ export default function SuperAdminDashboard() {
   return (
     <div className="min-h-screen bg-background pb-16 font-sans">
       <PageHeader
-        className="mb-8"
         maxWidth="max-w-6xl"
         title="Panel SuperAdmin"
         subtitle="Distribuidoras y accesos"
       />
 
-      <div className="px-5 md:px-12 lg:px-20 max-w-6xl mx-auto space-y-8">
+      <PageContent maxWidth="max-w-6xl" className="space-y-8">
         <div className="flex items-center justify-between gap-3">
           <p className="text-secondary font-medium">
             Hola, {user?.full_name || 'Administrador'} · <span className="font-bold text-primary-dark">{tenants.length} empresas</span>
@@ -341,7 +341,7 @@ export default function SuperAdminDashboard() {
             </table>
           </div>
         </div>
-      </div>
+      </PageContent>
       {editingTenant && (
         <Modal size="lg">
           <ModalHeader title={`Editar Distribuidora #${editingTenant.id}`} onClose={() => setEditingTenant(null)} />

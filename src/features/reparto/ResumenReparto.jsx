@@ -1,4 +1,5 @@
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { PageContent } from '../../components/primitives/PageContent';
 import { PageHeader } from '../../components/primitives/PageHeader';
 import { Button } from '../../components/primitives/Button';
 import { Check, Banknote, CreditCard, BookOpen, Package, Recycle } from 'lucide-react';
@@ -18,7 +19,7 @@ export const ResumenReparto = () => {
     <div className="min-h-screen bg-background pb-24 font-sans selection:bg-primary-light selection:text-primary-dark">
       <PageHeader title="Viaje Finalizado" subtitle={nombreRuta || 'Ruta completada'} maxWidth="max-w-xl" />
 
-      <div className="max-w-xl mx-auto p-5 space-y-5 mt-2">
+      <PageContent maxWidth="max-w-xl" className="space-y-5">
         <div className="flex justify-center">
           <span className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-success/10 text-success font-bold">
             <Check size={20} strokeWidth={3} /> Todo registrado
@@ -142,7 +143,7 @@ export const ResumenReparto = () => {
         >
           Volver al Inicio
         </Button>
-      </div>
+      </PageContent>
     </div>
   );
 };
