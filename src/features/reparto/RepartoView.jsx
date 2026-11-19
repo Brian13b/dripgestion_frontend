@@ -1,3 +1,7 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { SegmentedControl } from '../../components/primitives/SegmentedControl';
+import { Modal, ModalHeader } from '../../components/primitives/Modal';
+import { Button } from '../../components/primitives/Button';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Check, MapPin, Minus, Plus, Banknote, CreditCard, BookOpen, X, Search, UserPlus, Package, SkipForward, Recycle, Layers } from 'lucide-react';
@@ -323,25 +327,12 @@ export const RepartoView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
-      <div className="bg-primary-dark p-5 md:px-12 pt-8 md:pt-10 sticky top-0 z-20 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-3xl mx-auto flex justify-between items-center">
-          <div>
-            <p className="text-primary-light text-xs md:text-sm font-bold uppercase tracking-widest mb-1">
-              Recorrido en curso
-            </p>
-            <h1 className="text-2xl md:text-3xl font-black tracking-wide">
-              Cliente {indiceActual + 1} de {clientesRuta.length}
-            </h1>
-          </div>
-          <button
-            onClick={() => avanzarOSalir()}
-            className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-5 rounded-2xl flex items-center shadow-sm font-bold text-sm md:text-base"
-          >
-            <Check size={20} className="md:mr-2" strokeWidth={3} />
-            <span className="hidden md:inline tracking-wider">Finalizar Viaje</span>
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        maxWidth="max-w-3xl"
+        eyebrow="Recorrido en curso"
+        title={`Cliente ${indiceActual + 1} de ${clientesRuta.length}`}
+        actions={<HeaderAction icon={Check} label="Finalizar Viaje" onClick={() => avanzarOSalir()} />}
+      />
 
       {/* CONTENEDOR PRINCIPAL */}
       <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-5 mt-4">
@@ -359,7 +350,7 @@ export const RepartoView = () => {
           </p>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
+            <div className="bg-sand-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
               <p className="text-[10px] md:text-xs text-secondary uppercase font-bold tracking-wider mb-1">
                 Saldo Histórico
               </p>
@@ -378,7 +369,7 @@ export const RepartoView = () => {
                 </span>
               </p>
             </div>
-            <div className="bg-slate-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
+            <div className="bg-sand-50 p-4 rounded-2xl border border-primary-light/20 flex flex-col justify-center">
               <p className="text-[10px] md:text-xs text-secondary uppercase font-bold tracking-wider mb-1">
                 Envases Prestados
               </p>
@@ -421,7 +412,7 @@ export const RepartoView = () => {
                         {prod.nombre}
                       </span>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md uppercase">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-secondary bg-sand-100 px-2 py-0.5 rounded-md uppercase">
                           <Layers size={11} />
                           {prod.unidad_medida || 'unidad'}
                         </span>
@@ -440,73 +431,73 @@ export const RepartoView = () => {
 
                   {prod.es_retornable ? (
                     <div className="grid grid-cols-2 gap-4 md:gap-6">
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
+                      <div className="bg-sand-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
                         <span className="text-[10px] md:text-xs uppercase font-bold text-secondary tracking-widest mb-2">
                           Dejás (Llenos)
                         </span>
                         <div className="flex items-center space-x-4">
-                          <button
+                          <Button
                             onClick={() => updateCantidad(prod.id, 'entregado', -1)}
-                            className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                            variant="secondary" size="md" iconOnly
                           >
                             <Minus size={18} />
-                          </button>
+                          </Button>
                           <span className="w-6 text-center font-black text-xl text-primary-dark">
                             {movimientos[prod.id]?.entregado || 0}
                           </span>
-                          <button
+                          <Button
                             onClick={() => updateCantidad(prod.id, 'entregado', 1)}
-                            className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                            variant="secondary" size="md" iconOnly
                           >
                             <Plus size={18} />
-                          </button>
+                          </Button>
                         </div>
                       </div>
 
-                      <div className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
+                      <div className="bg-sand-50 p-3 rounded-2xl border border-primary-light/20 flex flex-col items-center">
                         <span className="text-[10px] md:text-xs uppercase font-bold text-secondary tracking-widest mb-2">
                           Te Llevás (Vacíos)
                         </span>
                         <div className="flex items-center space-x-4">
-                          <button
+                          <Button
                             onClick={() => updateCantidad(prod.id, 'devuelto', -1)}
-                            className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                            variant="secondary" size="md" iconOnly
                           >
                             <Minus size={18} />
-                          </button>
+                          </Button>
                           <span className="w-6 text-center font-black text-xl text-primary-dark">
                             {movimientos[prod.id]?.devuelto || 0}
                           </span>
-                          <button
+                          <Button
                             onClick={() => updateCantidad(prod.id, 'devuelto', 1)}
-                            className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                            variant="secondary" size="md" iconOnly
                           >
                             <Plus size={18} />
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20 flex items-center justify-between px-5">
+                    <div className="bg-sand-50 p-3 rounded-2xl border border-primary-light/20 flex items-center justify-between px-5">
                       <span className="text-xs uppercase font-bold text-secondary tracking-widest">
                         Cantidad Entregada
                       </span>
                       <div className="flex items-center space-x-4">
-                        <button
+                        <Button
                           onClick={() => updateCantidad(prod.id, 'entregado', -1)}
-                          className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                          variant="secondary" size="md" iconOnly
                         >
                           <Minus size={18} />
-                        </button>
+                        </Button>
                         <span className="w-6 text-center font-black text-xl text-primary-dark">
                           {movimientos[prod.id]?.entregado || 0}
                         </span>
-                        <button
+                        <Button
                           onClick={() => updateCantidad(prod.id, 'entregado', 1)}
-                          className="w-10 h-10 rounded-full border border-primary-light/30 bg-white shadow-sm flex items-center justify-center text-primary-dark hover:bg-primary hover:text-white transition-colors active:scale-95"
+                          variant="secondary" size="md" iconOnly
                         >
                           <Plus size={18} />
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   )}
@@ -522,7 +513,7 @@ export const RepartoView = () => {
               <Recycle size={20} className="mr-2 text-emerald-600" />
               Retiro de Envases Vacíos (Solo devolución)
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-secondary mb-4">
               Usá esta sección si el cliente devuelve envases sin llevar mercadería.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -535,21 +526,21 @@ export const RepartoView = () => {
                     {env.nombre}
                   </span>
                   <div className="flex items-center space-x-2.5 shrink-0">
-                    <button
+                    <Button
                       onClick={() => updateDevolucionDirecta(env.id, -1)}
-                      className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-primary-dark hover:bg-emerald-600 hover:text-white transition"
+                      variant="secondary" size="sm" iconOnly
                     >
                       <Minus size={14} />
-                    </button>
+                    </Button>
                     <span className="w-5 text-center font-black text-base text-emerald-800">
                       {devolucionesDirectas[env.id] || 0}
                     </span>
-                    <button
+                    <Button
                       onClick={() => updateDevolucionDirecta(env.id, 1)}
-                      className="w-8 h-8 rounded-full bg-white border border-emerald-200 flex items-center justify-center text-primary-dark hover:bg-emerald-600 hover:text-white transition"
+                      variant="secondary" size="sm" iconOnly
                     >
                       <Plus size={14} />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -581,46 +572,23 @@ export const RepartoView = () => {
           <h3 className="font-bold text-primary-dark text-lg mb-4 tracking-wide">
             Método de Pago
           </h3>
-          <div className="flex space-x-3 mb-6">
-            <button
-              onClick={() => setMetodoPago('efectivo')}
-              className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${
-                metodoPago === 'efectivo'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-primary-light/20 text-secondary hover:bg-slate-50'
-              }`}
-            >
-              <Banknote size={24} />
-              <span className="text-xs md:text-sm font-bold mt-2">Efectivo</span>
-            </button>
-            <button
-              onClick={() => setMetodoPago('transferencia')}
-              className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${
-                metodoPago === 'transferencia'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-primary-light/20 text-secondary hover:bg-slate-50'
-              }`}
-            >
-              <CreditCard size={24} />
-              <span className="text-xs md:text-sm font-bold mt-2">Transf.</span>
-            </button>
-            <button
-              onClick={() => {
-                setMetodoPago('cta_corriente');
-                setMontoCobrado('');
-              }}
-              className={`flex-1 py-4 flex flex-col items-center rounded-2xl border-2 transition-colors ${
-                metodoPago === 'cta_corriente'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-primary-light/20 text-secondary hover:bg-slate-50'
-              }`}
-            >
-              <BookOpen size={24} />
-              <span className="text-xs md:text-sm font-bold mt-2">Fiado</span>
-            </button>
-          </div>
+          <SegmentedControl
+            fullWidth
+            size="lg"
+            className="mb-6"
+            value={metodoPago}
+            onChange={(v) => {
+              setMetodoPago(v);
+              if (v === 'cta_corriente') setMontoCobrado('');
+            }}
+            options={[
+              { value: 'efectivo', label: 'Efectivo', icon: Banknote },
+              { value: 'transferencia', label: 'Transf.', icon: CreditCard },
+              { value: 'cta_corriente', label: 'Fiado', icon: BookOpen },
+            ]}
+          />
 
-          <div className="space-y-3 text-base text-secondary mb-6 bg-slate-50 p-4 md:p-5 rounded-2xl border border-primary-light/20 font-medium">
+          <div className="space-y-3 text-base text-secondary mb-6 bg-sand-50 p-4 md:p-5 rounded-2xl border border-primary-light/20 font-medium">
             <div className="flex justify-between items-center">
               <p>Venta de hoy:</p>{' '}
               <p className="font-bold text-primary text-lg">${totalEntregaHoy}</p>
@@ -646,25 +614,25 @@ export const RepartoView = () => {
                   type="number"
                   value={montoCobrado}
                   onChange={(e) => setMontoCobrado(e.target.value)}
-                  className="w-full bg-white border-2 border-primary-light/30 rounded-2xl py-4 pl-10 pr-4 text-2xl font-black text-primary-dark focus:border-primary outline-none shadow-inner"
+                  className="field field-lg pl-10 pr-4 font-black text-2xl"
                   placeholder="Ej: 5000"
                 />
               </div>
               <div className="flex gap-3">
-                <button
+                <Button
                   onClick={() => setMontoCobrado(totalEntregaHoy.toString())}
-                  className="flex-1 text-sm bg-white border border-primary-light/30 text-primary-dark py-3 rounded-xl font-bold hover:bg-slate-50 transition-colors shadow-sm"
+                  variant="secondary" size="md" className="flex-1"
                 >
                   Solo hoy
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() =>
                     setMontoCobrado(deudaTotal > 0 ? deudaTotal.toString() : '0')
                   }
-                  className="flex-1 text-sm bg-primary-dark text-white py-3 rounded-xl font-bold hover:bg-primary transition-colors shadow-sm"
+                  variant="dark" size="md" className="flex-1"
                 >
                   Saldar todo
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -687,16 +655,16 @@ export const RepartoView = () => {
 
         {/* BOTONES INFERIORES */}
         <div className="flex space-x-4 pt-4">
-          <button
+          <Button
             onClick={() => avanzarOSalir()}
-            className="flex-1 py-5 bg-white border border-primary-light/40 text-secondary rounded-2xl font-bold shadow-sm hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center text-lg"
+            variant="secondary" size="lg" className="flex-1"
           >
             <SkipForward size={20} className="mr-2" /> Omitir
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleConfirmar}
             disabled={isSubmitting}
-            className="flex-2 py-5 bg-primary hover:bg-primary-dark text-white rounded-2xl font-bold flex justify-center items-center shadow-lg active:scale-95 disabled:opacity-70 transition-all text-xl tracking-wide"
+            variant="primary" size="lg" className="flex-[2]"
           >
             {isSubmitting ? (
               'Guardando...'
@@ -705,51 +673,40 @@ export const RepartoView = () => {
                 <Check size={24} className="mr-2" strokeWidth={3} /> Confirmar
               </>
             )}
-          </button>
+          </Button>
         </div>
 
         {/* PAGINADOR Y AGREGAR AL PASO */}
         <div className="flex justify-between items-center px-2 py-6 text-sm font-bold text-secondary">
-          <button
+          <Button
             disabled={indiceActual === 0}
             onClick={() => setIndiceActual(indiceActual - 1)}
-            className="disabled:opacity-30 hover:text-primary-dark transition-colors"
+            variant="ghost" size="sm"
           >
             &lt; Anterior
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={abrirModalAgregar}
-            className="flex items-center text-primary bg-primary/10 px-5 py-2.5 rounded-full font-black active:scale-95 transition-transform border border-primary/20"
+            variant="soft" size="md"
           >
             <UserPlus size={18} className="mr-2" /> Agregar al paso
-          </button>
-          <button
+          </Button>
+          <Button
             disabled={indiceActual === clientesRuta.length - 1}
             onClick={() => setIndiceActual(indiceActual + 1)}
-            className="disabled:opacity-30 hover:text-primary-dark transition-colors"
+            variant="ghost" size="sm"
           >
             Siguiente &gt;
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* MODALES */}
       {modalAgregarAbierto && (
-        <div className="fixed inset-0 bg-primary-dark/80 z-60 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white w-full max-w-md rounded-4xl overflow-hidden flex flex-col h-[75vh] shadow-2xl animate-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
-              <h2 className="text-xl font-bold text-primary-dark tracking-wide">
-                Visita Excepcional
-              </h2>
-              <button
-                onClick={() => setModalAgregarAbierto(false)}
-                className="text-secondary hover:text-primary-dark bg-white p-2 rounded-full shadow-sm border border-primary-light/30"
-              >
-                <X size={20} />
-              </button>
-            </div>
+        <Modal tall>
+          <ModalHeader title="Visita Excepcional" onClose={() => setModalAgregarAbierto(false)} />
 
-            <div className="p-5 space-y-4 bg-slate-50 border-b border-primary-light/20 shrink-0">
+            <div className="p-5 space-y-4 bg-sand-50 border-b border-primary-light/20 shrink-0">
               <div className="relative">
                 <Search className="absolute left-4 top-3.5 text-primary" size={20} />
                 <input
@@ -757,15 +714,15 @@ export const RepartoView = () => {
                   placeholder="Buscar cliente..."
                   value={busquedaCliente}
                   onChange={(e) => setBusquedaCliente(e.target.value)}
-                  className="w-full bg-white border-2 border-primary-light/20 focus:border-primary outline-none rounded-2xl py-3 pl-12 pr-4 text-primary-dark font-medium"
+                  className="field pl-12 pr-4"
                 />
               </div>
-              <button
+              <Button
                 onClick={() => setModalFormularioAbierta(true)}
-                className="w-full bg-primary/10 hover:bg-primary/20 text-primary font-bold py-3.5 rounded-2xl flex justify-center active:scale-95 transition-all border border-primary/20"
+                variant="soft" size="md" fullWidth
               >
                 <UserPlus size={20} className="mr-2" /> Crear Cliente Nuevo
-              </button>
+              </Button>
             </div>
 
             <div className="overflow-y-auto p-3 flex-1 space-y-2 bg-white scrollbar-thin">
@@ -773,7 +730,7 @@ export const RepartoView = () => {
                 <button
                   key={c.id}
                   onClick={() => agregarClienteAlPaso(c)}
-                  className="w-full text-left p-4 hover:bg-slate-50 border border-primary-light/10 hover:border-primary/30 rounded-2xl flex justify-between items-center group transition-all"
+                  className="w-full text-left p-4 hover:bg-sand-50 border border-primary-light/10 hover:border-primary/30 rounded-2xl flex justify-between items-center group transition-all"
                 >
                   <div>
                     <p className="font-bold text-primary-dark text-lg">
@@ -789,8 +746,7 @@ export const RepartoView = () => {
                 </button>
               ))}
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
 
       <ClienteModal

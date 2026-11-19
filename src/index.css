@@ -67,3 +67,67 @@ body {
   border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover { background-color: var(--color-secondary); }
+
+/* ─── Design System DripGestión (ver DESIGN_SYSTEM.md) ─────────────────────── */
+:root {
+  --h-btn-sm: 2.25rem;   /* 36px */
+  --h-btn-md: 2.75rem;   /* 44px — target táctil mínimo */
+  --h-btn-lg: 3.5rem;    /* 56px — CTA principal en calle */
+  --h-input:  2.75rem;   /* 44px */
+  --h-header: 6rem;      /* 96px */
+}
+
+/* Superficies Liquid Glass — usar solo donde aporte jerarquía */
+@utility glass {
+  background-color: rgb(255 255 255 / 0.72);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgb(255 255 255 / 0.6);
+  box-shadow: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px -8px rgb(28 25 23 / 0.10);
+}
+@utility glass-dark {
+  background-color: rgb(28 25 23 / 0.72);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgb(255 255 255 / 0.12);
+}
+
+/* Card estándar: mismo radio, borde y sombra en toda la app */
+@utility card {
+  background-color: var(--color-surface);
+  border: 1px solid rgb(237 232 225 / 0.9);
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 1px 2px rgb(28 25 23 / 0.04);
+}
+
+/* Input estándar — en layer components para que pl-11, text-lg, etc. lo puedan pisar */
+@layer components {
+  .field {
+    display: block;
+    width: 100%;
+    min-height: var(--h-input);
+    padding: 0.5rem 1rem;
+    background-color: var(--color-sand-50);
+    color: var(--color-primary-dark);
+    border: 2px solid var(--color-sand-200);
+    border-radius: var(--radius-xl);
+    font-size: 1rem;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms, background-color 150ms;
+  }
+  .field::placeholder { color: var(--color-secondary); font-weight: 500; opacity: 0.7; }
+  .field:hover  { border-color: var(--color-primary-light); }
+  .field:focus  { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgb(232 106 31 / 0.15); background-color: var(--color-surface); }
+  .field:disabled { opacity: 0.55; cursor: not-allowed; }
+  /* Variante grande para montos y datos clave en la calle */
+  .field-lg { min-height: var(--h-btn-lg); padding-top: 0.75rem; padding-bottom: 0.75rem; font-size: 1.125rem; }
+}
+@utility type-label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+}

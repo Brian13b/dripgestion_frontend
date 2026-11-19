@@ -15,7 +15,7 @@ const NavItem = ({ to, icon, label, matchPrefixes = [] }) => {
       to={to}
       className={clsx(
         'flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors duration-200',
-        isActive ? 'text-primary-dark font-bold scale-105' : 'text-slate-400 hover:text-primary'
+        isActive ? 'text-primary-dark font-bold scale-105' : 'text-secondary hover:text-primary'
       )}
     >
       <IconComponent size={24} strokeWidth={isActive ? 2.5 : 2} className="md:w-6 md:h-6" />

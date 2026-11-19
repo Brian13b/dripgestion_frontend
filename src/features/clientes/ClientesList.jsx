@@ -1,3 +1,5 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { Button } from '../../components/primitives/Button';
 import { useState, useEffect } from 'react';
 import { Search, Plus, MapPin, Phone, Package, DollarSign, Pencil, Trash2, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -148,26 +150,12 @@ export const ClientesList = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
-              <User size={28} className="mr-3 text-white" />
-              Clientes
-            </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-              Gestión y saldo de cuentas corrientes
-            </p>
-          </div>
-          <button
-            onClick={abrirModalNuevo}
-            className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg cursor-pointer"
-          >
-            <Plus size={22} className="md:mr-2" />
-            <span className="hidden md:inline tracking-wider">Nuevo Cliente</span>
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        icon={User}
+        title="Clientes"
+        subtitle="Gestión y saldo de cuentas corrientes"
+        actions={<HeaderAction icon={Plus} label="Nuevo Cliente" onClick={abrirModalNuevo} />}
+      />
 
       {/* Barra de Filtros, Buscador y Conteo */}
       <div className="max-w-7xl mx-auto px-5 md:px-12 lg:px-16 mt-6 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -181,7 +169,7 @@ export const ClientesList = () => {
             placeholder="Buscar por nombre o dirección..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-12 pr-4 py-3.5 rounded-2xl border-2 border-primary-light/30 focus:outline-none focus:border-primary bg-white text-primary-dark font-medium shadow-sm text-base transition-colors"
+            className="field pl-12 pr-4"
           />
         </div>
 
@@ -210,27 +198,27 @@ export const ClientesList = () => {
               >
                 <div>
                   <div className="absolute top-5 right-5 flex space-x-2 text-gray-400">
-                    <button
+                    <Button
                       onClick={() => abrirCobro(cliente)}
-                      className="text-success bg-success/10 p-2 rounded-xl hover:bg-success/20 transition-colors cursor-pointer"
+                      variant="successSoft" size="sm" iconOnly
                       title="Cobrar saldo"
                     >
                       <DollarSign size={20} strokeWidth={3} />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => abrirModalEditar(cliente.id)}
-                      className="text-primary bg-primary/10 p-2 rounded-xl hover:bg-primary/20 transition-colors cursor-pointer"
+                      variant="soft" size="sm" iconOnly
                       title="Editar"
                     >
                       <Pencil size={20} />
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => handleDelete(cliente.id, cliente.nombre_negocio)}
-                      className="text-danger bg-danger/10 p-2 rounded-xl hover:bg-danger/20 transition-colors cursor-pointer"
+                      variant="dangerSoft" size="sm" iconOnly
                       title="Eliminar"
                     >
                       <Trash2 size={20} />
-                    </button>
+                    </Button>
                   </div>
 
                   <h3 className="font-bold text-primary-dark text-xl md:text-2xl mb-4 pr-32 tracking-tight leading-tight">
@@ -298,25 +286,25 @@ export const ClientesList = () => {
         {/* Paginación */}
         {!loading && totalPaginas > 1 && (
           <div className="flex items-center justify-center space-x-3 mt-10">
-            <button
+            <Button
               onClick={() => setPaginaActual((prev) => Math.max(prev - 1, 1))}
               disabled={paginaActual === 1}
-              className="p-3 rounded-2xl bg-white border border-primary-light/30 text-primary-dark disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors shadow-xs cursor-pointer"
+              variant="secondary" size="md" iconOnly
             >
               <ChevronLeft size={20} />
-            </button>
+            </Button>
 
             <span className="text-primary-dark font-bold px-4 py-2 bg-white rounded-2xl border border-primary-light/30 shadow-xs">
               Página {paginaActual} de {totalPaginas}
             </span>
 
-            <button
+            <Button
               onClick={() => setPaginaActual((prev) => Math.min(prev + 1, totalPaginas))}
               disabled={paginaActual === totalPaginas}
-              className="p-3 rounded-2xl bg-white border border-primary-light/30 text-primary-dark disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors shadow-xs cursor-pointer"
+              variant="secondary" size="md" iconOnly
             >
               <ChevronRight size={20} />
-            </button>
+            </Button>
           </div>
         )}
       </div>

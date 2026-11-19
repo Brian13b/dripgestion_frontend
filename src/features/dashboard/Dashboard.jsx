@@ -1,3 +1,4 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -75,22 +76,16 @@ export const Dashboard = () => {
   }, [isAdmin]);
 
   return (
-    <div className="min-h-screen bg-background font-sans">
+    <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
-              Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}
-            </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-              {isAdmin
-                ? `Resumen operativo de ${tenant?.nombre}`
-                : 'Listo para iniciar tu recorrido de hoy.'}
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title={`Buenos días, ${user?.full_name?.split(' ')[0] || 'Equipo'}`}
+        subtitle={
+          isAdmin
+            ? `Resumen operativo de ${tenant?.nombre}`
+            : 'Listo para iniciar tu recorrido de hoy.'
+        }
+      />
 
       <div className="px-5 md:px-12 lg:px-16 max-w-7xl mx-auto">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

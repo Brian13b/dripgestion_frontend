@@ -1,3 +1,6 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { SegmentedControl } from '../../components/primitives/SegmentedControl';
+import { Button } from '../../components/primitives/Button';
 import { useState, useEffect } from 'react';
 import { Tag, Save, Package, Plus, X, Eye, EyeOff, Recycle, Box, Layers } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -205,53 +208,26 @@ export const PreciosView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
-              <Tag size={28} className="mr-3 text-white" />
-              Catálogo y Envases
-            </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-              Precios, presentaciones y control de retornables
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 self-end sm:self-auto">
-            {tabActiva === 'productos' ? (
-              <button
-                type="button"
-                onClick={() => setMostrandoFormProducto(!mostrandoFormProducto)}
-                className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors px-4 py-2.5 md:px-5 rounded-2xl flex items-center shadow-sm font-bold text-sm md:text-base cursor-pointer"
-              >
-                {mostrandoFormProducto ? (
-                  <X size={20} />
-                ) : (
-                  <>
-                    <Plus size={20} className="mr-1.5" />
-                    <span>Nuevo Producto</span>
-                  </>
-                )}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setMostrandoFormEnvase(!mostrandoFormEnvase)}
-                className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors px-4 py-2.5 md:px-5 rounded-2xl flex items-center shadow-sm font-bold text-sm md:text-base cursor-pointer"
-              >
-                {mostrandoFormEnvase ? (
-                  <X size={20} />
-                ) : (
-                  <>
-                    <Plus size={20} className="mr-1.5" />
-                    <span>Nuevo Envase</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        icon={Tag}
+        title="Catálogo y Envases"
+        subtitle="Precios, presentaciones y control de retornables"
+        actions={
+          tabActiva === 'productos' ? (
+            <HeaderAction
+              icon={mostrandoFormProducto ? X : Plus}
+              label={mostrandoFormProducto ? 'Cerrar' : 'Nuevo Producto'}
+              onClick={() => setMostrandoFormProducto(!mostrandoFormProducto)}
+            />
+          ) : (
+            <HeaderAction
+              icon={mostrandoFormEnvase ? X : Plus}
+              label={mostrandoFormEnvase ? 'Cerrar' : 'Nuevo Envase'}
+              onClick={() => setMostrandoFormEnvase(!mostrandoFormEnvase)}
+            />
+          )
+        }
+      />
 
       {/* CONTENIDO PRINCIPAL */}
       <div className="p-5 md:p-10 lg:px-16 max-w-7xl mx-auto mt-2">
@@ -262,33 +238,15 @@ export const PreciosView = () => {
         ) : (
           <>
             {/* TABS FUERA DEL HEADER Y SIEMPRE VISIBLES */}
-            <div className="mb-6 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setTabActiva('productos')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition cursor-pointer ${
-                  tabActiva === 'productos'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-primary/40 hover:text-primary-dark'
-                }`}
-              >
-                <Package size={16} />
-                Productos ({productos.length})
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setTabActiva('envases')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition cursor-pointer ${
-                  tabActiva === 'envases'
-                    ? 'bg-primary text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-primary/40 hover:text-primary-dark'
-                }`}
-              >
-                <Recycle size={16} />
-                Envases Retornables ({tiposEnvase.length})
-              </button>
-            </div>
+            <SegmentedControl
+              className="mb-6"
+              value={tabActiva}
+              onChange={setTabActiva}
+              options={[
+                { value: 'productos', label: `Productos (${productos.length})`, icon: Package },
+                { value: 'envases', label: `Envases Retornables (${tiposEnvase.length})`, icon: Recycle },
+              ]}
+            />
 
             {tabActiva === 'productos' ? (
               <>
@@ -318,7 +276,7 @@ export const PreciosView = () => {
                               codigo: e.target.value,
                             })
                           }
-                          className="w-full border-2 border-primary-light/30 rounded-2xl p-3.5 bg-slate-50 text-base font-medium focus:border-primary focus:outline-none"
+                          className="field"
                           placeholder="Ej: Bidón 20L / Cajón Cerveza 1L"
                         />
                       </div>
@@ -339,7 +297,7 @@ export const PreciosView = () => {
                               precio_actual: e.target.value,
                             })
                           }
-                          className="w-full border-2 border-primary-light/30 rounded-2xl p-3.5 bg-slate-50 font-black text-primary text-lg focus:border-primary focus:outline-none"
+                          className="field field-lg font-black"
                           placeholder="0.00"
                         />
                       </div>
@@ -356,7 +314,7 @@ export const PreciosView = () => {
                               unidad_medida: e.target.value,
                             })
                           }
-                          className="w-full border-2 border-primary-light/30 rounded-2xl p-3.5 bg-slate-50 text-base font-semibold text-primary-dark focus:border-primary focus:outline-none"
+                          className="field"
                         >
                           {UNIDADES_MEDIDA.map((u) => (
                             <option key={u.value} value={u.value}>
@@ -367,7 +325,7 @@ export const PreciosView = () => {
                       </div>
 
                       <div className="flex flex-col justify-center">
-                        <label className="flex items-center gap-3 cursor-pointer p-3.5 rounded-2xl border-2 border-primary-light/30 bg-slate-50 hover:border-primary transition">
+                        <label className="flex items-center gap-3 cursor-pointer p-3.5 rounded-2xl border-2 border-primary-light/30 bg-sand-50 hover:border-primary transition">
                           <input
                             type="checkbox"
                             checked={nuevoProducto.es_retornable}
@@ -386,7 +344,7 @@ export const PreciosView = () => {
                             <span className="font-bold text-sm text-primary-dark block">
                               ¿Lleva envase retornable?
                             </span>
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-secondary">
                               Controla saldo de envases prestados al cliente
                             </span>
                           </div>
@@ -425,7 +383,7 @@ export const PreciosView = () => {
                                   tipo_envase_id: e.target.value,
                                 })
                               }
-                              className="w-full border-2 border-primary/30 rounded-2xl p-3.5 bg-white text-base font-semibold text-primary-dark focus:border-primary focus:outline-none"
+                              className="field"
                             >
                               <option value="">Seleccioná un envase...</option>
                               {envasesActivos.map((env) => (
@@ -440,24 +398,24 @@ export const PreciosView = () => {
                     </div>
 
                     <div className="mt-6 flex justify-end">
-                      <button
+                      <Button
                         type="submit"
-                        className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-8 rounded-2xl tracking-wider text-base shadow-md transition-colors cursor-pointer"
+                        variant="primary" size="lg" className="w-full md:w-auto"
                       >
                         Guardar Producto
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 )}
 
                 {/* GRILLA DE PRODUCTOS */}
                 {productos.length === 0 ? (
-                  <div className="bg-white rounded-3xl p-10 text-center border border-slate-200 max-w-xl mx-auto mt-6">
+                  <div className="bg-white rounded-3xl p-10 text-center border border-sand-200 max-w-xl mx-auto mt-6">
                     <Package size={40} className="mx-auto text-primary/50 mb-3" />
                     <h3 className="font-bold text-lg text-primary-dark">
                       Sin productos en el catálogo
                     </h3>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-secondary mt-1">
                       Agregá los productos o servicios que comercializás (ej. Bidón 20L, Pack de Cerveza, Hielo) para empezar a registrar ventas.
                     </p>
                   </div>
@@ -468,7 +426,7 @@ export const PreciosView = () => {
                         key={prod.id}
                         className={`bg-white p-6 rounded-3xl shadow-sm border-2 transition-all flex flex-col justify-between ${
                           !prod.activo
-                            ? 'border-dashed border-slate-300 opacity-60 grayscale'
+                            ? 'border-dashed border-sand-200 opacity-60 grayscale'
                             : 'border-primary-light/20 hover:border-primary hover:shadow-md'
                         }`}
                       >
@@ -479,7 +437,7 @@ export const PreciosView = () => {
                                 className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${
                                   prod.activo
                                     ? 'bg-primary/10 text-primary'
-                                    : 'bg-slate-100 text-slate-400'
+                                    : 'bg-sand-100 text-secondary'
                                 }`}
                               >
                                 <Package size={24} />
@@ -499,7 +457,7 @@ export const PreciosView = () => {
                               className={`p-2 rounded-xl transition-colors cursor-pointer ${
                                 prod.activo
                                   ? 'text-primary hover:bg-primary/10'
-                                  : 'text-slate-400 hover:bg-slate-100'
+                                  : 'text-secondary hover:bg-sand-100'
                               }`}
                               title={prod.activo ? 'Desactivar' : 'Activar'}
                             >
@@ -509,7 +467,7 @@ export const PreciosView = () => {
 
                           {/* BADGES MULTI-RUBRO */}
                           <div className="flex flex-wrap gap-2 mb-5">
-                            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 uppercase">
+                            <span className="inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-lg bg-sand-100 text-secondary uppercase">
                               <Layers size={12} />
                               {prod.unidad_medida || 'unidad'}
                             </span>
@@ -547,7 +505,7 @@ export const PreciosView = () => {
                                 <button
                                   type="button"
                                   onClick={cancelarEdicionPrecio}
-                                  className="bg-slate-200 text-slate-700 p-2.5 rounded-xl hover:bg-slate-300 transition cursor-pointer"
+                                  className="bg-sand-200 text-primary-dark p-2.5 rounded-xl hover:bg-sand-200 transition cursor-pointer"
                                   title="Cancelar"
                                 >
                                   <X size={18} />
@@ -609,7 +567,7 @@ export const PreciosView = () => {
                               codigo: e.target.value,
                             })
                           }
-                          className="w-full border-2 border-primary-light/30 rounded-2xl p-3.5 bg-slate-50 text-base font-medium focus:border-primary focus:outline-none"
+                          className="field"
                           placeholder="Ej: Bidón 20L / Cajón 12u / Barril 30L"
                         />
                       </div>
@@ -628,30 +586,30 @@ export const PreciosView = () => {
                               valor_reposicion: e.target.value,
                             })
                           }
-                          className="w-full border-2 border-primary-light/30 rounded-2xl p-3.5 bg-slate-50 font-black text-primary text-lg focus:border-primary focus:outline-none"
+                          className="field field-lg font-black"
                           placeholder="0.00"
                         />
                       </div>
                     </div>
                     <div className="mt-6 flex justify-end">
-                      <button
+                      <Button
                         type="submit"
-                        className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-8 rounded-2xl tracking-wider text-base shadow-md transition-colors cursor-pointer"
+                        variant="primary" size="lg" className="w-full md:w-auto"
                       >
                         Guardar Envase
-                      </button>
+                      </Button>
                     </div>
                   </form>
                 )}
 
                 {/* GRILLA DE TIPOS DE ENVASE */}
                 {tiposEnvase.length === 0 ? (
-                  <div className="bg-white rounded-3xl p-10 text-center border border-slate-200 max-w-xl mx-auto">
+                  <div className="bg-white rounded-3xl p-10 text-center border border-sand-200 max-w-xl mx-auto">
                     <Recycle size={40} className="mx-auto text-primary/50 mb-3" />
                     <h3 className="font-bold text-lg text-primary-dark">
                       Sin envases retornables configurados
                     </h3>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-secondary mt-1">
                       Creá los envases que prestás a tus clientes (ej. Bidón 20L, Cajón,
                       Garrafa) para llevar el control automático de saldos.
                     </p>
@@ -663,7 +621,7 @@ export const PreciosView = () => {
                         key={env.id}
                         className={`bg-white p-6 rounded-3xl shadow-sm border-2 transition-all ${
                           !env.activo
-                            ? 'border-dashed border-slate-300 opacity-60 grayscale'
+                            ? 'border-dashed border-sand-200 opacity-60 grayscale'
                             : 'border-primary-light/20 hover:border-primary hover:shadow-md'
                         }`}
                       >
@@ -681,14 +639,14 @@ export const PreciosView = () => {
                               </p>
                             </div>
                           </div>
-                          <button
+                          <Button
                             type="button"
                             onClick={() => handleToggleEnvase(env.id)}
-                            className="p-2 rounded-xl text-primary hover:bg-primary/10 transition-colors cursor-pointer"
+                            variant="soft" size="sm" iconOnly
                             title={env.activo ? 'Desactivar' : 'Activar'}
                           >
                             {env.activo ? <Eye size={20} /> : <EyeOff size={20} />}
-                          </button>
+                          </Button>
                         </div>
 
                         <div className="flex items-center justify-between bg-background p-3.5 rounded-2xl border border-primary-light/30">
@@ -712,7 +670,7 @@ export const PreciosView = () => {
                                 <button
                                   type="button"
                                   onClick={cancelarEdicionEnvase}
-                                  className="bg-slate-200 text-slate-700 p-2.5 rounded-xl hover:bg-slate-300 transition cursor-pointer"
+                                  className="bg-sand-200 text-primary-dark p-2.5 rounded-xl hover:bg-sand-200 transition cursor-pointer"
                                   title="Cancelar"
                                 >
                                   <X size={18} />
@@ -730,7 +688,7 @@ export const PreciosView = () => {
                           ) : (
                             <div className="flex items-center justify-between w-full">
                               <div>
-                                <span className="text-[11px] uppercase font-bold text-slate-400 block">
+                                <span className="text-[11px] uppercase font-bold text-secondary block">
                                   Valor Reposición
                                 </span>
                                 <span className="font-black text-lg text-primary-dark">

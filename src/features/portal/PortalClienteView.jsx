@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { Button } from '../../components/primitives/Button';
 import { LogOut, Package, DollarSign, MessageCircle, AlertCircle, FileText, Droplet } from 'lucide-react';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
@@ -47,13 +48,9 @@ export const PortalClienteView = () => {
     <div className="min-h-screen bg-background font-sans flex flex-col items-center pb-10">
       <div className="bg-primary-dark w-full pt-12 pb-10 shadow-lg rounded-b-3xl relative text-center">
         <div className="max-w-2xl mx-auto px-5">
-          <button
-            onClick={logout}
-            className="absolute top-6 right-6 text-white/60 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors"
-            title="Cerrar sesión"
-          >
-            <LogOut size={24} />
-          </button>
+          <Button variant="onDarkGhost" iconOnly onClick={logout} title="Cerrar sesión" aria-label="Cerrar sesión" className="absolute top-6 right-6">
+            <LogOut size={20} />
+          </Button>
           <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border-2 border-white/20 overflow-hidden shadow-inner shrink-0">
             {tenant?.logo_url ? (
               <img
@@ -146,12 +143,12 @@ export const PortalClienteView = () => {
           </div>
         </div>
 
-        <button
+        <Button
           onClick={handlePedirPorWhatsApp}
-          className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-5 rounded-3xl flex items-center justify-center shadow-lg shadow-green-200 transition-all active:scale-95 text-xl tracking-wider"
+          variant="whatsapp" size="lg" fullWidth
         >
           <MessageCircle size={28} className="mr-3" /> Hacer Pedido por WhatsApp
-        </button>
+        </Button>
 
         {/* SECCIÓN DE HISTORIAL DEL CLIENTE */}
         <div className="mt-8 pt-6 border-t border-primary-light/30">
@@ -182,7 +179,7 @@ export const PortalClienteView = () => {
                     <p className="font-black text-lg text-primary-dark">
                       ${mov.monto}
                     </p>
-                    <p className="text-[10px] uppercase font-bold text-slate-400">
+                    <p className="text-[10px] uppercase font-bold text-secondary">
                       {mov.tipo}
                     </p>
                   </div>

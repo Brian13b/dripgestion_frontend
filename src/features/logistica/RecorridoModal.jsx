@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
+import { Button } from '../../components/primitives/Button';
 import { Play, X, Search, ArrowUp, ArrowDown, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -35,27 +37,18 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
   if (!recorrido) return null;
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/80 z-70 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-md rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
-        <div className="p-5 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
-          <div>
-            <h2 className="text-xl font-bold text-primary-dark tracking-wide">Previa: {recorrido.nombre}</h2>
-            <p className="text-sm text-secondary mt-1 font-medium">Agregá excepciones, ordená o quitá clientes por hoy.</p>
-          </div>
-          <button onClick={onClose} className="text-secondary hover:text-primary-dark bg-white rounded-full p-2 shadow-sm border border-primary-light/30">
-            <X size={20} />
-          </button>
-        </div>
+    <Modal>
+        <ModalHeader title={`Previa: ${recorrido.nombre}`} subtitle="Agregá excepciones, ordená o quitá clientes por hoy." onClose={onClose} />
         
-        <div className="p-4 bg-slate-50 border-b border-primary-light/20 relative z-20 shrink-0">
+        <div className="p-4 bg-sand-50 border-b border-primary-light/20 relative z-20 shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-3 text-primary" size={20}/>
-            <input type="text" placeholder="Buscar cliente para agregar hoy..." value={busquedaExcepcion} onChange={e=>setBusquedaExcepcion(e.target.value)} className="w-full pl-10 pr-4 py-3 rounded-xl border-2 border-primary-light/30 focus:border-primary font-medium text-primary-dark outline-none"/>
+            <input type="text" placeholder="Buscar cliente para agregar hoy..." value={busquedaExcepcion} onChange={e=>setBusquedaExcepcion(e.target.value)} className="field pl-10 pr-4"/>
           </div>
           {busquedaExcepcion && (
             <div className="absolute top-15 left-4 right-4 bg-white rounded-xl shadow-xl border border-gray-100 max-h-40 overflow-y-auto z-50">
               {excepcionesBuscadas.map(c => (
-                <button key={c.id} onClick={() => agregarExcepcion(c)} className="w-full text-left p-3 hover:bg-slate-50 border-b flex justify-between items-center text-primary-dark font-bold">
+                <button key={c.id} onClick={() => agregarExcepcion(c)} className="w-full text-left p-3 hover:bg-sand-50 border-b flex justify-between items-center text-primary-dark font-bold">
                   {c.nombre_negocio} <Plus className="text-primary"/>
                 </button>
               ))}
@@ -74,21 +67,20 @@ export const RecorridoModal = ({ recorrido, clientes, onClose, onComenzar }) => 
                 </div>
               </div>
               <div className="flex space-x-1 shrink-0 ml-2">
-                <button disabled={index === 0} onClick={() => moverCliente(index, -1)} className="p-2 bg-white shadow-sm border border-primary-light/20 hover:bg-primary hover:text-white rounded-xl disabled:opacity-30 transition-colors"><ArrowUp size={20} /></button>
-                <button disabled={index === clientesEnVistaPrevia.length - 1} onClick={() => moverCliente(index, 1)} className="p-2 bg-white shadow-sm border border-primary-light/20 hover:bg-primary hover:text-white rounded-xl disabled:opacity-30 transition-colors"><ArrowDown size={20} /></button>
-                <button onClick={() => quitarCliente(cliente.id)} className="text-danger bg-white shadow-sm border border-danger/20 p-2 rounded-xl hover:bg-danger hover:text-white transition-colors ml-1"><X size={20} /></button>
+                <Button disabled={index === 0} onClick={() => moverCliente(index, -1)} variant="secondary" size="sm" iconOnly><ArrowUp size={20} /></Button>
+                <Button disabled={index === clientesEnVistaPrevia.length - 1} onClick={() => moverCliente(index, 1)} variant="secondary" size="sm" iconOnly><ArrowDown size={20} /></Button>
+                <Button onClick={() => quitarCliente(cliente.id)} variant="dangerSoft" size="sm" iconOnly><X size={20} /></Button>
               </div>
             </div>
           ))}
           {clientesEnVistaPrevia.length === 0 && <p className="text-center text-secondary py-6">Ruta vacía. Buscá un cliente arriba para agregarlo.</p>}
         </div>
         
-        <div className="p-5 bg-background border-t border-primary-light/20 shrink-0">
-          <button onClick={() => onComenzar(recorrido.id, clientesEnVistaPrevia)} disabled={clientesEnVistaPrevia.length === 0} className="w-full py-4 font-bold text-white bg-primary hover:bg-primary-dark rounded-2xl flex items-center justify-center text-xl tracking-wider shadow-md disabled:opacity-50 transition-colors">
+        <ModalFooter>
+          <Button onClick={() => onComenzar(recorrido.id, clientesEnVistaPrevia)} disabled={clientesEnVistaPrevia.length === 0} variant="primary" size="lg" fullWidth>
             <Play size={24} className="mr-2 fill-current" /> Confirmar e Iniciar
-          </button>
-        </div>
-      </div>
-    </div>
+          </Button>
+        </ModalFooter>
+      </Modal>
   );
 };

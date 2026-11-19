@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Button } from '../../components/primitives/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
@@ -148,7 +149,7 @@ export const Login = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-4 border-2 border-primary-light/30 rounded-2xl focus:ring-0 focus:border-primary bg-slate-50 text-primary-dark font-medium transition-colors text-lg"
+                  className="field field-lg pl-12 pr-4"
                   placeholder={isRootDomain ? 'Ej: brian_admin' : 'Ej: 261-1234567'}
                   required
                 />
@@ -167,32 +168,32 @@ export const Login = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-12 pr-4 py-4 border-2 border-primary-light/30 rounded-2xl focus:ring-0 focus:border-primary bg-slate-50 text-primary-dark font-black tracking-widest transition-colors text-lg"
+                  className="field field-lg pl-12 pr-4 font-black tracking-widest"
                   placeholder="* * * *"
                   required
                 />
               </div>
             </div>
 
-            <button
+            <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-dark hover:bg-primary text-white font-bold py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide cursor-pointer"
+              variant="dark" size="lg" fullWidth
             >
               {isLoading ? 'Verificando...' : 'Ingresar al sistema'}
-            </button>
+            </Button>
           </form>
 
           {!isRootDomain && (
-            <button
+            <Button
               onClick={handlePedirPorWhatsApp}
-              className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white py-4 rounded-2xl transition-all shadow-md active:scale-95 disabled:opacity-70 mt-4 text-xl tracking-wide cursor-pointer"
+              variant="whatsapp" size="lg" fullWidth
             >
               ¿No tenés PIN? Contactanos.
-            </button>
+            </Button>
           )}
 
-          <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col items-center">
+          <div className="mt-8 pt-6 border-t border-sand-100 flex flex-col items-center">
             <p className="text-[11px] text-secondary font-bold uppercase tracking-widest mb-3">
               Mejorá tu experiencia
             </p>

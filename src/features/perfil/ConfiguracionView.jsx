@@ -1,3 +1,6 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { SegmentedControl } from '../../components/primitives/SegmentedControl';
+import { Button } from '../../components/primitives/Button';
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTenant } from '../../context/TenantContext';
@@ -90,42 +93,22 @@ export const ConfiguracionView = () => {
     <div className="min-h-screen bg-background pb-24 font-sans">
       
       {/* HEADER */}
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
-          <div className="flex items-center">
-            <button onClick={() => navigate(-1)} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
-              <ArrowLeft size={28} />
-            </button>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Configuración</h1>
-              <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Ajustes del Sistema</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        onBack={() => navigate(-1)}
+        title="Configuración"
+        subtitle="Ajustes del sistema"
+      />
 
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-8 flex flex-col md:flex-row gap-6 md:gap-8">        
         {/* ASIDE */}
         <div className="md:w-1/3 lg:w-1/4 shrink-0">
-          <div className="bg-white p-3 rounded-3xl shadow-sm border border-primary-light/20 flex md:flex-col overflow-x-auto hide-scrollbar space-x-2 md:space-x-0 md:space-y-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center px-4 py-4 md:py-5 rounded-2xl font-bold transition-all shrink-0 md:shrink border-2 ${
-                    isActive 
-                      ? 'bg-primary/10 text-primary border-primary/20 shadow-inner' 
-                      : 'text-secondary border-transparent hover:bg-slate-50 hover:text-primary-dark'
-                  }`}
-                >
-                  <Icon size={22} className={`mr-3 ${isActive ? 'text-primary' : 'text-slate-400'}`} />
-                  <span className="tracking-wide text-sm md:text-base">{tab.name}</span>
-                </button>
-              );
-            })}
+          <div className="card p-3">
+            <SegmentedControl
+              variant="stacked"
+              value={activeTab}
+              onChange={setActiveTab}
+              options={tabs.map((tab) => ({ value: tab.id, label: tab.name, icon: tab.icon }))}
+            />
           </div>
         </div>
 
@@ -138,11 +121,11 @@ export const ConfiguracionView = () => {
               <div className="space-y-5 max-w-lg">
                 <div>
                   <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Nombre Público</label>
-                  <input type="text" value={formData.nombre} onChange={(e) => setFormData({...formData, nombre: e.target.value})} className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-bold text-lg outline-none" />
+                  <input type="text" value={formData.nombre} onChange={(e) => setFormData({...formData, nombre: e.target.value})} className="field field-lg" />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-2">Número de WhatsApp (Pedidor)</label>
-                  <input type="text" value={formData.whatsapp} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} placeholder="Ej: 5491123456789" className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-bold text-lg outline-none" />
+                  <input type="text" value={formData.whatsapp} onChange={(e) => setFormData({...formData, whatsapp: e.target.value})} placeholder="Ej: 5491123456789" className="field field-lg" />
                   <p className="text-xs text-secondary mt-2 italic">* El número a donde los clientes enviarán sus pedidos.</p>
                 </div>
               </div>
@@ -154,9 +137,9 @@ export const ConfiguracionView = () => {
             <div className="space-y-8 animate-in fade-in duration-300">
               <h2 className="text-2xl font-bold text-primary-dark border-b border-primary-light/20 pb-4 flex items-center"><Palette className="mr-3 text-primary"/> Branding Visual</h2>
               
-              <div className="p-5 bg-slate-50 border border-primary-light/30 rounded-3xl flex flex-col md:flex-row items-center gap-6 max-w-xl">
+              <div className="p-5 bg-sand-50 border border-primary-light/30 rounded-3xl flex flex-col md:flex-row items-center gap-6 max-w-xl">
                 <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md border-2 border-primary-light/20 overflow-hidden shrink-0">
-                  {tenant?.logo_url ? <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-2"/> : <ImageIcon size={32} className="text-slate-300"/>}
+                  {tenant?.logo_url ? <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-2"/> : <ImageIcon size={32} className="text-sand-200"/>}
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <p className="font-bold text-primary-dark mb-1 tracking-wide">Logo de la App</p>
@@ -183,7 +166,7 @@ export const ConfiguracionView = () => {
                 <select 
                   value={formData.font_sans} 
                   onChange={(e) => setFormData({...formData, font_sans: e.target.value})} 
-                  className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-bold text-lg outline-none cursor-pointer"
+                  className="field field-lg cursor-pointer"
                 >
                   <option value="'Inter', sans-serif">Inter (Moderna y Limpia)</option>
                   <option value="'Poppins', sans-serif">Poppins (Redondeada y Amigable)</option>
@@ -196,7 +179,7 @@ export const ConfiguracionView = () => {
                 <label className="block text-sm font-bold text-secondary uppercase tracking-wider mb-4 border-b border-primary-light/20 pb-2">Paleta de Colores</label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
                   {coloresConfig.map((color) => (
-                    <div key={color.key} className="bg-slate-50 p-3 rounded-2xl border border-primary-light/20">
+                    <div key={color.key} className="bg-sand-50 p-3 rounded-2xl border border-primary-light/20">
                       <label className="block text-xs font-bold text-secondary mb-2">{color.label}</label>
                       <div className="flex items-center gap-3">
                         <input 
@@ -232,7 +215,7 @@ export const ConfiguracionView = () => {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Tu contraseña actual" 
-                    className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" 
+                    className="field field-lg font-black tracking-widest" 
                   />
                 </div>
                 <div>
@@ -242,7 +225,7 @@ export const ConfiguracionView = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Mínimo 6 caracteres" 
-                    className="w-full p-4 rounded-2xl border-2 border-primary-light/30 focus:border-primary text-primary-dark font-black tracking-widest text-lg outline-none" 
+                    className="field field-lg font-black tracking-widest" 
                   />
                 </div>
                 
@@ -269,13 +252,13 @@ export const ConfiguracionView = () => {
 
           {/* BOTÓN GUARDAR */}
           <div className="mt-10 pt-6 border-t border-primary-light/20 flex justify-end">
-            <button 
+            <Button 
               onClick={handleGuardar} 
               disabled={isSaving}
-              className="w-full md:w-auto bg-primary hover:bg-primary-dark text-white font-bold py-4 px-10 rounded-2xl shadow-lg transition-all active:scale-95 text-lg flex items-center justify-center tracking-wide disabled:opacity-70"
+              variant="primary" size="lg" className="w-full md:w-auto"
             >
               {isSaving ? 'Guardando...' : <><Save size={24} className="mr-2" /> Guardar Cambios</>}
-            </button>
+            </Button>
           </div>
 
         </div>

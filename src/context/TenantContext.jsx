@@ -64,9 +64,9 @@ export const TenantProvider = ({ children }) => {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center font-sans">
-        <div className="w-12 h-12 border-4 border-slate-200 border-t-blue-600 rounded-full animate-spin"></div>
-        <p className="mt-4 text-slate-500 font-bold tracking-widest uppercase text-xs">
+      <div className="min-h-screen bg-sand-50 flex flex-col items-center justify-center font-sans">
+        <div className="w-12 h-12 border-4 border-sand-200 border-t-blue-600 rounded-full animate-spin"></div>
+        <p className="mt-4 text-secondary font-bold tracking-widest uppercase text-xs">
           DripGestión
         </p>
       </div>
@@ -74,10 +74,10 @@ export const TenantProvider = ({ children }) => {
 
   if (error)
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center font-sans">
+      <div className="min-h-screen bg-sand-50 flex items-center justify-center font-sans">
         <div className="bg-white p-10 rounded-3xl shadow-xl text-center border border-red-50">
-          <h1 className="text-4xl font-black text-slate-800 mb-3">DripGestión</h1>
-          <p className="text-slate-500 font-medium italic">{error}</p>
+          <h1 className="text-4xl font-black text-primary-dark mb-3">DripGestión</h1>
+          <p className="text-secondary font-medium italic">{error}</p>
         </div>
       </div>
     );

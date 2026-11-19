@@ -1,3 +1,5 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { Button } from '../../components/primitives/Button';
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Plus, Trash2, Shield, Truck, Pencil, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -60,21 +62,11 @@ export const EquipoView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex justify-between items-center mb-6">
-          <div className="flex items-center" >
-            <button onClick={() => navigate('/perfil')} className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0">
-              <ArrowLeft size={28} />
-            </button>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold tracking-wide">Mi Equipo</h1>
-            </div>
-          </div>
-          <button onClick={handleNuevo} className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg">
-            <Plus size={22} className="md:mr-2" /><span className="hidden md:inline tracking-wider">Nuevo Usuario</span>
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        onBack={() => navigate('/perfil')}
+        title="Mi Equipo"
+        actions={<HeaderAction icon={Plus} label="Nuevo Usuario" onClick={handleNuevo} />}
+      />
 
       <div className="max-w-4xl mx-auto p-5 space-y-4">
         {loading ? (
@@ -95,19 +87,19 @@ export const EquipoView = () => {
             </div>
             
             <div className="flex gap-2">
-              <button 
+              <Button 
                 onClick={() => handleLogoutRemoto(miembro.id, miembro.full_name || miembro.username)} 
                 title="Cerrar todas sus sesiones"
-                className="p-3 text-secondary hover:bg-secondary/10 rounded-2xl transition-colors"
+                variant="ghost" size="sm" iconOnly
               >
                 <LogOut size={20} />
-              </button>
-              <button 
+              </Button>
+              <Button 
                 onClick={() => handleEditar(miembro.id)} 
-                className="p-3 text-primary hover:bg-primary-light/10 rounded-2xl transition-colors"
+                variant="soft" size="sm" iconOnly
               >
                 <Pencil size={20} />
-              </button>
+              </Button>
               <button 
                 onClick={() => handleEliminar(miembro.id)} 
                 className="p-3 text-danger hover:bg-danger/10 rounded-2xl transition-colors"

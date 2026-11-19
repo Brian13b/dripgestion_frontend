@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Button } from '../../components/primitives/Button';
+import { PageHeader } from '../../components/primitives/PageHeader';
+import { Modal, ModalHeader } from '../../components/primitives/Modal';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import api from '../../api/axios';
@@ -121,35 +124,24 @@ export default function SuperAdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background pb-16 font-sans">
-      <div className="bg-primary-dark px-5 md:px-12 lg:px-20 pt-10 pb-8 md:pb-12 mb-8 shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <div className="flex items-center text-primary font-black text-2xl md:text-3xl tracking-tight mb-2">
-              <div className="w-11 h-11 bg-white rounded-full flex items-center justify-center mr-3 shrink-0 shadow-sm">
-                <ShieldCheck size={24} className="text-primary" />
-              </div>
-              <span>Panel SuperAdmin — Drip Gestión</span>
-            </div>
-            <p className="text-white/90 font-medium text-sm md:text-base">
-              Hola, {user?.full_name || 'Administrador'}. Gestioná las distribuidoras y sus accesos.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 self-start md:self-auto">
-            <span className="px-3.5 py-2 bg-white/10 text-white text-xs font-bold rounded-2xl border border-white/20 flex items-center gap-2">
+      <PageHeader
+        className="mb-8"
+        maxWidth="max-w-6xl"
+        icon={ShieldCheck}
+        title="Panel SuperAdmin — Drip Gestión"
+        subtitle={`Hola, ${user?.full_name || 'Administrador'}. Gestioná las distribuidoras y sus accesos.`}
+        actions={
+          <>
+            <span className="hidden sm:flex h-9 px-3.5 items-center gap-2 bg-white/10 text-white text-sm font-bold rounded-xl border border-white/15">
               <Building2 size={16} className="text-primary-light" />
               {tenants.length} Empresas
             </span>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-danger/90 hover:bg-danger text-white text-sm font-bold rounded-2xl transition flex items-center gap-2 shadow-sm active:scale-95"
-            >
-              <LogOut size={16} />
+            <Button variant="danger" size="md" onClick={handleLogout} leftIcon={<LogOut size={16} />}>
               Salir
-            </button>
-          </div>
-        </div>
-      </div>
+            </Button>
+          </>
+        }
+      />
 
       <div className="px-5 md:px-12 lg:px-20 max-w-6xl mx-auto space-y-8">
         {/* Formulario: Nueva Empresa + Admin */}
@@ -157,7 +149,7 @@ export default function SuperAdminDashboard() {
           onSubmit={handleCreateTenant}
           className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-primary-light/20 space-y-6"
         >
-          <div className="flex items-center gap-2 border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-2 border-b border-sand-100 pb-4">
             <Plus size={20} className="text-primary" />
             <h2 className="text-lg font-bold text-primary-dark">Registrar Nueva Distribuidora</h2>
           </div>
@@ -173,7 +165,7 @@ export default function SuperAdminDashboard() {
                 placeholder="Ej: Distribuidora El Sol"
                 value={formData.nombre}
                 onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                className="field"
               />
             </div>
             <div>
@@ -188,7 +180,7 @@ export default function SuperAdminDashboard() {
                 onChange={(e) =>
                   setFormData({ ...formData, subdominio: e.target.value.toLowerCase().trim() })
                 }
-                className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                className="field"
               />
             </div>
             <div>
@@ -200,12 +192,12 @@ export default function SuperAdminDashboard() {
                 placeholder="549343..."
                 value={formData.whatsapp}
                 onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                className="field"
               />
             </div>
           </div>
 
-          <div className="border-t border-slate-100 pt-5">
+          <div className="border-t border-sand-100 pt-5">
             <h3 className="text-xs font-bold text-secondary uppercase tracking-wider mb-3">
               Credenciales del Administrador Inicial
             </h3>
@@ -220,7 +212,7 @@ export default function SuperAdminDashboard() {
                   placeholder="Juan Pérez"
                   value={formData.admin_full_name}
                   onChange={(e) => setFormData({ ...formData, admin_full_name: e.target.value })}
-                  className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  className="field"
                 />
               </div>
               <div>
@@ -233,7 +225,7 @@ export default function SuperAdminDashboard() {
                   placeholder="admin_elsol"
                   value={formData.admin_username}
                   onChange={(e) => setFormData({ ...formData, admin_username: e.target.value })}
-                  className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  className="field"
                 />
               </div>
               <div>
@@ -246,21 +238,16 @@ export default function SuperAdminDashboard() {
                   placeholder="••••••••"
                   value={formData.admin_password}
                   onChange={(e) => setFormData({ ...formData, admin_password: e.target.value })}
-                  className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  className="field"
                 />
               </div>
             </div>
           </div>
 
           <div className="flex justify-end pt-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="bg-primary-dark hover:bg-primary text-white font-bold px-6 py-3 rounded-2xl text-sm transition shadow-md active:scale-95 disabled:opacity-60 flex items-center gap-2"
-            >
-              <Plus size={18} />
+            <Button type="submit" variant="dark" size="md" disabled={submitting} leftIcon={<Plus size={18} />}>
               {submitting ? 'Registrando...' : 'Crear Empresa y Administrador'}
-            </button>
+            </Button>
           </div>
         </form>
 
@@ -268,7 +255,7 @@ export default function SuperAdminDashboard() {
         <div className="bg-white rounded-3xl shadow-sm border border-primary-light/20 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-slate-50 text-secondary text-xs font-bold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-sand-50 text-secondary text-xs font-bold uppercase tracking-wider border-b border-sand-100">
                 <tr>
                   <th className="py-4 px-5">ID</th>
                   <th className="py-4 px-5">Distribuidora</th>
@@ -278,7 +265,7 @@ export default function SuperAdminDashboard() {
                   <th className="py-4 px-5 text-right">Control de Acceso</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-sand-100 text-sm">
                 {loading ? (
                   <tr>
                     <td colSpan="6" className="p-8 text-center text-secondary font-medium">
@@ -293,7 +280,7 @@ export default function SuperAdminDashboard() {
                   </tr>
                 ) : (
                   tenants.map((tenant) => (
-                    <tr key={tenant.id} className="hover:bg-slate-50/80 transition-colors">
+                    <tr key={tenant.id} className="hover:bg-sand-50/80 transition-colors">
                       <td className="py-4 px-5 font-mono text-secondary font-bold">#{tenant.id}</td>
                       <td className="py-4 px-5 font-bold text-primary-dark">{tenant.nombre}</td>
                       <td className="py-4 px-5">
@@ -321,21 +308,20 @@ export default function SuperAdminDashboard() {
                       </td>
                       <td className="py-4 px-5 text-right">
                         <div className="inline-flex items-center justify-end gap-2">
-                          <button
+                          <Button
+                            variant="soft"
+                            size="sm"
                             onClick={() => handleOpenEdit(tenant)}
-                            className="px-3 py-2 rounded-xl text-xs font-bold bg-primary/10 text-primary hover:bg-primary/20 transition inline-flex items-center gap-1.5"
                             title="Editar datos de la empresa"
+                            leftIcon={<Pencil size={14} />}
                           >
-                            <Pencil size={14} /> Editar
-                          </button>
+                            Editar
+                          </Button>
 
-                          <button
+                          <Button
+                            variant={tenant.is_active ? 'dangerSoft' : 'successSoft'}
+                            size="sm"
                             onClick={() => handleToggleEstado(tenant)}
-                            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition inline-flex items-center gap-1.5 ${
-                              tenant.is_active
-                                ? 'bg-danger/10 text-danger hover:bg-danger/20'
-                                : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
-                            }`}
                           >
                             {tenant.is_active ? (
                               <>
@@ -346,7 +332,7 @@ export default function SuperAdminDashboard() {
                                 <Power size={14} /> Habilitar Acceso
                               </>
                             )}
-                          </button>
+                          </Button>
                         </div>
                       </td>
                     </tr>
@@ -358,23 +344,10 @@ export default function SuperAdminDashboard() {
         </div>
       </div>
       {editingTenant && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg rounded-3xl shadow-xl border border-primary-light/20 overflow-hidden">
-            <div className="bg-primary-dark px-6 py-4 flex items-center justify-between text-white">
-              <div className="flex items-center gap-2 font-bold">
-                <Pencil size={18} className="text-primary-light" />
-                <span>Editar Distribuidora #{editingTenant.id}</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingTenant(null)}
-                className="p-1.5 rounded-xl hover:bg-white/10 transition"
-              >
-                <X size={18} />
-              </button>
-            </div>
+        <Modal size="lg">
+          <ModalHeader title={`Editar Distribuidora #${editingTenant.id}`} onClose={() => setEditingTenant(null)} />
 
-            <form onSubmit={handleUpdateTenant} className="p-6 space-y-4">
+            <form onSubmit={handleUpdateTenant} className="p-6 space-y-4 overflow-y-auto">
               <div>
                 <label className="block text-xs font-bold text-primary-dark uppercase tracking-wider mb-1.5">
                   Nombre Comercial *
@@ -384,7 +357,7 @@ export default function SuperAdminDashboard() {
                   required
                   value={editingTenant.nombre}
                   onChange={(e) => setEditingTenant({ ...editingTenant, nombre: e.target.value })}
-                  className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                  className="field"
                 />
               </div>
 
@@ -403,7 +376,7 @@ export default function SuperAdminDashboard() {
                         subdominio: e.target.value.toLowerCase().trim(),
                       })
                     }
-                    className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                    className="field"
                   />
                   <span className="text-xs font-bold text-secondary shrink-0">.{BASE_DOMAIN}</span>
                 </div>
@@ -418,7 +391,7 @@ export default function SuperAdminDashboard() {
                     type="text"
                     value={editingTenant.whatsapp}
                     onChange={(e) => setEditingTenant({ ...editingTenant, whatsapp: e.target.value })}
-                    className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-4 py-2.5 text-sm bg-slate-50 font-medium"
+                    className="field"
                   />
                 </div>
 
@@ -433,7 +406,7 @@ export default function SuperAdminDashboard() {
                       onChange={(e) =>
                         setEditingTenant({ ...editingTenant, color_primario: e.target.value })
                       }
-                      className="h-10 w-12 rounded-xl border border-slate-200 cursor-pointer bg-slate-50 p-1"
+                      className="h-10 w-12 rounded-xl border border-sand-200 cursor-pointer bg-sand-50 p-1"
                     />
                     <input
                       type="text"
@@ -441,31 +414,22 @@ export default function SuperAdminDashboard() {
                       onChange={(e) =>
                         setEditingTenant({ ...editingTenant, color_primario: e.target.value })
                       }
-                      className="w-full border-2 border-primary-light/30 focus:border-primary focus:ring-0 rounded-2xl px-3 py-2 text-sm bg-slate-50 font-mono"
+                      className="field font-mono"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setEditingTenant(null)}
-                  className="px-4 py-2.5 rounded-2xl text-sm font-bold text-secondary hover:bg-slate-100 transition"
-                >
+              <div className="flex justify-end gap-2 pt-4 border-t border-sand-100">
+                <Button type="button" variant="ghost" size="md" onClick={() => setEditingTenant(null)}>
                   Cancelar
-                </button>
-                <button
-                  type="submit"
-                  disabled={updating}
-                  className="bg-primary-dark hover:bg-primary text-white font-bold px-5 py-2.5 rounded-2xl text-sm transition shadow-sm active:scale-95 disabled:opacity-60"
-                >
+                </Button>
+                <Button type="submit" variant="dark" size="md" disabled={updating}>
                   {updating ? 'Guardando...' : 'Guardar Cambios'}
-                </button>
+                </Button>
               </div>
             </form>
-          </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

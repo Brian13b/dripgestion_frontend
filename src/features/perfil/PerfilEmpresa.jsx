@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { Button } from '../../components/primitives/Button';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { useTenant } from '../../context/TenantContext';
@@ -28,7 +29,7 @@ export const PerfilEmpresa = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <div className="bg-primary-dark px-5 pt-16 pb-12 text-center relative mx-auto shadow-md border-b-4 border-primary rounded-b-4xl">
+      <div className="bg-primary-dark px-5 pt-16 pb-12 text-center relative mx-auto shadow-md border-b-4 border-primary rounded-b-3xl">
         <div className="w-28 h-28 bg-white rounded-full mx-auto mb-5 flex items-center justify-center shadow-xl border-4 border-white/20 overflow-hidden shrink-0">
           {tenant?.logo_url ? (
             <img src={tenant.logo_url} alt="Logo" className="w-full h-full object-contain p-2" />
@@ -39,9 +40,9 @@ export const PerfilEmpresa = () => {
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight">{user?.full_name || 'Mi Distribuidora'}</h1>
         <p className="text-primary-light font-medium text-lg mt-2 tracking-wide">{tenant?.nombre || 'Gestión Logística'}</p>
         {user?.role?.toUpperCase() === 'ADMIN' && (
-           <button onClick={() => navigate('/configuracion')} className="absolute top-8 right-6 md:right-12 text-white/80 hover:text-white p-3 hover:bg-white/10 rounded-full transition-colors">
-            <Settings size={28} />
-          </button>
+           <Button variant="onDarkGhost" iconOnly onClick={() => navigate('/configuracion')} aria-label="Configuración" className="absolute top-8 right-6 md:right-12">
+            <Settings size={20} />
+          </Button>
         )}
       </div>
 

@@ -70,7 +70,7 @@ const RequireCliente = () => {
   if (user.role?.toLowerCase() !== 'cliente') return <Navigate to="/dashboard" replace />;
 
   return (
-    <div className="min-h-screen bg-slate-200 flex justify-center selection:bg-primary-light selection:text-primary-dark">
+    <div className="min-h-screen bg-sand-200 flex justify-center selection:bg-primary-light selection:text-primary-dark">
       <div className="w-full max-w-md bg-background min-h-screen relative shadow-2xl overflow-x-hidden">
         <Outlet />
       </div>

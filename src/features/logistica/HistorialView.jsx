@@ -1,3 +1,4 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
 import React, { useState, useEffect, useContext } from 'react';
 import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, ReceiptText } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
@@ -71,26 +72,18 @@ export const HistorialView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
-              <ReceiptText size={28} className="mr-3 text-white" />
-              Auditoría de Caja
-            </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-              Control financiero, arqueo por recorrido y conciliación de cobranzas
-            </p>
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        icon={ReceiptText}
+        title="Auditoría de Caja"
+        subtitle="Control financiero, arqueo por recorrido y conciliación de cobranzas"
+      />
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
 
         {/* BARRA DE FILTROS */}
         <div className="bg-white p-4 rounded-3xl shadow-xs border border-primary-light/20 flex flex-col md:flex-row items-center gap-3">
           {/* Filtro Fecha */}
-          <div className="relative group overflow-hidden rounded-2xl bg-slate-50 border border-primary-light/30 w-full md:w-auto flex-1">
+          <div className="relative group overflow-hidden rounded-2xl bg-sand-50 border border-primary-light/30 w-full md:w-auto flex-1">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
               <CalendarIcon size={18} className="text-primary" />
             </div>
@@ -105,7 +98,7 @@ export const HistorialView = () => {
           {/* Filtros Admin */}
           {user?.role?.toUpperCase() === 'ADMIN' && (
             <>
-              <div className="relative rounded-2xl bg-slate-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
+              <div className="relative rounded-2xl bg-sand-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Users size={18} className="text-primary" />
                 </div>
@@ -121,7 +114,7 @@ export const HistorialView = () => {
                 </select>
               </div>
 
-              <div className="relative rounded-2xl bg-slate-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
+              <div className="relative rounded-2xl bg-sand-50 border border-primary-light/30 overflow-hidden w-full md:w-auto flex-1">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 </div>
                 <select 
@@ -161,7 +154,7 @@ export const HistorialView = () => {
           <div className="grid grid-cols-3 gap-3 md:gap-6">
             <div className="bg-success text-white p-4 md:p-6 rounded-3xl shadow-sm border border-success/50 flex flex-col items-center text-center"><Banknote size={24} className="mb-2 opacity-80" /><p className="text-xs md:text-sm font-bold opacity-90 tracking-wider">Efectivo</p><p className="text-2xl md:text-4xl font-black mt-1">${totalEfectivoDia}</p></div>
             <div className="bg-primary text-white p-4 md:p-6 rounded-3xl shadow-sm border border-primary-light/50 flex flex-col items-center text-center"><CreditCard size={24} className="mb-2 opacity-80" /><p className="text-xs md:text-sm font-bold opacity-90 tracking-wider">Transf.</p><p className="text-2xl md:text-4xl font-black mt-1">${totalTransferenciaDia}</p></div>
-            <div className="bg-white text-slate-700 p-4 md:p-6 rounded-3xl shadow-sm border border-primary-light/30 flex flex-col items-center text-center"><BookOpen size={24} className="mb-2 text-slate-400" /><p className="text-xs md:text-sm font-bold text-slate-500 tracking-wider">A Cuenta</p><p className="text-2xl md:text-4xl font-black mt-1 text-primary-dark">${totalFiadoDia}</p></div>
+            <div className="bg-white text-primary-dark p-4 md:p-6 rounded-3xl shadow-sm border border-primary-light/30 flex flex-col items-center text-center"><BookOpen size={24} className="mb-2 text-secondary" /><p className="text-xs md:text-sm font-bold text-secondary tracking-wider">A Cuenta</p><p className="text-2xl md:text-4xl font-black mt-1 text-primary-dark">${totalFiadoDia}</p></div>
           </div>
         </div>
 
@@ -180,12 +173,12 @@ export const HistorialView = () => {
                   </div>
                   <div className="text-right">
                     <span className={`font-black text-2xl block ${mov.metodo_pago === 'cta_corriente' ? 'text-orange-500' : 'text-primary-dark'}`}>${mov.metodo_pago === 'cta_corriente' ? mov.monto_total : mov.monto_cobrado}</span>
-                    <span className="text-[10px] font-bold uppercase text-secondary bg-slate-100 px-2 py-0.5 rounded-md">{mov.metodo_pago === 'cta_corriente' ? 'Fiado' : mov.metodo_pago}</span>
+                    <span className="text-[10px] font-bold uppercase text-secondary bg-sand-100 px-2 py-0.5 rounded-md">{mov.metodo_pago === 'cta_corriente' ? 'Fiado' : mov.metodo_pago}</span>
                   </div>
                 </div>
                 <div className="pl-3 mt-4">
                   <p className="text-primary-dark font-medium text-sm bg-primary-light/20 border border-primary-light/30 inline-block px-3 py-1.5 rounded-xl">{mov.resumen_productos}</p>
-                  {mov.observacion && <p className="text-sm text-secondary italic mt-3 border-l-2 border-primary-light/50 pl-3 py-1 bg-slate-50 rounded-r-lg">"{mov.observacion}"</p>}
+                  {mov.observacion && <p className="text-sm text-secondary italic mt-3 border-l-2 border-primary-light/50 pl-3 py-1 bg-sand-50 rounded-r-lg">"{mov.observacion}"</p>}
                 </div>
               </div>
             ))}

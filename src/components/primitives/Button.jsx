@@ -28,11 +28,17 @@ const Spinner = ({ size = 15 }) => (
 );
 
 /* ─── Variantes de estilo ────────────────────────────────────────────────── */
+// Ver DESIGN_SYSTEM.md → "Botones". Una sola receta por intención.
 const variantStyles = {
   primary: [
     'bg-primary text-white',
     'shadow-sm shadow-primary/20',
     'hover:shadow-md hover:shadow-primary/30 hover:brightness-105',
+  ],
+  dark: [
+    'bg-primary-dark text-white',
+    'shadow-sm',
+    'hover:bg-primary',
   ],
   secondary: [
     'bg-sand-100 text-primary-dark',
@@ -48,12 +54,59 @@ const variantStyles = {
     'bg-transparent text-primary-dark',
     'hover:bg-sand-100 hover:text-primary',
   ],
+  soft: [
+    'bg-primary/10 text-primary',
+    'hover:bg-primary/20',
+  ],
+  success: [
+    'bg-success text-white',
+    'shadow-sm shadow-success/20',
+    'hover:brightness-105',
+  ],
+  successSoft: [
+    'bg-success/10 text-success',
+    'hover:bg-success/20',
+  ],
+  danger: [
+    'bg-danger text-white',
+    'shadow-sm shadow-danger/20',
+    'hover:brightness-105',
+  ],
+  dangerSoft: [
+    'bg-danger/10 text-danger',
+    'hover:bg-danger/20',
+  ],
+  whatsapp: [
+    'bg-[#25D366] text-white',
+    'shadow-sm',
+    'hover:bg-[#20bd5a]',
+  ],
+  // Botón de acción sobre el header oscuro (PageHeader)
+  onDark: [
+    'bg-white text-primary',
+    'shadow-sm',
+    'hover:bg-primary-light hover:text-primary-dark',
+  ],
+  // Botón secundario / icono sobre el header oscuro (volver, ajustes)
+  onDarkGhost: [
+    'bg-white/10 text-white backdrop-blur-sm',
+    'border border-white/15',
+    'hover:bg-white/20',
+  ],
 };
 
+// Alturas estándar: 36 / 44 / 56 px. md = target táctil mínimo recomendado.
 const sizeStyles = {
-  sm: 'h-8  px-3   text-xs  gap-1.5 rounded-lg',
-  md: 'h-10 px-4   text-sm  gap-2   rounded-xl',
-  lg: 'h-12 px-6   text-base gap-2.5 rounded-xl',
+  sm: 'h-9  px-3.5 text-sm gap-1.5 rounded-xl',
+  md: 'h-11 px-5   text-sm gap-2   rounded-xl',
+  lg: 'h-14 px-6   text-base gap-2.5 rounded-2xl',
+};
+
+// Botones solo-icono: cuadrados, mismas alturas que el resto.
+const iconSizeStyles = {
+  sm: 'h-9  w-9  rounded-xl',
+  md: 'h-11 w-11 rounded-xl',
+  lg: 'h-14 w-14 rounded-2xl',
 };
 
 /* ─── Animación Emil-style ───────────────────────────────────────────────── */
@@ -74,6 +127,7 @@ export const Button = ({
   leftIcon,
   rightIcon,
   fullWidth = false,
+  iconOnly  = false,
   children,
   className,
   ...props
@@ -88,7 +142,7 @@ export const Button = ({
       className={cn(
         // Base
         'relative inline-flex items-center justify-center',
-        'font-semibold tracking-tight select-none whitespace-nowrap',
+        'font-semibold tracking-tight select-none whitespace-nowrap cursor-pointer',
         // Transición de color suave
         'transition-colors duration-150 ease-out',
         // Focus accesible
@@ -98,7 +152,7 @@ export const Button = ({
         'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
         // Variante + tamaño
         variantStyles[variant],
-        sizeStyles[size],
+        iconOnly ? iconSizeStyles[size] : sizeStyles[size],
         // Ancho completo
         fullWidth && 'w-full',
         className,

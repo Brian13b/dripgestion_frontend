@@ -1,4 +1,5 @@
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { Button } from '../../components/primitives/Button';
 import { Check, Banknote, CreditCard, BookOpen, Package, Recycle } from 'lucide-react';
 
 export const ResumenReparto = () => {
@@ -36,7 +37,7 @@ export const ResumenReparto = () => {
             <p className="text-4xl md:text-5xl font-black mt-1">${totalRecaudado}</p>
           </div>
           <div className="bg-white rounded-3xl p-6 text-primary-dark shadow-sm border border-primary-light/30 flex flex-col items-center text-center">
-            <BookOpen size={32} className="mb-2 text-slate-400" />
+            <BookOpen size={32} className="mb-2 text-secondary" />
             <p className="text-xs font-bold uppercase tracking-widest text-secondary">
               A Cuenta
             </p>
@@ -137,12 +138,12 @@ export const ResumenReparto = () => {
           </div>
         )}
 
-        <button
+        <Button
           onClick={() => navigate('/dashboard')}
-          className="w-full mt-4 bg-primary-dark hover:bg-primary text-white font-bold py-5 rounded-3xl shadow-lg transition-colors active:scale-95 text-xl tracking-wider"
+          variant="dark" size="lg" fullWidth
         >
           Volver al Inicio
-        </button>
+        </Button>
       </div>
     </div>
   );

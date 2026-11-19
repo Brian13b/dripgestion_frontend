@@ -21,7 +21,7 @@ const SidebarItem = ({ to, icon, label, collapsed, matchPrefixes = [] }) => {
         collapsed ? 'justify-center px-2 py-3' : 'gap-3.5 px-4 py-3',
         isActive
           ? 'bg-primary text-white shadow-md shadow-primary/25 font-bold'
-          : 'text-slate-600 hover:bg-primary/10 hover:text-primary-dark'
+          : 'text-secondary hover:bg-primary/10 hover:text-primary-dark'
       )}
     >
       <IconComponent size={20} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
@@ -32,12 +32,12 @@ const SidebarItem = ({ to, icon, label, collapsed, matchPrefixes = [] }) => {
 
 const SectionLabel = ({ text, collapsed }) => {
   if (collapsed) {
-    return <div className="my-3 mx-3 border-t border-slate-200/80" />;
+    return <div className="my-3 mx-3 border-t border-sand-200/80" />;
   }
 
   return (
     <div className="pt-4 pb-1 px-4">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 truncate">
+      <p className="text-[10px] font-bold uppercase tracking-widest text-secondary truncate">
         {text}
       </p>
     </div>
@@ -127,7 +127,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       </nav>
 
       {/* Pie: Usuario actual + Cerrar sesión */}
-      <div className="p-3 border-t border-slate-100 bg-slate-50/60">
+      <div className="p-3 border-t border-sand-100 bg-sand-50/60">
         <button
           type="button"
           onClick={handleLogout}

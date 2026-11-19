@@ -1,3 +1,5 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
+import { Button } from '../../components/primitives/Button';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Play, Pencil, Trash2, Package } from 'lucide-react';
@@ -81,26 +83,18 @@ export const RecorridosList = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* HEADER */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
-              <Package size={28} className="mr-3 text-white" />
-              Rutas de Reparto
-            </h1>
-            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-              Organiza la logística de entregas
-            </p>
-          </div>
-          <button 
-            onClick={() => setRutaParaConfigurar({ id: null, nombre: '', dia_semana: 0, clientes_orden: [] })} 
-            className="bg-white text-primary hover:bg-primary-light hover:text-white transition-colors p-3 md:px-6 rounded-2xl flex items-center shadow-sm font-bold text-lg cursor-pointer"
-          >
-            <Plus size={22} className="md:mr-2" />
-            <span className="hidden md:inline tracking-wider">Nueva Ruta</span>
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        icon={Package}
+        title="Rutas de Reparto"
+        subtitle="Organiza la logística de entregas"
+        actions={
+          <HeaderAction
+            icon={Plus}
+            label="Nueva Ruta"
+            onClick={() => setRutaParaConfigurar({ id: null, nombre: '', dia_semana: 0, clientes_orden: [] })}
+          />
+        }
+      />
 
       {/* LISTA DE RECORRIDOS */}
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2">
@@ -117,8 +111,8 @@ export const RecorridosList = () => {
               return (
                 <div key={recorrido.id} className="bg-white p-6 rounded-3xl shadow-sm border border-primary-light/20 relative flex flex-col hover:shadow-md transition-shadow">
                   <div className="absolute top-6 right-5 flex space-x-2 text-gray-400">
-                    <button onClick={() => setRutaParaConfigurar(recorrido)} className="bg-primary-light/20 p-2 rounded-xl text-primary hover:bg-primary-light/40 transition-colors"><Pencil size={18} /></button>
-                    <button onClick={() => handleDelete(recorrido.id, recorrido.nombre)} className="bg-danger/10 p-2 rounded-xl text-danger hover:bg-danger/20 transition-colors"><Trash2 size={18} /></button>
+                    <Button onClick={() => setRutaParaConfigurar(recorrido)} variant="soft" size="sm" iconOnly><Pencil size={18} /></Button>
+                    <Button onClick={() => handleDelete(recorrido.id, recorrido.nombre)} variant="dangerSoft" size="sm" iconOnly><Trash2 size={18} /></Button>
                   </div>
 
                   <h3 className="font-bold text-primary-dark text-2xl mb-3 pr-24 tracking-wide leading-tight">{recorrido.nombre}</h3>
@@ -143,7 +137,7 @@ export const RecorridosList = () => {
                     {clientesEnRuta.length === 0 && <p className="text-sm text-danger bg-danger/10 p-3 rounded-xl tracking-wide">Ruta vacía. Asigná clientes.</p>}
                   </div>
 
-                  <button onClick={() => setRutaParaPrevisualizar(recorrido)} disabled={clientesEnRuta.length === 0} className={`w-full py-4 rounded-2xl flex items-center justify-center font-bold tracking-wider text-lg transition-all active:scale-95 ${clientesEnRuta.length > 0 ? 'bg-primary hover:bg-primary-dark text-white shadow-md' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}>
+                  <button onClick={() => setRutaParaPrevisualizar(recorrido)} disabled={clientesEnRuta.length === 0} className={`w-full py-4 rounded-2xl flex items-center justify-center font-bold tracking-wider text-lg transition-all active:scale-95 ${clientesEnRuta.length > 0 ? 'bg-primary hover:bg-primary-dark text-white shadow-md' : 'bg-sand-100 text-secondary cursor-not-allowed'}`}>
                     <Play size={20} className="mr-2 fill-current" />
                     Iniciar Ruta
                   </button>

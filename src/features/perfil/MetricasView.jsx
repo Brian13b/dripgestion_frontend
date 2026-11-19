@@ -1,3 +1,4 @@
+import { PageHeader, HeaderAction } from '../../components/primitives/PageHeader';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend } from 'recharts';
@@ -55,25 +56,11 @@ export const MetricasView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      <div className="bg-primary-dark p-5 md:px-12 lg:px-20 pt-8 md:pt-12 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary rounded-b-4xl">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center gap-5">
-          
-          <div className="flex items-center">
-            <button 
-                onClick={() => navigate(-1)} 
-                className="hover:bg-white/20 bg-white/5 p-3 rounded-full transition-colors mr-4 shadow-sm backdrop-blur-sm shrink-0"
-            >
-                <ArrowLeft size={28} />
-            </button>
-            <div>
-                <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
-                    Panel de Métricas
-                </h1>
-                <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">Análisis Inteligente de Negocio</p>
-            </div>
-          </div>  
-        </div>
-      </div>
+      <PageHeader
+        onBack={() => navigate(-1)}
+        title="Panel de Métricas"
+        subtitle="Análisis inteligente de negocio"
+      />
 
       <div className="p-5 md:p-12 lg:px-20 max-w-7xl mx-auto mt-2 space-y-8">
         {/* SELECTORES DE COMPARACIÓN */}
@@ -86,11 +73,11 @@ export const MetricasView = () => {
               type="month" 
               value={mesA} 
               onChange={(e) => setMesA(e.target.value)} 
-              className="w-full p-3 bg-slate-50 rounded-2xl font-bold text-primary-dark outline-none border border-slate-200 focus:border-primary transition-colors cursor-pointer" 
+              className="field cursor-pointer" 
             />
           </div>
           
-          <div className="hidden md:flex mt-6 bg-slate-100 p-2 rounded-full text-slate-400">
+          <div className="hidden md:flex mt-6 bg-sand-100 p-2 rounded-full text-secondary">
             <GitCompare size={20} />
           </div>
 
@@ -102,7 +89,7 @@ export const MetricasView = () => {
               type="month" 
               value={mesB} 
               onChange={(e) => setMesB(e.target.value)} 
-              className="w-full p-3 bg-slate-50 rounded-2xl font-bold text-primary-dark outline-none border border-slate-200 focus:border-primary transition-colors cursor-pointer" 
+              className="field cursor-pointer" 
             />
           </div>
         </div>

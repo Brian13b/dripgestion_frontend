@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Modal, ModalHeader, ModalFooter } from '../../components/primitives/Modal';
 import { Store, MapPin, Phone, MessageSquare, KeyRound, X, Lock, FileText, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { clientesService } from '../../api/clienteService';
@@ -86,14 +87,10 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-primary-dark/80 z-70 flex items-center justify-center p-4 backdrop-blur-sm">
-      <div className="bg-white w-full max-w-md rounded-4xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+    <Modal>
         
         {/* Header */}
-        <div className="p-5 border-b border-primary-light/20 flex justify-between items-center bg-background shrink-0">
-          <h2 className="text-xl font-bold text-primary-dark tracking-wide">{isEditing ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
-          <button onClick={onClose} className="text-secondary hover:text-primary-dark bg-white rounded-full p-2 shadow-sm border border-primary-light/30"><X size={20} /></button>
-        </div>
+        <ModalHeader title={isEditing ? 'Editar Cliente' : 'Nuevo Cliente'} onClose={onClose} />
 
         {/* Formulario con Scroll */}
         <div className="overflow-y-auto p-6 custom-scrollbar">
@@ -102,7 +99,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Nombre / Negocio *</label>
               <div className="relative">
                 <Store size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                <input type="text" name="nombre_negocio" required value={formData.nombre_negocio} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-slate-50 font-bold text-primary-dark" />
+                <input type="text" name="nombre_negocio" required value={formData.nombre_negocio} onChange={handleChange} className="field pl-11 pr-4" />
               </div>
             </div>
 
@@ -110,7 +107,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Dirección *</label>
               <div className="relative">
                 <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                <input type="text" name="direccion" required value={formData.direccion} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-slate-50 font-medium text-primary-dark" />
+                <input type="text" name="direccion" required value={formData.direccion} onChange={handleChange} className="field pl-11 pr-4" />
               </div>
             </div>
 
@@ -119,7 +116,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">CUIT (Sin guiones)</label>
               <div className="relative">
                 <FileText size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                <input type="text" name="cuit" maxLength="11" placeholder="20334445556" value={formData.cuit} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark" />
+                <input type="text" name="cuit" maxLength="11" placeholder="20334445556" value={formData.cuit} onChange={handleChange} className="field pl-11 pr-4" />
               </div>
             </div>
 
@@ -127,7 +124,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Condición IVA</label>
               <div className="relative">
                 <CheckCircle size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                <select name="condicion_iva" value={formData.condicion_iva} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-white font-bold text-primary-dark appearance-none">
+                <select name="condicion_iva" value={formData.condicion_iva} onChange={handleChange} className="field pl-11 pr-4 appearance-none">
                   <option value="Consumidor Final">Consumidor Final</option>
                   <option value="Monotributista">Monotributista</option>
                   <option value="Responsable Inscripto">Responsable Inscripto</option>
@@ -142,25 +139,25 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
                 <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Teléfono *</label>
                 <div className="relative">
                   <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
-                  <input type="text" name="telefono" required value={formData.telefono} onChange={handleChange} className="w-full pl-11 pr-3 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-slate-50 font-bold text-primary-dark" />
+                  <input type="text" name="telefono" required value={formData.telefono} onChange={handleChange} className="field pl-11 pr-3" />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">PIN Acceso</label>
                 <div className="relative">
                   {isEditing ? (
-                    <div className="flex items-center gap-2 w-full pl-4 pr-3 py-3 border-2 rounded-2xl bg-slate-100 border-slate-200">
-                      <Lock size={18} className="text-slate-400 shrink-0" />
+                    <div className="flex items-center gap-2 w-full pl-4 pr-3 py-3 border-2 rounded-2xl bg-sand-100 border-sand-200">
+                      <Lock size={18} className="text-secondary shrink-0" />
                       {hasPinConfigured
                         ? <span className="text-emerald-600 font-bold text-sm">PIN Configurado</span>
-                        : <span className="text-slate-400 font-medium text-sm">Sin PIN</span>
+                        : <span className="text-secondary font-medium text-sm">Sin PIN</span>
                       }
                     </div>
                   ) : (
                     <>
                       <KeyRound size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
                       <input type="text" name="pin_acceso" required maxLength="4" value={formData.pin_acceso} onChange={handleChange}
-                        className="w-full pl-11 pr-3 py-3 border-2 rounded-2xl tracking-widest font-black text-center border-primary-light/30 bg-slate-50 focus:border-primary text-primary-dark"
+                        className="field pl-11 pr-3 tracking-widest font-black text-center"
                       />
                     </>
                   )}
@@ -172,14 +169,14 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
               <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Observaciones</label>
               <div className="relative">
                 <MessageSquare size={18} className="absolute left-4 top-4 text-primary" />
-                <textarea name="observaciones" rows="2" value={formData.observaciones} onChange={handleChange} className="w-full pl-11 pr-4 py-3 border-2 border-primary-light/30 rounded-2xl focus:border-primary bg-slate-50 font-medium text-primary-dark" />
+                <textarea name="observaciones" rows="2" value={formData.observaciones} onChange={handleChange} className="field pl-11 pr-4" />
               </div>
             </div>
           </form>
         </div>
 
         {/* Footer */}
-        <div className="p-5 border-t border-primary-light/20 bg-background shrink-0">
+        <ModalFooter>
           <Button
             type="submit"
             form="cliente-form"
@@ -189,8 +186,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
           >
             {isEditing ? 'Guardar Cambios' : 'Crear Cliente'}
           </Button>
-        </div>
-      </div>
-    </div>
+        </ModalFooter>
+      </Modal>
   );
 };
