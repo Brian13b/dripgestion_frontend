@@ -151,11 +151,11 @@ export const ClientesList = () => {
       <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-wide flex items-center">
-              <User size={32} className="mr-3 text-white" />
+            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
+              <User size={28} className="mr-3 text-white" />
               Clientes
             </h1>
-            <p className="text-primary-light font-medium mt-1 tracking-wider">
+            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
               Gestión y saldo de cuentas corrientes
             </p>
           </div>

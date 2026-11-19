@@ -204,15 +204,15 @@ export const PreciosView = () => {
 
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
-      {/* HEADER (sin tabs adentro) */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 sticky top-0 z-10 text-white shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      {/* HEADER */}
+      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
               <Tag size={28} className="mr-3 text-white" />
               Catálogo y Envases
             </h1>
-            <p className="text-primary-light text-xs md:text-sm font-medium mt-1 tracking-wider">
+            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
               Precios, presentaciones y control de retornables
             </p>
           </div>

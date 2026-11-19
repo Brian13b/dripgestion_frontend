@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, Map } from 'lucide-react';
+import { Clock, Banknote, FileText, CreditCard, Calendar as CalendarIcon, BookOpen, CalendarDays, Users, ReceiptText } from 'lucide-react';
 import { recorridoService } from '../../api/recorridoService';
 import { AuthContext } from '../../context/AuthContext';
 import { userService } from '../../api/userService';
@@ -71,14 +71,15 @@ export const HistorialView = () => {
   return (
     <div className="min-h-screen bg-background pb-24 font-sans">
       {/* Header */}
-      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-20 pt-8 md:pt-12 text-white shadow-md border-b-4 border-primary">
+      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold tracking-wide">
+            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
+              <ReceiptText size={28} className="mr-3 text-white" />
               Auditoría de Caja
             </h1>
-            <p className="text-primary-light text-xs md:text-sm font-bold mt-1 tracking-widest uppercase opacity-90">
-              Control Financiero
+            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
+              Control financiero, arqueo por recorrido y conciliación de cobranzas
             </p>
           </div>
         </div>

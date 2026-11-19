@@ -79,10 +79,10 @@ export const Dashboard = () => {
       {/* Header */}
       <div className="bg-primary-dark max-h-32 px-5 md:px-12 lg:px-16 pt-8 pb-8 md:pb-10 mb-8 shadow-md border-b-4 border-primary">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-wide flex items-center">
             Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}
           </h2>
-          <p className="text-white/80 font-medium text-sm md:text-base mt-1 mb-4">
+          <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
             {isAdmin
               ? `Resumen operativo de ${tenant?.nombre}`
               : 'Listo para iniciar tu recorrido de hoy.'}
