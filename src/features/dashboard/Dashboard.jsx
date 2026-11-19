@@ -75,18 +75,20 @@ export const Dashboard = () => {
   }, [isAdmin]);
 
   return (
-    <div className="min-h-screen bg-background pb-24 font-sans">
+    <div className="min-h-screen bg-background font-sans">
       {/* Header */}
-      <div className="bg-primary-dark max-h-32 px-5 md:px-12 lg:px-16 pt-8 pb-8 md:pb-10 mb-8 shadow-md border-b-4 border-primary">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-wide flex items-center">
-            Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}
-          </h2>
-          <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
-            {isAdmin
-              ? `Resumen operativo de ${tenant?.nombre}`
-              : 'Listo para iniciar tu recorrido de hoy.'}
-          </p>
+      <div className="bg-primary-dark max-h-32 p-5 md:px-12 lg:px-16 pt-8 md:pt-10 text-white shadow-md border-b-4 border-primary">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-wide flex items-center">
+              Buenos días, {user?.full_name?.split(' ')[0] || 'Equipo'}
+            </h1>
+            <p className="text-primary-light text-sm md:text-base font-medium mt-1 tracking-wider">
+              {isAdmin
+                ? `Resumen operativo de ${tenant?.nombre}`
+                : 'Listo para iniciar tu recorrido de hoy.'}
+            </p>
+          </div>
         </div>
       </div>
 
