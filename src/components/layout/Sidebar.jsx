@@ -66,8 +66,8 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       {/* Cabecera: Marca + Botón Colapsar */}
       <div
         className={clsx(
-          'bg-primary-dark py-6 border-b-4 border-primary shadow-md flex items-center',
-          collapsed ? 'flex-col justify-center gap-3 px-2' : 'justify-between gap-2 px-4'
+          'bg-primary-dark h-24 border-b-4 border-primary shadow-md flex items-center transition-all duration-300',
+          collapsed ? 'justify-center gap-1 px-2' : 'justify-between gap-2 px-4'
         )}
       >
         <div className={clsx('flex items-center min-w-0', collapsed ? 'justify-center' : 'gap-3')}>
@@ -110,13 +110,7 @@ export const Sidebar = ({ collapsed, onToggleCollapse }) => {
       <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto">
         <SidebarItem to="/dashboard" icon={LayoutGrid} label="Inicio" collapsed={collapsed} />
         <SidebarItem to="/clientes" icon={Users} label="Clientes" collapsed={collapsed} />
-        <SidebarItem
-          to="/recorridos"
-          icon={MapPin}
-          label="Rutas y Repartos"
-          collapsed={collapsed}
-          matchPrefixes={['/recorridos', '/reparto']}
-        />
+        <SidebarItem to="/recorridos" icon={MapPin} label="Rutas y Repartos" collapsed={collapsed} matchPrefixes={['/recorridos', '/reparto']} />
         <SidebarItem to="/historial" icon={History} label="Historial del Día" collapsed={collapsed} />
 
         {isAdmin && (
