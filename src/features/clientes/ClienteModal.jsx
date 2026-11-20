@@ -5,7 +5,7 @@ import { notify } from '../../lib/notify';
 import { clientesService } from '../../api/clienteService';
 import { Button } from '../../components/primitives/Button';
 
-export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) => {
+export const ClienteModal = ({ isOpen, onClose, clienteId = null, zonasSugeridas = [], onSuccess }) => {
   const isEditing = Boolean(clienteId);
   const [isLoading, setIsLoading] = useState(false);
   const [hasPinConfigured, setHasPinConfigured] = useState(false);
@@ -13,6 +13,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
   const [formData, setFormData] = useState({
     nombre_negocio: '',
     direccion: '',
+    zona: '',
     telefono: '',
     observaciones: '',
     pin_acceso: '',
@@ -29,6 +30,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
           setFormData({
             nombre_negocio: data.nombre_negocio || '',
             direccion: data.direccion || '',
+            zona: data.zona || '',
             telefono: data.telefono || '',
             observaciones: data.observaciones || '',
             pin_acceso: '',
@@ -48,6 +50,7 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
       setFormData({
         nombre_negocio: '',
         direccion: '',
+        zona: '',
         telefono: '',
         observaciones: '',
         pin_acceso: randomPin,
@@ -109,6 +112,14 @@ export const ClienteModal = ({ isOpen, onClose, clienteId = null, onSuccess }) =
                 <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-primary" />
                 <input type="text" name="direccion" required value={formData.direccion} onChange={handleChange} className="field pl-11 pr-4" />
               </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-secondary uppercase mb-2 tracking-widest ml-1">Zona / barrio</label>
+              <input type="text" name="zona" maxLength="60" list="zonas-sugeridas" placeholder="Ej. Centro, Godoy Cruz" value={formData.zona} onChange={handleChange} className="field px-4" />
+              <datalist id="zonas-sugeridas">
+                {zonasSugeridas.map((z) => <option key={z} value={z} />)}
+              </datalist>
             </div>
 
             {/* Seccion Fiscal */}
